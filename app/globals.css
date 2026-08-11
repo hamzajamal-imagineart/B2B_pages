@@ -1,0 +1,370 @@
+@import "tailwindcss";
+
+/* ============================================================
+   ImagineArt Enterprise — design tokens
+   Clean, light, editorial (à la plaud.ai / langdock) with a
+   signature dark bento surface + lime accent from the brief.
+   ============================================================ */
+
+:root {
+  --ink: #0b0b0c; /* primary text / near-black */
+  --ink-2: #46474b; /* secondary text */
+  --ink-3: #83858c; /* muted / captions */
+  --line: rgba(11, 11, 12, 0.09); /* hairline borders */
+  --line-strong: rgba(11, 11, 12, 0.16);
+
+  --paper: #ffffff; /* base background */
+  --paper-2: #f6f6f4; /* alternating section wash */
+  --paper-3: #efefec;
+
+  --surface-dark: #0d0e10; /* dark bento surface */
+  --surface-dark-2: #16171a;
+  --surface-dark-line: rgba(255, 255, 255, 0.08);
+
+  --lime: #8a3ffc; /* accent */
+  --lime-deep: #7a2af0;
+  --lime-ink: #ffffff; /* text on lime */
+
+  --radius: 22px;
+  --radius-lg: 30px;
+  --maxw: 1360px;
+
+  --font-fallback: "Google Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Base rules live in @layer base so Tailwind utilities (a higher layer)
+   can still override them — otherwise this unlayered reset would beat
+   utility classes like px-*, mx-auto, mb-* regardless of specificity. */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  section[id] {
+    scroll-margin-top: 88px;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans), var(--font-fallback);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Never render heavier than 500 anywhere (Enterprise page). */
+  h1, h2, h3, h4, h5, h6, strong, b {
+    font-weight: 500;
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--lime-deep);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--lime);
+  color: var(--lime-ink);
+}
+
+/* ── Layout helpers ──
+   Shared container width across all pages: 86vw, capped at 1360px
+   (matches the Workflows page). */
+.wrap {
+  width: 100%;
+  max-width: min(86vw, var(--maxw));
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+
+/* Fluid display type */
+.display {
+  font-size: clamp(2.6rem, 6.2vw, 4.7rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+.h2 {
+  font-size: clamp(1.85rem, 3.6vw, 2.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+}
+
+.lede {
+  font-size: clamp(1.05rem, 1.5vw, 1.28rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  font-weight: 400;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding-inline: 22px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease,
+    border-color 0.18s ease, color 0.18s ease;
+  white-space: nowrap;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--ink);
+  color: #fff;
+}
+.btn-primary:hover { background: #26272b; }
+
+.btn-lime {
+  background: var(--lime);
+  color: var(--lime-ink);
+}
+.btn-lime:hover { background: var(--lime-deep); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.btn-ghost:hover { background: rgba(11, 11, 12, 0.04); }
+
+.btn-arrow {
+  transition: transform 0.18s ease;
+}
+.btn:hover .btn-arrow { transform: translateX(3px); }
+
+/* ── Section rhythm ── */
+.section {
+  padding-block: clamp(72px, 10vw, 132px);
+}
+
+/* reveal-on-scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ── Hero banner (full-bleed image + overlaid copy) ── */
+.hero-banner {
+  position: relative;
+  width: 100%;
+  height: clamp(560px, 82vh, 880px);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 40px 90px -60px rgba(11, 11, 12, 0.5);
+}
+
+/* Full-bleed hero image. Swap /hero.png for a real image or a <video>. */
+.hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: radial-gradient(120% 90% at 75% 15%, #3a3f52 0%, #1a1c26 45%, #0b0c10 100%);
+  transform: scale(1.03);
+  animation: hero-drift 24s ease-in-out infinite alternate;
+}
+@keyframes hero-drift {
+  from { transform: scale(1.03) translate3d(0, 0, 0); }
+  to { transform: scale(1.09) translate3d(-1.5%, -1.5%, 0); }
+}
+
+/* Legibility scrim, weighted to the lower-left where the copy sits. */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(8, 9, 12, 0.72) 0%, rgba(8, 9, 12, 0.28) 42%, rgba(8, 9, 12, 0) 68%),
+    linear-gradient(0deg, rgba(8, 9, 12, 0.7) 0%, rgba(8, 9, 12, 0) 55%);
+}
+
+.hero-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-block: 0 clamp(28px, 5vw, 68px);
+  color: #fff;
+}
+.hero-copy-inner {
+  max-width: 720px;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+}
+.hero-title {
+  margin-top: 18px;
+  font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+.hero-sub {
+  margin-top: 20px;
+  max-width: 500px;
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 400;
+}
+.hero-actions {
+  margin-top: 30px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.hero-btn-primary {
+  background: #fff;
+  color: var(--ink);
+}
+.hero-btn-primary:hover { background: rgba(255, 255, 255, 0.88); }
+.hero-btn-ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(6px);
+}
+.hero-btn-ghost:hover { background: rgba(255, 255, 255, 0.16); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-media { animation: none; transform: none; }
+}
+
+/* ── Dark bento cards ── */
+.card-inner {
+  background: var(--surface-dark-2);
+  border: 1px solid var(--surface-dark-line);
+  border-radius: 18px;
+  padding: 20px;
+  height: 100%;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.card-inner:hover {
+  border-color: rgba(138, 63, 252, 0.35);
+  transform: translateY(-2px);
+}
+.badge-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--lime);
+  background: rgba(138, 63, 252, 0.12);
+  border: 1px solid rgba(138, 63, 252, 0.28);
+  padding: 4px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ── Z-fold visual panels ── */
+.viz-shell {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(12px, 1.6vw, 18px);
+  box-shadow: 0 40px 80px -60px rgba(11, 11, 12, 0.28);
+}
+.viz-panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+}
+.viz-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-2);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.viz-chip-approved {
+  color: var(--lime-deep);
+  background: rgba(138, 63, 252, 0.1);
+  border-color: rgba(138, 63, 252, 0.28);
+}
+.viz-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 10px 12px;
+}
+.viz-filter {
+  font-size: 11.5px;
+  color: var(--ink-2);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 11px;
+}
+.viz-filter-on {
+  color: var(--lime-ink);
+  background: var(--lime);
+  border-color: transparent;
+}
