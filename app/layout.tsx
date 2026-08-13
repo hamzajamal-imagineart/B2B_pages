@@ -2,16 +2,20 @@ import type { Metadata } from "next";
 import { Google_Sans_Flex } from "next/font/google";
 import "./globals.css";
 
-// Google Sans Flex is a variable font; we cap rendered weight at 500 via CSS.
+// Google Sans Flex is the only typeface (§2). The kit's tokens read it as
+// --font-google-sans and re-export it as --font-sans.
 const googleSans = Google_Sans_Flex({
-  variable: "--font-sans",
+  variable: "--font-google-sans",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "ImagineArt Enterprise — Create at the speed of your ambition",
+  title: "ImagineArt Enterprise, Create at the Speed of Your Ambition",
   description:
-    "The enterprise AI creative platform that turns ideas into production-ready images and video — securely, at scale, and without limits on who gets to create.",
+    "The enterprise AI creative platform that turns ideas into production-ready images and video, securely, at scale, and without limits on who gets to create.",
+  // Next emits app/favicon.ico at the export root, which the host proxy 404s.
+  // Point at a nested copy instead (§7).
+  icons: { icon: "/media/footer/logo-icon.svg" },
 };
 
 export default function RootLayout({

@@ -1,9 +1,9 @@
-import Navbar from "../components/Navbar";
-import WorkflowPage from "../components/workflow/WorkflowPage";
-import ModelsSection from "../components/workflow/ModelsSection";
-import FAQ from "../components/workflow/FAQ";
-import FinalCTA from "../components/workflow/FinalCTA";
-import SiteFooter from "../components/SiteFooter";
+import Navbar from "../components/workflows/Navbar";
+import WorkflowPage from "../components/workflows/WorkflowPage";
+import ModelsSection from "../components/workflows/ModelsSection";
+import FAQ from "../components/workflows/FAQ";
+import FinalCTA from "../components/workflows/FinalCTA";
+import SiteFooter from "../components/workflows/SiteFooter";
 
 export const metadata = {
   title: "Workflows · ImagineArt",

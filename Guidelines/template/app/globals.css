@@ -1,0 +1,313 @@
+@import "tailwindcss";
+
+/* ═════════════════════════════════════════════════════════════
+   TEMPLATE BASE — generic. Nothing page-specific lives here.
+
+   What's in this file, all of it load-bearing:
+     · @theme tokens ......... colour, type, spacing
+     · @layer base ........... reset + body defaults
+     · .container-page ....... 1240px / 32px gutters (§3)
+     · .no-scrollbar ......... for horizontal card tracks
+     · .hero-bg + .hero-on-light / .hero-on-dark
+                              the hero surface + scrim system,
+                              driven by lib/theme.ts (§7)
+
+   Add page-specific rules BELOW the marker at the end of this
+   file, so the generic base stays easy to diff against the kit.
+   ═════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────
+   Design tokens. The primitive ramp is collapsed to near-black
+   (#171717) so every `*-brand` / `*-accent` utility renders
+   monochrome — per the "no coloured accent" hard rule (§2),
+   without having to touch call sites.
+   ───────────────────────────────────────────────────────────── */
+@theme {
+  /* ---------- Primitives — neutral ramp (monochrome; the accent is near-black) ---------- */
+  --color-primary-10: rgb(247 247 247);
+  --color-primary-20: rgb(237 237 237);
+  --color-primary-30: rgb(224 224 224);
+  --color-primary-40: rgb(209 209 209);
+  --color-primary-50: rgb(163 163 163);
+  --color-primary-60: rgb(87 87 87);
+  --color-primary-70: rgb(61 61 61);
+  --color-primary-80: rgb(41 41 41);
+  --color-primary-90: rgb(33 33 33);
+  --color-primary-100: rgb(23 23 23);     /* #171717 near-black */
+
+  --color-neutral-10: rgb(247 247 247);
+  --color-neutral-20: rgb(237 237 237);
+  --color-neutral-30: rgb(224 224 224);
+  --color-neutral-40: rgb(209 209 209);
+  --color-neutral-50: rgb(189 189 189);
+  --color-neutral-60: rgb(87 87 87);
+  --color-neutral-70: rgb(61 61 61);
+  --color-neutral-80: rgb(41 41 41);
+  --color-neutral-90: rgb(33 33 33);
+  --color-neutral-100: rgb(23 23 23);
+  --color-neutral-110: rgb(15 15 15);
+
+  /* Accent = near-black (monochrome; no colored accent per Guidelines) */
+  --color-accent-orange: rgb(23 23 23);
+
+  /* Brand "gradient" endpoints collapsed to near-black so `*-brand-gradient`
+     renders as a solid near-black, keeping the page monochrome. */
+  --color-brand-from: #171717;
+  --color-brand-to: #171717;
+
+  /* ---------- Semantic tokens (light theme) ---------- */
+  --color-background: rgb(255 255 255);
+  --color-content-primary: rgb(23 23 23);     /* #171717 near-black */
+  --color-content-secondary: rgb(87 87 87);
+  --color-content-tertiary: rgb(0 0 0 / 0.5);
+  --color-content-brand: rgb(23 23 23);       /* accent is the near-black */
+
+  --color-surface-primary: rgb(250 250 250);
+  --color-surface-secondary: rgb(240 240 240);
+  --color-surface-tertiary: rgb(230 230 230);
+
+  --color-fill-brand: rgb(23 23 23);
+  --color-fill-brand-hover: rgb(41 41 41);
+
+  --color-border-primary: rgb(0 0 0 / 0.08);
+  --color-border-secondary: rgb(0 0 0 / 0.12);
+  --color-border-tertiary: rgb(0 0 0 / 0.2);
+  --color-border-brand: rgb(23 23 23);
+
+  /* Dark surfaces (footer / scrolled nav) — near-black per Guidelines */
+  --color-footer-bg: #070707;
+
+  /* ---------- Fonts (variable wired via next/font/local in layout.tsx) ---------- */
+  --font-sans: var(--font-google-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-google-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+  /* ---------- Type scale ---------- */
+  --text-display-md: 72px;
+  --text-display-md--line-height: 84px;
+  --text-display-md--letter-spacing: -0.01em;
+  --text-display-sm: 60px;
+  --text-display-sm--line-height: 72px;
+  --text-display-sm--letter-spacing: -0.01em;
+  --text-display-xs: 48px;
+  --text-display-xs--line-height: 56px;
+
+  --text-heading-2xl: 40px;
+  --text-heading-2xl--line-height: 48px;
+  --text-heading-xl: 36px;
+  --text-heading-xl--line-height: 44px;
+  --text-heading-lg: 32px;
+  --text-heading-lg--line-height: 40px;
+  --text-heading-md: 28px;
+  --text-heading-md--line-height: 36px;
+  --text-heading-sm: 24px;
+  --text-heading-sm--line-height: 32px;
+  --text-heading-xs: 20px;
+  --text-heading-xs--line-height: 24px;
+
+  --text-body-xl: 20px;
+  --text-body-xl--line-height: 28px;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-body-xs: 12px;
+  --text-body-xs--line-height: 16px;
+
+  --radius-2: 8px;
+  --radius-3: 12px;
+  --radius-4: 16px;
+  --radius-5: 20px;
+  --radius-6: 24px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+  }
+  section[id] {
+    scroll-margin-top: 96px;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  ::selection {
+    background: rgb(23 23 23 / 0.12);
+    color: rgb(23 23 23);
+  }
+  /* Dark surfaces need the inverse: the light-page selection above is a dark
+     tint with near-black text, which disappears against #070707. */
+  footer ::selection,
+  .hero-on-dark ::selection {
+    background: rgb(255 255 255 / 0.16);
+    color: #fff;
+  }
+}
+
+@layer utilities {
+  /* Brand gradient helpers (render solid near-black — see note above) */
+  .bg-brand-gradient {
+    background-image: linear-gradient(135deg, var(--color-brand-from) 0%, var(--color-brand-to) 100%);
+  }
+  .text-brand-gradient {
+    background-image: linear-gradient(135deg, var(--color-brand-from) 0%, var(--color-brand-to) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Horizontal-only padding: a shorthand value here would silently zero out
+     any vertical padding classes applied alongside it. */
+  .container-page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding-left: 32px;
+    padding-right: 32px;
+    position: relative;
+  }
+  @media (max-width: 768px) {
+    .container-page {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  /* Hide scrollbar cross-browser (ported from ai-slides-generator) */
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+
+/* ─── Base variables ─────────────────────────────────────────── */
+:root {
+  /* Monochrome palette */
+  --color-bg:            #FFFFFF;
+  --color-surface:       #FFFFFF;
+  --color-border:        #DEDEDD;
+  --color-border-hover:  #BBBBB8;
+  --color-text-1:        #111110;
+  --color-text-2:        #6A6A67;
+  --color-text-3:        #AAAAAA;
+
+  /* Tile / feature-card surface (§3) */
+  --color-surface-tile:  #f1f2f3;
+
+  /* Muted half of a two-tone heading. The page's one typographic
+     flourish — keep it consistent across hero, FAQ and intros. */
+  --color-heading-muted: #6E6E73;
+
+  /* Typography — one family, see §2 */
+  --font-sans: var(--font-google-sans, ui-sans-serif, system-ui, sans-serif);
+
+  /* Motion — for CSS transitions only. No JS-driven motion (§2). */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-sm: 150ms;
+  --dur-md: 220ms;
+  --dur-lg: 320ms;
+}
+
+/* ─── Base reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { height: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text-1);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Hero Background ─────────────────────────────────────────
+   Full-bleed photographic hero, light/dark from one switch.
+
+   Both the scrim and the flat fallback colour come from custom
+   properties, and the .hero-on-light / .hero-on-dark class right
+   below supplies them — so the surface class alone decides the
+   whole treatment. That class (and the matching photo, and the
+   navbar variant) all come from src/lib/heroTheme.ts; flip
+   HERO_THEME there and nothing here needs editing.
+
+   Scrim: a top-down wash over the photo. It keeps the H1/subtext
+   legible and fades the bottom edge into the section that follows,
+   without flattening the whole shot.
+
+   The photo URL arrives as --hero-photo, set inline in
+   HeroSection.tsx via withBasePath() — a bare url() in CSS is not
+   basePath-prefixed by Next and would 404 on the mounted deploy.
+────────────────────────────────────────────────────────────── */
+.hero-bg {
+  background-color: var(--hero-fallback);
+  background-image: var(--hero-scrim), var(--hero-photo);
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+}
+
+/* Dark photo → darkening scrim, fades out to near-black at the base. */
+.hero-on-dark {
+  --hero-fallback: #06070B;
+  /* Flat fill behind an offset hero video — matches the footage's own
+     background so the exposed strip is invisible. */
+  --hero-video-fill: #06070B;
+  --hero-scrim: linear-gradient(
+    180deg,
+    rgba(6,7,11,0.72) 0%,
+    rgba(6,7,11,0.42) 38%,
+    rgba(6,7,11,0.60) 72%,
+    rgba(6,7,11,0.64) 100%
+  );
+}
+
+/* Light photo → white wash. Deliberately gentler through the middle so the
+   image keeps its colour, and heavier at the base so the hero dissolves into
+   the white Models section underneath it. */
+.hero-on-light {
+  --hero-fallback: #DCE8F6;
+  /* Flat fill behind an offset hero video — matches the footage's own
+     background so the exposed strip is invisible. */
+  --hero-video-fill: #ffffff;
+  /* Light wash over the whole frame — kept minimal so the footage stays vivid;
+     legibility now comes from the copy being solid, not from veiling the video. */
+  --hero-scrim: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.22) 0%,
+    rgba(255,255,255,0.06) 30%,
+    rgba(255,255,255,0.14) 70%,
+    rgba(255,255,255,0.16) 100%
+  );
+}
+
+
+/* ─── Hero foreground type ─────────────────────────────────────
+   Hooks for a hero built per §4. Give the section
+   `hero-bg ${HERO_SURFACE_CLASS}` and these resolve automatically.
+
+   Everything here is a SOLID colour on purpose: over video, any
+   alpha lets frames show through and the copy shimmers as the
+   footage moves (§8).
+────────────────────────────────────────────────────────────── */
+.hero-on-dark .hero-h1 { color: #FFFFFF; }
+.hero-on-dark .hero-h1 em { color: #FFFFFF; }
+.hero-on-dark .hero-h1-muted { color: #A1A1A6; }
+.hero-on-dark .hero-sub { color: #D6D6DA; }
+.hero-on-dark .hero-note { color: #A1A1A6; }
+
+.hero-on-light .hero-h1 { color: #171717; }
+.hero-on-light .hero-h1 em { color: #171717; }
+.hero-on-light .hero-h1-muted { color: var(--color-heading-muted); }
+.hero-on-light .hero-sub { color: #3F3F44; }
+/* Sits lowest in the hero, where media is usually busiest. Flip to #FFFFFF if
+   it lands on a dense part of the frame. */
+.hero-on-light .hero-note { color: var(--color-heading-muted); }
+
+/* ═════════════════════════════════════════════════════════════
+   PAGE-SPECIFIC RULES — add yours below this line.
+   Anything above is the shared base; keep it diffable.
+   ═════════════════════════════════════════════════════════════ */

@@ -1,332 +1,325 @@
-# ImagineMCP — Design Guidelines
+# Landing Page Kit — build instructions
 
-This kit defines the **navbar, footer, typography, and color system** for the
-ImagineMCP marketing site. Follow it exactly so any new page matches the
-existing ones. The golden rule: **reuse the tokens and components in this kit —
-never invent new colors, weights, or fonts.**
+You are building a marketing/landing page for an ImagineArt product. This file
+is the single source of truth: rules, tokens, components, layout patterns, and
+the platform constraints that will otherwise break your deploy.
 
-> TL;DR of the hard rules
-> - ❌ **No bold fonts.** Max weight is `font-semibold` (600). Never `700+`.
-> - ❌ **No colored accent.** No orange, purple, blue, green, teal, etc. The
->   palette is **monochrome** — near-black (`#171717`) on white/light, white on
->   dark. The "accent" is the near-black itself. Color comes only from imagery.
-> - ✅ Use the semantic CSS variables from `tokens/globals.css`, not raw hexes.
-> - ✅ Headings are **Title Case** (`capitalize`), body is sentence case.
-> - ✅ One font family everywhere: **Google Sans Flex**.
+Read §1–§3 before writing anything. Read §7 before you touch an asset path.
 
 ---
 
-## 1. Colors
+## 1. Build order
 
-All colors are defined as CSS variables in `tokens/globals.css` under `@theme`.
-Use the **semantic tokens** (`content-primary`, `content-secondary`,
-`surface-primary`, `border-primary`, etc.) via Tailwind classes
-(`text-content-primary`, `bg-surface-primary`, `border-border-primary`). Do not
-hardcode hexes in components except for the few documented dark one-offs already
-in the kit (e.g. footer `#070707`, feature band `#0d0d0d`).
+1. **Copy `template/` into the project's `src/`.** The tree mirrors a Next.js
+   App Router `src/`, so every `@/…` import resolves with no edits:
 
-### The palette
+   ```
+   template/app/globals.css            → src/app/globals.css
+   template/app/page-template.tsx      → src/app/page.tsx
+   template/app/layout-font-setup.tsx  → merge into src/app/layout.tsx
+   template/lib/*.ts                   → src/lib/
+   template/components/**              → src/components/
+   fonts/google-sans-flex.woff2        → src/app/fonts/
+   assets/*                            → public/media/        ← nested, see §7
+   ```
 
-The system is **monochrome** — near-black ink on white/light, with a few dark
-surfaces. There is **no colored brand accent**: the "accent" is the near-black
-itself (solid-black buttons and icon chips on white; white on dark). Saturated
-color only ever comes from full-bleed hero / feature **imagery**, never chrome.
+   `assets/` holds only the site-wide marks the kit's own components need:
 
-| Role | Token | Value |
-|------|-------|-------|
-| Accent / primary action | `--color-content-primary` (= `--color-neutral-100`) | `#171717` near-black |
-| Page background | `--color-background` | white `#fff` |
-| Primary text | `--color-content-primary` | `#171717` |
-| Secondary text | `--color-content-secondary` | `rgb(87 87 87)` |
-| Tertiary text | `--color-content-tertiary` | `rgb(0 0 0 / 0.5)` |
-| Light surface (cards) | `--color-surface-primary` | `rgb(250 250 250)` |
-| Light-grey section | (one-off) | `#f5f5f7` |
-| Borders | `--color-border-primary` | `rgb(0 0 0 / 0.08)` |
-| Dark feature band | (one-off) | `#0d0d0d` |
-| Footer background | (one-off) | `#070707` |
+   | File | Used by |
+   |---|---|
+   | `imagine-art-wordmark.svg` | `SiteNav` |
+   | `footer/logo-icon.svg` | `SiteFooter` |
+   | `footer/watermark.svg` | `SiteFooter` |
 
-> **Legacy note:** `globals.css` still ships an orange ramp
-> (`primary-10 … primary-100`) from an earlier brand. **It is not used on this
-> site** — don't reach for it in new work. Use the **neutral ramp**
-> (`neutral-10 … neutral-110`) for any tint/shade; don't eyeball a new value.
+   Keep the `footer/` subfolder when you copy, so the paths resolve as
+   `/media/footer/…`. Every other image is page-specific — supply your own under
+   `public/<folder>/`, never `public/` root.
 
-### ✅ Do
-- Keep everything **monochrome** — near-black (`#171717`) on white/light, white
-  on the dark surfaces. The accent *is* the near-black (solid-black buttons,
-  black icon chips, black active states).
-- Keep the page **white / light** with near-black text. Sections separate with
-  `border-t border-border-primary`, not heavy color blocks.
-- Use the **dark footer** (`#070707`), the **dark feature band** (`#0d0d0d`) and
-  the **dark scrolled-navbar** glass as the only dark surfaces.
-- Express soft tints with **opacity on black/white** (`text-white/55`,
-  `bg-black/[0.04]`) rather than new grey hexes.
-- Let **imagery** carry the color — the hero render and feature media are the
-  only saturated color on the page.
-
-### ❌ Don't
-- **No accent hue.** No orange, purple, blue, green, pink, yellow. If you're
-  reaching for a color that isn't neutral/black/white, stop — this site has no
-  colored accent (ignore the legacy orange tokens in `globals.css`).
-- Don't hardcode arbitrary hexes (`#7c3aed`, `#3b82f6`, …). If a value isn't a
-  neutral already in `globals.css`, it doesn't belong on the page.
-- Don't signal good/bad or state with red/green — use copy, icons and the single
-  near-black accent.
-- Don't put colored text on colored backgrounds. It's near-black on white, or
-  white on the dark surfaces.
+2. **Wire the font** per `layout-font-setup.tsx`. Google Sans Flex is the only
+   typeface.
+3. **Set the theme switch** in `src/lib/theme.ts` — `HERO_THEME` light|dark and
+   `HERO_MEDIA` photo|video. One line each; everything follows.
+4. **Build the hero**, then content sections, then the closing CTA.
+5. **Audit `globals.css`.** It ships complete and proven, but carries rules the
+   previous page needed. Delete what yours doesn't use.
+6. **Run §9's checklist before saying you're done.** `tsc --noEmit` is not
+   enough — see §7.
 
 ---
 
-## 2. Typography
+## 2. Hard rules
 
-**One typeface: Google Sans Flex** (variable font, see `fonts/`). It powers both
-`--font-sans` (body) and `--font-display` (headings). A mono stack
-(`--font-mono`) is used only for tiny eyebrow labels.
+Never violate these. They are what makes the pages look like one family.
 
-### Weights — the most important rule
-We use **four weights only**:
+| Rule | Detail |
+|---|---|
+| **Font weight ≤ 600** | Allowed: 300 / 400 / 500 / 600. Headings top out at **500**. Never `font-bold`, never 700+. |
+| **Monochrome only** | Near-black `#171717` on light, white on dark. Colour comes from **imagery only** — no decorative coloured accents. |
+| **One typeface** | Google Sans Flex everywhere, including italics (synthesised). |
+| **Case** | Headings Title Case. Body sentence case. UPPERCASE only for mono eyebrows. |
+| **No em-dashes in copy** | Use commas, colons, or full stops. Applies to all user-facing text. |
+| **No decorative JS** | No scroll-reveal, no auto-rotate, no ambient motion. Hover via CSS `:hover`, never JS handlers. Real interaction (menus, accordions, carousel buttons) is fine. |
 
-| Weight | Tailwind | Used for |
-|--------|----------|----------|
-| 300 Light | `font-light` | large mobile-menu links |
-| 400 Regular | `font-normal` | body copy, paragraphs |
-| 500 Medium | `font-medium` | nav links, buttons, labels, hero H1 |
-| 600 Semibold | `font-semibold` | section headings (H2/H3), eyebrows |
-
-- ❌ **Never use `font-bold` (700) or heavier.** Headings top out at semibold.
-- ❌ Never use `<strong>` for visual weight beyond `font-medium`/`font-semibold`
-  (the few `<strong>` in the kit are set to `font-medium`/`font-semibold`
-  explicitly — match that).
-
-### Case & style
-- **Headings (H1, H2, H3): Title Case**, applied with the Tailwind `capitalize`
-  class — e.g. "Generate Images, Video And Music With". Not sentence case, not
-  ALL CAPS.
-- **Body copy: sentence case.**
-- **Eyebrows / kickers:** small mono, **UPPERCASE**, wide tracking — this is the
-  *only* place uppercase is allowed. Pattern:
-  `font-mono text-[10.5px] font-semibold tracking-[1.8px] uppercase text-content-tertiary`.
-- Headings use **tight negative letter-spacing** (`tracking-[-0.5px]`) and tight
-  line-height (`leading-[1.05]`).
-- Body uses relaxed line-height (`leading-[1.7]`) and a hair of negative
-  tracking (`tracking-[-0.005em]`).
-
-### Type scale (from `globals.css`)
-Headings are set with `clamp()` for fluid sizing. Common patterns in use:
-- Section H2: `clamp(32px, 4vw, 52px)`, `font-semibold`, `capitalize`.
-- Card H3: `clamp(20px, 2.2vw, 30px)` or fixed `text-[20px]`, `font-semibold`.
-- Body: `text-[15px]`–`text-[18px]`, `leading-[1.7]`.
-- A full token scale (`--text-display-md`, `--text-heading-2xl`, `--text-body-*`)
-  exists in `globals.css` — prefer it for new components.
-
-### ✅ Do
-- Use `font-display` for headings, `font-sans` for everything else.
-- Let two-tone headings carry emphasis with color, not weight — e.g. a muted
-  second clause: `<span className="text-black/35">…</span>`.
-
-### ❌ Don't
-- Don't introduce a second font family (no Inter/Roboto/etc. — Google Sans Flex
-  already falls back to Inter/system).
-- Don't bold things to make them stand out. Use color, size, or spacing.
-- Don't uppercase headings or body. Uppercase is for mono eyebrows only.
+The monochrome rule has one sanctioned exception: **real third-party brand
+marks** (provider logos, app-store badges) keep their own colours. If a design
+calls for a coloured accent anyway, say so out loud and get explicit sign-off
+before shipping it.
 
 ---
 
-## 3. Navbar (`components/SiteNav.tsx`)
+## 3. Design system
 
-A `fixed` top header (`z-[60]`) that **morphs on scroll**, tuned to sit over a
-**dark hero**:
-- **At top:** transparent, **white** links/logo, full-width. Content aligns to
-  the page container via `padding: calc((100vw - min(86vw, 1360px)) / 2)`.
-- **Scrolled (>32px):** collapses into a centered **dark glass pill**
-  (`rgba(10,10,11,0.42)` + `backdrop-blur(32px)`), fully rounded (`border-radius:999`
-  stadium). The pill width **respects the page container** (`min(86vw, 1360px)`),
-  so its edges line up with the rest of the page.
-- Logo is the **wordmark** (`/imagine-art-wordmark.svg`) rendered white via
-  `filter: brightness(0) invert(1)` on the bar, and un-inverted (dark) inside the
-  mobile overlay.
-- Smooth transition via `cubic-bezier(0.22,1,0.36,1)`, ~480ms.
-- Desktop (`>1080px`): logo · links (with two-line slide hover + **active-route**
-  state) · **two CTAs** — primary ("Get Started", filled) + ghost ("Book a demo").
-- Mobile (`≤1080px`): hamburger → full-screen white overlay menu.
+### Colour
 
-**`variant` prop (adapts to the hero):**
-- `variant="onDark"` (default) — white links/logo/CTAs; use over a **dark** hero.
-- `variant="onLight"` — dark links, **un-inverted** (dark) logo, and a dark
-  primary CTA; use over a **light/white** hero.
-- Either way, once scrolled the bar becomes the same **dark glass pill** (white
-  text, inverted logo). Colors cross-fade on scroll. Pass the variant that
-  matches each page's hero: `<SiteNav variant="onLight" />`.
+| Token | Value | Use |
+|---|---|---|
+| `--color-content-primary` | `#171717` | headings, primary text |
+| body copy | `rgb(100,100,100)` | card and tile body text |
+| body copy, larger | `rgb(87,87,87)` | section intro paragraphs |
+| `--color-heading-muted` | `#6E6E73` | the muted half of a two-tone heading |
+| tile surface | `#f1f2f3` | bento tiles, feature cards |
+| section surface | `#ffffff` | default section background |
+| hairline border | `rgba(0,0,0,0.08)` – `0.09` | section rules, card borders |
+| dark surface | `#06070B` / `#111110` | footer, scrolled nav pill only |
 
-**CTA sizing:** both CTAs share `height: 40px`, `padding: 8px 16px`,
-`font-size: 16px`, `font-weight: 500`. Only the primary/ghost class differs.
-The capsule CTAs nest **concentrically** inside the stadium pill (16px inset all
-round).
+**Two-tone headings**: put the second clause in `var(--color-heading-muted)`.
+Used by the hero, the FAQ heading, and section intros. Keep it consistent — this
+is the page's one typographic flourish.
 
-### ✅ Do
-- Keep it `z-[60]`, fixed, with the scroll-driven pill behavior intact.
-- Keep the pill width tied to the page container (`min(86vw, 1360px)`).
-- Keep nav links at `font-medium` (≤500) with the subtle slide/hover.
-- If you only need **one** CTA, keep it as the **primary**.
+### Type scale
 
-### ❌ Don't
-- Don't add a colored nav background or bold/uppercase links.
-- Don't let the CTA radius and pill radius drift out of the concentric relationship.
+Headings are `font-medium` (500), tracking `-0.5px`, line-height `1.1`.
 
----
+| Element | Size |
+|---|---|
+| Hero `h1` | `clamp(34px, 4.4vw, 54px)`, tracking `-0.03em`, leading `1.08` |
+| Section `h2` (standard) | `clamp(28px, 3.6vw, 44px)` |
+| Section `h2` (FAQ) | `clamp(36px, 4vw, 52px)` |
+| Section `h2` (closing CTA) | `clamp(32px, 4.4vw, 56px)`, tracking `-1px` |
+| Card / tile `h3` | `clamp(19px, 1.5vw, 22px)` — or `clamp(20px, 1.7vw, 25px)` on wide tiles |
+| Section intro `p` | `17px` / `1.7` |
+| Card body `p` | `14.5px` / `1.65` |
+| Mono eyebrow | `10.5–11px`, weight 600, tracking `0.18em–1.8px`, uppercase |
 
-## 4. Footer (`components/SiteFooter.tsx`)
-
-A dark footer (`bg-[#070707]`) with:
-- A brand column (logo + app-store buttons).
-- A responsive **link grid** (`grid-cols-2 sm:grid-cols-3 lg:grid-cols-6`).
-- A large faint SVG **watermark**.
-- A bottom bar: copyright + cookie button + social icons.
-
-Text is white at **low opacity** (`text-white/55`, headings `text-white/[0.38]`,
-copyright `text-white/25`), brightening on hover. Column headings are
-`text-[11px] font-semibold tracking-[0.5px] uppercase`-style kickers.
-
-### ✅ Do
-- Keep all footer text as low-opacity white on `#070707`.
-- Keep links muted → brighten on hover (`hover:text-white/90`).
-- Max content width `1240px`, padding `px-5 md:px-10`.
-
-### ❌ Don't
-- Don't use any colored text or accent in the footer — it's low-opacity white
-  on `#070707`, brightening on hover. No colored CTA.
-- Don't bold footer links.
-
----
-
-## 5. FAQ section (`components/FaqSection.tsx`)
-
-A **two-column** section: a sticky-feeling heading block on the left, an
-accordion list on the right. Pattern:
-
-```
-section#faq (border-t border-border-primary)
-└ .container-page
-  └ py-16 md:py-24, flex-col lg:flex-row, gap-10 lg:gap-20
-    ├ Left  (lg:w-[360px], shrink-0): H2 + one-line subtext
-    └ Right (flex-1): accordion rows, each border-b border-border-primary
-```
+Body copy measure: `52ch` max on wide tiles, `34ch` on narrow, `58ch` on
+section intros. Long lines are the fastest way to make a page look amateur.
 
 ### Layout
-- **Desktop (`lg`+):** heading column fixed at `360px` on the left, accordion
-  fills the rest. Big `gap-20` between them.
-- **Mobile:** stacks — heading on top, accordion below.
-- Heading: `clamp(36px, 4vw, 52px)`, `font-semibold`, two-tone (second word
-  muted via `text-black/35`). Note: this H2 is **sentence case here** ("Got any
-  questions left?") — it intentionally has **no `capitalize`** because it reads
-  as a conversational question. (Section H2s elsewhere are Title Case; questions
-  and the literal FAQ question text stay sentence case.)
-- Subtext: `text-[17px] text-content-secondary max-w-[36ch]`.
 
-### Accordion rows (`FaqRow`)
-- Each row separated by a hairline `border-b border-border-primary` (and the
-  list has a `border-t` on top, so dividers wrap the whole stack).
-- **Row trigger** is a full-width `<button>` (`py-6`, `text-left`,
-  `aria-expanded`) with the question on the left and a **circular ± icon** on the
-  right (`w-8 h-8 rounded-full bg-black/[0.05]`). The vertical bar of the plus
-  collapses (`scaleY(0)` + fade) to become a minus when open.
-- Question text: `font-medium`, `clamp(16px, 1.4vw, 19px)`, `leading-snug`.
-- **Expand/collapse** uses the **CSS grid-rows trick** for height animation —
-  `grid-template-rows: 0fr → 1fr` with `transition: grid-template-rows 280ms`,
-  inner wrapper `overflow-hidden`. (No JS height measuring, no max-height hacks.)
-- Answer: `text-[16px] leading-[1.75] text-content-secondary max-w-[72ch] pb-6`.
-- Rows reveal-stagger in (`delay={i * 60}`).
+- **`.container-page`** — 1240px max-width, 32px gutters (20px under 768px).
+  Use it for every section. Don't add section-level `px-*`; the container has
+  its own gutters.
+- **Section rhythm** — `py-28` standard, `py-28 md:py-40` for taller sections.
+- **Separation** — a single `border-t border-black/[0.08]` hairline. Not both a
+  border and a background change.
+- **Radii** — `22px` tiles, `24px`/`3xl` cards, `100px` pills, `10px` buttons.
+- **Shadows** — prefer none. A hairline border does the work. Where elevation is
+  genuinely needed: `0 18px 50px rgba(23,35,56,0.16)`. Cool-neutral, never black.
 
-### SEO
-- The section emits **FAQPage JSON-LD** (`@type: FAQPage`) built from the FAQ
-  data array. Keep this when you reuse the section — it's a real SEO win. Source
-  the questions from a typed data file (like `lib/data/faq.ts`), not inline JSX.
+### Buttons — `components/Button.tsx`
 
-### ✅ Do
-- Keep the two-column layout, hairline dividers, circular ± toggle, and the
-  grid-rows height animation.
-- Keep questions/answers in **sentence case**.
-- Keep the JSON-LD in sync with the visible Q&A.
+`ButtonLink` (anchor) and `Button` (button) share `buttonClass`.
 
-### ❌ Don't
-- Don't box each row in a card or add background fills — it's a clean divided
-  list, not chips.
-- Don't bold the questions (they're `font-medium`) or the answers.
-- Don't animate with `max-height` guesses; use the `grid-template-rows` pattern.
-- Don't introduce a colored expand icon — it's neutral black on a faint grey
-  circle.
+| Variant | Use |
+|---|---|
+| `brand` | primary action — near-black fill, white text |
+| `ghost` | secondary — transparent, bordered |
+| `white` | on dark or photographic surfaces |
+| `muted` | tertiary — light grey fill |
+
+Sizes: `md` (h-10) and `lg` (h-12). One primary action per section.
 
 ---
 
-## 6. Buttons (`components/Button.tsx`) — bonus
+## 4. Page skeleton
 
-Shared primitive with four variants, all `rounded-[10px] font-medium`:
-- `brand` — near-black bg, white text (primary CTA).
-- `white` — white bg, subtle border + shadow.
-- `ghost` — transparent, bordered.
-- `muted` — light grey `#EDEDED` bg.
+Canonical order. Delete what the page doesn't need; don't reorder without reason.
 
-Sizes `md` / `lg`. Never restyle a button to a new color — pick a variant.
+```
+SiteNav                    variant driven by lib/theme.ts
+├── Hero                   90vh, min-h-[640px], photo or video
+├── #models / logos strip   provider or integration marks
+├── #how-it-works           numbered steps
+├── #features               feature bento or z-fold
+├── #use-cases              persona cards
+├── #compare                comparison table
+├── Testimonials            no anchor
+├── #faq                    accordion + FAQPage JSON-LD
+└── Closing CTA             un-boxed
+SiteFooter
+```
 
----
-
-## 7. Shared conventions
-- **Container width:** `1240px` max, gutters `32px` desktop / `20px` mobile
-  (`.container-page` in `globals.css`).
-- **Corners:** generous radii (`rounded-2xl`, `rounded-3xl` for cards;
-  `rounded-[10px]`/`[22px]` for buttons/pills).
-- **Shadows:** soft and low-opacity only (e.g. `shadow-[0_2px_16px_rgba(0,0,0,0.045)]`).
-  No hard or colored drop shadows.
-- **Borders:** hairline `border-border-primary` (`rgb(0 0 0 / 0.08)`).
-- **Motion:** subtle reveal-on-scroll and ease-out transitions; respect
-  `prefers-reduced-motion` (see `.reveal` + media query in `globals.css`).
-- **Eyebrow + heading + body** is the standard section header rhythm.
+Anchors go **above** each section (`scrollMarginTop: 80`) so the fixed nav
+doesn't cover the target. Keep ids in sync with `SiteNav`'s links.
 
 ---
 
-## 8. Comparison / “Old vs New” section (`components/ComparisonSection.tsx`)
+## 5. Components
 
-A two-column **Without vs With** comparison: eyebrow + Title-Case H2 + body,
-then two equal-height glass cards.
+All self-contained: no phantom imports, no animation library. Each carries
+placeholder content marked `TODO` — replace it, don't ship it.
 
-### Layout
-- Standard section — `border-t border-border-primary`, `.container-page`,
-  `py-16 md:py-24`; header block capped at `max-w-[720px]`.
-- Cards in `grid md:grid-cols-2 gap-4 md:gap-6 items-stretch`; each card is
-  `h-full` so both match the taller column.
-- Card: `rounded-3xl`, hairline `border-border-primary`, glass
-  (`bg-white/60 backdrop-blur-xl backdrop-saturate-150`), soft shadow
-  `shadow-[0_2px_16px_rgba(0,0,0,0.045)]`, gentle hover lift.
-- Card header: `font-semibold` label (`clamp(17px,1.6vw,20px)`) + an italic
-  `text-content-tertiary` note, divided by a hairline border.
-- Rows: `flex items-start gap-3`, `text-[15px] leading-[1.5]
-  text-content-secondary`, each led by a 22px round icon chip.
-
-### The accent rule (important)
-- Positive (“With”) rows use a solid **near-black** check chip
-  (`bg-content-primary text-white`). Negative (“Without”) rows use a **neutral**
-  ✕ chip (`bg-black/[0.05] text-content-tertiary`).
-- Good/bad is carried by **the icon shape alone** — never green vs red, and no
-  colored accent (this site is monochrome; see §1).
-
-### ✅ Do
-- Keep both columns equal height (`items-stretch` + `h-full`).
-- Keep weights ≤ `font-semibold`; the check’s weight comes from the SVG stroke,
-  not a bold font.
-- Express the glass with opacity-on-white + blur, not a new grey hex.
-
-### ❌ Don't
-- Don't color the columns green/red, and don't add a second accent.
-- Don't use a hard or colored drop shadow.
-- Don't uppercase the heading — Title Case only (uppercase is for the eyebrow).
+| Component | Notes |
+|---|---|
+| `SiteNav` | Fixed. `variant="onLight" \| "onDark"` for the hero behind it. Compacts to a dark glass pill on scroll; mobile hamburger. Client component — real interaction. |
+| `SiteFooter` | Dark surface. Logo icon, link columns, social row, and a full-width watermark along the bottom edge. Stays dark regardless of `HERO_THEME` — dark footer and dark scrolled nav pill are the two sanctioned dark surfaces (§2). |
+| `FAQSection` | Two-column: heading left, accordion right. All rows open by default so content is in the initial SSR HTML. Emits `FAQPage` JSON-LD — don't duplicate that schema in `page.tsx`. |
+| `TestimonialsSection` | Two staggered rows on one horizontal track, arrow-button nav, masked edges. Cards duplicated per row for range. |
+| `Button` | See §3. |
+| `primitives/SectionPattern` | `variant="dots" \| "diagonal"`. Needs `relative overflow-hidden` on the section and `relative z-10` on the content. Use on **at most one or two** sections — it's an accent, not a texture. |
+| `primitives/SectionGuides` | Container-edge rules with corner dots. `edge="top" \| "bottom"`. Inset by the dot radius so `overflow-hidden` can't slice the dots in half. |
 
 ---
 
-## How to use this kit on a new page
-1. Drop `tokens/globals.css` in (or merge its `@theme` block) — it's the single
-   source of truth for colors, fonts, and the type scale.
-2. Wire the font exactly as in `fonts/layout-font-setup.tsx`.
-3. Reuse `components/SiteNav.tsx` and `components/SiteFooter.tsx` as-is (fix the
-   import paths and asset paths — assets are in `assets/`).
-4. For any new UI: pull colors from the tokens, keep weights ≤ 600, headings in
-   Title Case, and stay **monochrome** — near-black on white/light, white on
-   dark, no colored accent.
+## 6. Section patterns — pick by content, not by taste
+
+This is the section that saves the most rework. **The pattern must follow the
+content.** Choosing a layout first and then forcing content into it is the most
+common failure.
+
+### Uniform card grid
+3 columns, identical tiles, `gap-5`/`gap-6`.
+**Use when** items are peers with similar copy length and one shared image
+aspect — personas, features, use cases.
+
+### Bento (mixed spans)
+3- or 4-column grid, tiles spanning 1–2 columns, arranged so they tile exactly
+with no dense-flow tricks.
+
+**Use when** tiles genuinely differ in weight or content density — one flagship
+plus supporting items, or mixed media sizes.
+
+**Do NOT use when** items are peers. Six equal personas in a bento produces a
+"featured" tile with nothing to feature, and it reads arbitrary. This mistake
+has been made and reverted twice. If you can't say *why* a given tile is bigger,
+use the uniform grid.
+
+Working spans, both verified to tile exactly:
+
+```
+4 items / 3 cols:  [2,1]  [1,2]
+6 items / 3 cols:  [2,1]  [1,2]  [1,2]
+```
+
+Tile anatomy: copy at the top in a padded block, media pinned to the bottom via
+`mt-auto` with `flex-1` so it absorbs leftover height. Rows
+`md:auto-rows-[minmax(360px,auto)]` — `auto` in the max so a tile grows rather
+than clipping its own body. Give wide tiles a wider measure than narrow ones.
+
+### Z-fold
+Alternating image/copy rows, one CTA per row.
+**Use when** you have 3–5 substantial features that each deserve a large visual.
+**Only one z-fold per page** — a second reads as a repeat of the first.
+
+### Comparison table
+CSS grid, one elevated column for your product.
+Beware: `overflow-x: auto` with `overflow-y: visible` — CSS coerces `visible` to
+`auto`, producing a stray vertical scrollbar. Pad the container to contain any
+bleed instead.
+
+### Small-card grid with hover detail
+Compact tiles, detail revealed on hover in an absolutely-positioned panel
+(`min-h-full`, `z-20`) so the grid never reflows.
+**Always** provide a no-hover fallback — render the detail inline below `lg` —
+and make tiles focusable so the content is keyboard-reachable.
+
+---
+
+## 7. Platform and deploy — read before touching an asset path
+
+These pages are **static exports served from a CDN behind a host proxy**. Four
+constraints, every one of which has broken a deploy.
+
+### `basePath`
+Pages are mounted at a sub-path (e.g. `/imagine-computer/ai-chat`). Next
+prefixes URLs *it* generates — `_next/`, `<Link>`, `next/font`. It does **not**
+touch hand-written asset strings, and with `images.unoptimized` an `<Image src>`
+is emitted verbatim.
+
+**Every hand-written `/public` path goes through `withBasePath()`** from
+`lib/assets.ts`. A bare `url(/foo.png)` in CSS is never prefixed — pass the URL
+in as a custom property set inline instead.
+
+### Assets must be nested at least one directory deep
+The host proxy forwards `/<mount>/<dir>/<file>` but **404s `/<mount>/<file>`**.
+Anything at the export root is unreachable in production.
+
+Put every asset under `public/media/`, `public/logos/`, etc. **Never at
+`public/` root.** This silently killed a nav logo, a hero video, its poster, the
+photo fallback, and the favicon in one deploy — the hero rendered flat white.
+
+The favicon is a special case: Next's `app/favicon.ico` convention always emits
+at the export root, so keep a copy at `public/media/favicon.ico` and point
+`metadata.icons` at it.
+
+### `tsc --noEmit` is not the build
+`next build`'s type-check walks every file matched by `tsconfig`'s `include`
+globs — including reference folders you never import. `tsc` tolerates broken
+imports there; `next build` fails on them.
+
+**Verify with `npx next build`, not `tsc`.** Exclude any reference directory in
+`tsconfig.json`:
+
+```json
+"exclude": ["node_modules", "Guidelines"]
+```
+
+### Video
+1. **Encode above 1920px.** Retina is DPR 2, so a 1920 file is upscaled and
+   looks soft regardless of bitrate. 2560×1440 at CRF ~23 is the balance
+   (~16 MB for 20s). Diagnose softness by measuring the actual scale factor:
+   `max(rect.w / videoWidth, rect.h / videoHeight) * devicePixelRatio`.
+2. **Ping-pong the loop** so the seam lands on an identical frame. Browsers
+   can't play a negative `playbackRate`, so bake it in:
+   ```
+   ffmpeg -i src.mp4 -filter_complex \
+     "[0:v]scale=2560:1440:flags=lanczos,split[a][b];\
+      [b]reverse,trim=start_frame=1,setpts=PTS-STARTPTS[r];\
+      [a][r]concat=n=2:v=1[out]" \
+     -map "[out]" -an -c:v libx264 -preset slower -crf 23 \
+     -pix_fmt yuv420p -movflags +faststart out.mp4
+   ```
+   Doubles duration and file size. Trim the source to buy that back.
+3. **Poster = the video's own first frame.** Anything else flashes the wrong
+   image.
+4. `autoPlay muted loop playsInline` — muted is required for autoplay,
+   `playsInline` stops iOS going fullscreen.
+5. **All hero UI must be opaque over video.** Alpha shimmers as frames change.
+
+---
+
+## 8. Anti-patterns — tried, reverted, don't repeat
+
+- **Frame sequences instead of video.** Proposed to beat blur; it doesn't. The
+  frames are the same resolution, so they upscale identically — at ~100 MB and
+  gigabytes of decode memory, plus a `requestAnimationFrame` loop. The fix for
+  blur is resolution (§7), not format.
+- **Translucent UI over moving footage.** Glass panels and alpha text read muddy
+  and shimmer. Solid fills.
+- **`backdrop-filter` in `globals.css`.** Tailwind v4's Lightning CSS strips it
+  project-wide. It silently does nothing — don't build a look that depends on it.
+  Use Tailwind's own `backdrop-blur-*` utilities if you truly need it.
+- **A bordered, gradient-filled CTA card.** Reads as a pasted-in banner. Un-box
+  it: white section, hairline rule, whitespace, one action.
+- **Patterns on every section.** Dots/diagonals everywhere become noise. One or
+  two sections, maximum.
+- **Bento for peer content.** See §6.
+- **Decorative scroll/hover JS.** Removed site-wide. CSS or nothing.
+
+---
+
+## 9. Pre-ship checklist
+
+- [ ] `npx next build` passes — not just `tsc --noEmit`
+- [ ] No referenced asset resolves to the export root (`find out -maxdepth 1 -type f`)
+- [ ] Every hand-written asset path goes through `withBasePath()`
+- [ ] Favicon copy exists under `public/media/` and `metadata.icons` points at it
+- [ ] No font-weight above 600 anywhere
+- [ ] No coloured accents except real third-party brand marks
+- [ ] No em-dashes in user-facing copy
+- [ ] All headings Title Case; eyebrows the only uppercase
+- [ ] Every section uses `.container-page`
+- [ ] Hero has `min-h-[640px]` alongside its `vh` height
+- [ ] Hover-only content has a no-hover fallback and is keyboard-reachable
+- [ ] All `TODO` placeholders replaced — check `FAQSection`, `TestimonialsSection`, `SiteFooter`
+- [ ] Page checked at 1440px, 768px, and 390px
