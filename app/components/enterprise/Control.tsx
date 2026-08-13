@@ -168,9 +168,9 @@ export default function Control() {
           position: absolute;
           left: 0;
           right: 0;
-          bottom: 0;
+          bottom: 22px;
           aspect-ratio: 16 / 9;
-          border-radius: 14px 0 0 0;
+          border-radius: 12px;
           overflow: hidden;
         }
         .stack-video {
