@@ -37,12 +37,6 @@ const REVIEWS: Review[] = [
   },
 ];
 
-const METRICS: { icon: React.ReactNode; value: string; label: string }[] = [
-  { icon: <IconSpark />, value: "TODO", label: "TODO: metric" },
-  { icon: <IconUsers />, value: "TODO", label: "TODO: metric" },
-  { icon: <IconCheck />, value: "TODO", label: "TODO: metric" },
-];
-
 export function TestimonialsSection() {
   return (
     <section
@@ -63,17 +57,6 @@ export function TestimonialsSection() {
               <span className="h-muted">who ship every day</span>
             </h2>
 
-            <ul className="rv-metrics">
-              {METRICS.map((m, i) => (
-                <li key={i} className="rv-metric">
-                  <span className="rv-metric-icon glass glass-on-light">{m.icon}</span>
-                  <span>
-                    <span className="rv-metric-value">{m.value}</span>
-                    <span className="rv-metric-label">{m.label}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Viewport clips and fades; the track holds the reviews twice so
@@ -129,24 +112,6 @@ export function TestimonialsSection() {
           flex: 0 0 auto;
         }
 
-        .rv-metrics {
-          list-style: none;
-          margin: 30px 0 0;
-          padding: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 18px;
-        }
-        .rv-metric { display: flex; align-items: center; gap: 12px; }
-        .rv-metric-icon {
-          width: 32px; height: 32px;
-          border-radius: 11px;
-          color: var(--ink);
-          display: grid; place-items: center;
-          flex: 0 0 auto;
-        }
-        .rv-metric-value { display: block; font-size: 17px; line-height: 1.25; }
-        .rv-metric-label { display: block; font-size: 13.5px; color: var(--ink-3); }
 
         .rv-viewport {
           position: relative;
@@ -221,30 +186,6 @@ function IconHeart() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
       <path d="M12 20.7l-1.4-1.3C5.4 14.7 2 11.6 2 7.9 2 5 4.2 2.9 7 2.9c1.6 0 3.1.7 4 1.9.9-1.2 2.4-1.9 4-1.9 2.8 0 5 2.1 5 5 0 3.7-3.4 6.8-8.6 11.5L12 20.7z" />
-    </svg>
-  );
-}
-function IconSpark() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M12 2.5l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 2.5z" />
-    </svg>
-  );
-}
-function IconUsers() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <circle cx="9" cy="7.5" r="3.2" />
-      <path d="M2.5 19c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6v.5h-13V19z" />
-      <circle cx="17.3" cy="6.4" r="2.5" />
-      <path d="M15.2 12.4c3 .1 5.3 2.1 5.3 5.1v.5h-3.2c0-2.2-.8-4.1-2.1-5.6z" />
-    </svg>
-  );
-}
-function IconCheck() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-      <path d="M5 12.5l4.5 4.5L19 7" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
