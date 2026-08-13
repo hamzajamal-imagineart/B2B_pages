@@ -44,7 +44,7 @@
 
   --paper: #ffffff;      /* page background */
   --panel: #ffffff;      /* elevated surface for the rare real card */
-  --panel-2: #f2f1ee;
+  --panel-2: #f1f2f3;   /* neutral grey; a warm value read as beige */
 
   --radius-lg: 20px;
   --maxw: 1240px;
