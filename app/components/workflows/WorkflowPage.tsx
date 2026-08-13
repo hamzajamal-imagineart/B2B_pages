@@ -134,7 +134,7 @@ function PerformanceCard({ hovered }: { hovered: boolean }) {
 function ScaleCard({ hovered }: { hovered: boolean }) {
   return (
     <CardFrame ratio="4/5">
-      <CardVideo src="/variable-demo.mp4" playing={hovered} />
+      <CardVideo src="/media/variable-demo.mp4" playing={hovered} />
     </CardFrame>
   );
 }
@@ -1171,7 +1171,7 @@ const USE_CASES: UseCase[] = [
   { id: "fashion",      label: "Fashion",        visualTitle: "Editorial Lookbooks",          desc: "Editorial fashion stories. On-model, every time.",         video: "/editor-demo.mp4"   },
   { id: "advertising",  label: "Advertising",    visualTitle: "Performance Ad Pack",          desc: "Hooks, statics, motion. Built for paid social.",           video: "/simple-demo.mp4"   },
   { id: "photography",  label: "Photography",    visualTitle: "Studio Product Shots",         desc: "Photoreal SKU shots. No studio.",                          video: "/iterate-demo.mp4"  },
-  { id: "concepting",   label: "Concepting",     visualTitle: "Concept Art & Worldbuilding",  desc: "Characters, environments, props — on-style.",             video: "/variable-demo.mp4" },
+  { id: "concepting",   label: "Concepting",     visualTitle: "Concept Art & Worldbuilding",  desc: "Characters, environments, props — on-style.",             video: "/media/variable-demo.mp4" },
   { id: "branding",     label: "Branding",       visualTitle: "Brand Kit Application",        desc: "Lock your brand once. Generate forever.",                  video: "/models-bg.mp4"     },
   { id: "product",      label: "Product",        visualTitle: "Packshots & Renders",          desc: "Studio-grade visuals for every PDP.",                      video: "/workflow-hero.mp4" },
   { id: "motion",       label: "Motion",         visualTitle: "Animated Brand Moments",       desc: "Statics into motion. Loops, transitions, hero moments.",   video: "/editor-demo.mp4"   },

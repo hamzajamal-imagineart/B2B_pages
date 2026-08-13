@@ -6,7 +6,7 @@ import { withBasePath } from "@/lib/assets";
 
 const CTA_HREF = "https://www.imagine.art/business/enterprise/contact-us";
 
-const VIDEO_SRC = "/media/hero-workflow.mp4";
+const VIDEO_SRC = "/media/hero-v2.mp4";
 
 /** mm:ss from the file itself, so the label can't drift from the asset. */
 function formatDuration(seconds: number) {
@@ -42,9 +42,9 @@ export default function Hero() {
   return (
     <section id="top" className="hero-section ">
       <div className="container-page hero-inner relative z-10">
-        <p className="eyebrow">ImagineArt Enterprise</p>
+        <p className="eyebrow hero-eyebrow">ImagineArt Enterprise</p>
 
-        <h1 className="display hero-h1 mt-3 max-w-[16ch]">
+        <h1 className="display hero-h1 mt-3 mx-auto max-w-[16ch] text-center">
           Create at the speed{" "}
           <span className="h-muted">of your ambition</span>
         </h1>
@@ -152,13 +152,15 @@ export default function Hero() {
         .hero-h1 {
           font-size: clamp(32px, 4.8vw, 60px);
         }
+        /* Eyebrow centres with the title above it. */
+        .hero-eyebrow { display: flex; justify-content: center; }
 
-        /* Frame matches the source exactly (1280x704), so object-fit contain
-           fills it edge to edge with no letterboxing and nothing cropped. */
+        /* Frame matches the source exactly (1280x720 = 16:9), so object-fit
+           contain fills it edge to edge with nothing cropped. */
         .hero-banner {
           position: relative;
           width: 100%;
-          aspect-ratio: 1280 / 704;
+          aspect-ratio: 16 / 9;
           border-radius: 22px;
           padding: 0;
           overflow: hidden;

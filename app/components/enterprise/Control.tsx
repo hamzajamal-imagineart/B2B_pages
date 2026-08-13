@@ -4,6 +4,7 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
 
 import { useRef } from "react";
 import { withBasePath } from "@/lib/assets";
+import { IntegrationsGrid } from "@/components/IntegrationsGrid";
 
 export default function Control() {
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -51,13 +52,15 @@ export default function Control() {
           <PromptMock />
         </StackCard>
         <StackCard tone="2" title="Workflows" body="Build powerful, node-based AI pipelines.">
-          <WorkflowMock />
+          <CardVideo src="/media/variable-demo.mp4" />
         </StackCard>
         <StackCard tone="3" title="Models" body="Every leading model, one interface.">
           <ModelsMock />
         </StackCard>
         <StackCard tone="4" title="Integrations" body="Fits into the tools your team already runs.">
-          <IntegrationsMock />
+          <div className="stack-embed">
+            <IntegrationsGrid />
+          </div>
         </StackCard>
         <StackCard tone="5" title="Control" body="Central governance and admin oversight.">
           <ControlMock />
@@ -155,6 +158,20 @@ export default function Control() {
           color: #fff;
           flex: 0 0 auto;
         }
+        /* Embeds bleed to the card's edges and are clipped by it, so a demo
+           reads as part of the card rather than a pasted-in box. */
+        .stack-embed {
+          position: absolute;
+          inset: 0;
+          border-radius: 14px 0 0 0;
+          overflow: hidden;
+        }
+        .stack-video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
         .stack-mock {
           margin-top: auto;
           flex: 1;
@@ -221,6 +238,24 @@ export default function Control() {
   );
 }
 
+/** Muted, looping product capture that fills the bottom of a card. */
+function CardVideo({ src }: { src: string }) {
+  return (
+    <div className="stack-embed">
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video
+        className="stack-video"
+        src={withBasePath(src)}
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden
+      />
+    </div>
+  );
+}
+
 function StackCard({
   tone,
   title,
@@ -271,27 +306,6 @@ function PromptMock() {
   );
 }
 
-/* ── Workflows: the same node chain used elsewhere. ── */
-function WorkflowMock() {
-  return (
-    <div style={{ position: "absolute", left: 0, right: -8, bottom: 0, background: "#fff", borderRadius: "14px 0 0 0", padding: 12, color: "var(--ink)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 500 }}>
-        <span style={{ width: 6, height: 6, borderRadius: 999, background: "var(--ink)" }} />
-        Gen-4 Image
-      </div>
-      <div style={{ marginTop: 8, background: "var(--panel-2)", borderRadius: 9, padding: 9, fontSize: 11 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span>Add node</span><span style={{ color: "var(--ink-3)" }}>✕</span>
-        </div>
-        <div style={{ marginTop: 7, display: "flex", flexDirection: "column", gap: 5, color: "var(--ink-2)" }}>
-          <span>+ Agent</span>
-          <span>⟲ Condition</span>
-          <span>↻ Loop</span>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ── Models: partner/model checklist, real names from the logo wall. ── */
 function ModelsMock() {
@@ -308,24 +322,6 @@ function ModelsMock() {
   );
 }
 
-/* ── Integrations: monogram grid standing in for real app icons. ── */
-function IntegrationsMock() {
-  const brands = ["ByteDance", "Kling AI", "MINIMAX", "Wan", "fal", "Grok"];
-  return (
-    <div style={{ position: "absolute", left: 0, right: -8, bottom: 0, background: "rgba(255,255,255,0.06)", borderRadius: "14px 0 0 0", padding: 12 }}>
-      <div style={{ textAlign: "center", fontSize: 10.5, color: "rgba(255,255,255,0.7)", background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "4px 0", marginBottom: 8 }}>
-        50+ integrations
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 5 }}>
-        {brands.map((b) => (
-          <span key={b} style={{ aspectRatio: "1/1", borderRadius: 8, background: "rgba(255,255,255,0.12)", display: "grid", placeItems: "center", fontSize: 9.5, color: "#fff" }}>
-            {b.slice(0, 2).toUpperCase()}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /* ── Control: the same credit-usage stat from the admin panel below. ── */
 function ControlMock() {
