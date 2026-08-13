@@ -3,6 +3,7 @@
 import { SectionGuides } from "@/components/primitives/SectionGuides";
 
 import { useRef } from "react";
+import { withBasePath } from "@/lib/assets";
 
 export default function Control() {
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -41,7 +42,12 @@ export default function Control() {
       </div>
 
       <div ref={trackRef} className="stack-track no-scrollbar mt-12">
-        <StackCard tone="1" title="Generate" body="Model agnostic. For everyone in the company.">
+        <StackCard
+          tone="1"
+          title="Generate"
+          body="Model agnostic. For everyone in the company."
+          bg="/media/card-generate.jpg"
+        >
           <PromptMock />
         </StackCard>
         <StackCard tone="2" title="Workflows" body="Build powerful, node-based AI pipelines.">
@@ -126,11 +132,18 @@ export default function Control() {
           color: #fff;
           overflow: hidden;
         }
-        .stack-tone-1 { background: #2b2a28; }
-        .stack-tone-2 { background: #33393e; }
-        .stack-tone-3 { background: #3d3b34; }
-        .stack-tone-4 { background: #24302f; }
-        .stack-tone-5 { background: #141414; }
+        /* A card with an image keeps its flat tone as the fallback fill, so
+           nothing flashes before the image paints. */
+        .stack-card {
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+        .stack-tone-1 { background-color: #2b2a28; }
+        .stack-tone-2 { background-color: #33393e; }
+        .stack-tone-3 { background-color: #3d3b34; }
+        .stack-tone-4 { background-color: #24302f; }
+        .stack-tone-5 { background-color: #141414; }
 
         .stack-title { font-size: 19px; font-weight: 400; }
         .stack-body { margin-top: 8px; font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,0.6); max-width: 22ch; }
@@ -138,7 +151,6 @@ export default function Control() {
           margin-top: 16px;
           width: 34px; height: 34px;
           border-radius: 999px;
-          background: rgba(255,255,255,0.14);
           display: grid; place-items: center;
           color: #fff;
           flex: 0 0 auto;
@@ -170,7 +182,7 @@ export default function Control() {
           grid-column: span 1;
           display: flex;
           flex-direction: column;
-          background: #f1f2f4;
+          background: #e5ece5;
           border-radius: 24px;
           padding: 32px 32px 0;
           overflow: hidden;
@@ -213,18 +225,28 @@ function StackCard({
   tone,
   title,
   body,
+  bg,
   children,
 }: {
   tone: "1" | "2" | "3" | "4" | "5";
   title: string;
   body: string;
+  /** Optional image backdrop; the flat tone stays underneath as the fill. */
+  bg?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className={`stack-card stack-tone-${tone}`}>
+    <div
+      className={`stack-card stack-tone-${tone}`}
+      style={
+        bg
+          ? { backgroundImage: `url(${withBasePath(bg)})` }
+          : undefined
+      }
+    >
       <div className="stack-title">{title}</div>
       <p className="stack-body">{body}</p>
-      <span className="stack-arrow">
+      <span className="stack-arrow glass">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 12h12M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </span>
       <div className="stack-mock">{children}</div>

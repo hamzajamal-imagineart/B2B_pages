@@ -66,7 +66,7 @@ export function TestimonialsSection() {
             <ul className="rv-metrics">
               {METRICS.map((m, i) => (
                 <li key={i} className="rv-metric">
-                  <span className="rv-metric-icon">{m.icon}</span>
+                  <span className="rv-metric-icon glass glass-on-light">{m.icon}</span>
                   <span>
                     <span className="rv-metric-value">{m.value}</span>
                     <span className="rv-metric-label">{m.label}</span>
@@ -120,8 +120,8 @@ export function TestimonialsSection() {
           color: var(--ink-2);
         }
         .rv-badge svg {
-          width: 30px; height: 30px;
-          padding: 8px;
+          width: 32px; height: 32px;
+          padding: 9px;
           border-radius: 999px;
           background: var(--ink);
           color: #fff;
@@ -139,9 +139,8 @@ export function TestimonialsSection() {
         }
         .rv-metric { display: flex; align-items: center; gap: 12px; }
         .rv-metric-icon {
-          width: 30px; height: 30px;
-          border-radius: 9px;
-          background: #f1f2f4;
+          width: 32px; height: 32px;
+          border-radius: 11px;
           color: var(--ink);
           display: grid; place-items: center;
           flex: 0 0 auto;

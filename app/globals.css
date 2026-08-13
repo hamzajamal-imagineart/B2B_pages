@@ -34,6 +34,9 @@
 
 :root {
   --ink: #141414;
+  /* Headings sit a step off pure black: at display sizes #141414 reads
+     heavy, and the lighter value keeps plenty of contrast on white. */
+  --ink-heading: #2a2a2c;
   --ink-2: #5b5b5b;
   --ink-3: #7a7a7a;
   --line: rgba(0, 0, 0, 0.09);
@@ -80,7 +83,7 @@
   a { color: inherit; text-decoration: none; }
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 400;
+    font-weight: 500;
   }
   strong, b { font-weight: 600; }
 
@@ -144,18 +147,20 @@
 }
 
 .display {
+  color: var(--ink-heading);
   font-size: clamp(40px, 6vw, 72px);
   line-height: 1.05;
   letter-spacing: -0.02em;
-  font-weight: 400;
+  font-weight: 500;
   text-wrap: balance;
 }
 
 .h2 {
+  color: var(--ink-heading);
   font-size: clamp(30px, 4vw, 48px);
   line-height: 1.1;
   letter-spacing: -0.015em;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .lede {
@@ -394,6 +399,94 @@
       var(--grain-3) 100%);
 }
 
-/* Second clause of a two-tone heading. The page's one typographic flourish —
-   keep it to the trailing phrase so the first clause still carries the point. */
-.h-muted { color: var(--ink-3); }
+/* Second clause of a two-tone heading — the page's one typographic flourish.
+   The image is clipped to the glyphs rather than filling a box.
+
+   --fill is set once on <main> via withBasePath(), because a bare url() in a
+   stylesheet is never basePath-prefixed by Next and would 404 on the mounted
+   deploy (Guidelines §7).
+
+   background-color is the fallback: the text fill is transparent, so without
+   it a failed image would render the clause invisible rather than muted. */
+.h-muted {
+  background-color: var(--ink-3);
+  background-image: var(--fill);
+  background-size: cover;
+  background-position: center 62%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ═════════════════════════════════════════════════════════════
+   Liquid glass — the same lens treatment as the hero's product-tour
+   pill, for any icon sitting in its own box.
+
+   Heavy blur + saturation lift so whatever is behind bleeds through as
+   colour, a bright specular along the top edge, a softer one along the
+   base to imply thickness, and an outer shadow to lift it off the
+   surface. Tint and shadow come from custom properties so the same
+   rule works on a dark tile and a light one.
+   ═════════════════════════════════════════════════════════════ */
+.glass {
+  border: 0;
+  background: var(--glass-tint, rgba(255, 255, 255, 0.1));
+  /* Low blur on purpose: heavy blur reads as frosted/etched glass. A lens
+     you look THROUGH needs the backdrop legible, with the character coming
+     from the edges instead. Brightness/saturation lift is the light being
+     concentrated as it passes through. */
+  -webkit-backdrop-filter: blur(5px) saturate(210%) brightness(1.06);
+  backdrop-filter: blur(5px) saturate(210%) brightness(1.06);
+  box-shadow:
+    /* Light entering the top-left and leaving the bottom-right — the two
+       opposing rims are what sell refraction rather than frost. */
+    inset 1.5px 1.5px 0 -0.5px var(--glass-spec, rgba(255, 255, 255, 0.8)),
+    inset -1.5px -1.5px 0 -0.5px var(--glass-spec-low, rgba(255, 255, 255, 0.3)),
+    inset 0 0 0 1px var(--glass-ring, rgba(255, 255, 255, 0.18)),
+    inset 0 0 10px var(--glass-bloom, rgba(255, 255, 255, 0.08)),
+    0 4px 14px var(--glass-cast, rgba(0, 0, 0, 0.18));
+}
+
+/* On a light surface the lens needs a denser fill and a cooler cast,
+   otherwise it disappears into the background. */
+.glass-on-light {
+  --glass-tint: rgba(255, 255, 255, 0.28);
+  --glass-spec: rgba(255, 255, 255, 1);
+  --glass-spec-low: rgba(255, 255, 255, 0.55);
+  --glass-ring: rgba(255, 255, 255, 0.5);
+  --glass-bloom: rgba(255, 255, 255, 0.16);
+  --glass-cast: rgba(16, 20, 20, 0.09);
+}
+
+/* The brighter lens used for a focal element in a diagram. */
+.glass-strong {
+  --glass-tint: rgba(255, 255, 255, 0.18);
+  --glass-spec: rgba(255, 255, 255, 0.95);
+  --glass-ring: rgba(255, 255, 255, 0.32);
+  --glass-bloom: rgba(255, 255, 255, 0.14);
+}
+
+/* ═════════════════════════════════════════════════════════════
+   Page grain — a very light green-tinted noise over the whole page,
+   so flat white areas have some tooth instead of reading as dead paper.
+
+   Fixed rather than absolute so it doesn't have to span the document
+   height (a full-height blurred/tiled layer that tall is wasteful);
+   the tile is small and repeats, so cost stays flat regardless of
+   page length.
+
+   pointer-events:none and a negative z-index keep it inert and behind
+   every section, and it sits on <body> so nothing needs to opt in.
+   ═════════════════════════════════════════════════════════════ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.5;
+  background-color: #f7f9f6;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.42  0 0 0 0 0.52  0 0 0 0 0.40  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}

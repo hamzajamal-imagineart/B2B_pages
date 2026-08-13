@@ -188,29 +188,29 @@ export default function Hero() {
           /* Liquid glass: heavy blur + saturation lift so whatever is behind
              bleeds through as colour, a bright specular top edge, and a soft
              inner shadow along the base to give the lens some thickness. */
-          background: rgba(255, 255, 255, 0.42);
-          -webkit-backdrop-filter: blur(26px) saturate(200%);
-          backdrop-filter: blur(26px) saturate(200%);
+          background: rgba(255, 255, 255, 0.3);
+          -webkit-backdrop-filter: blur(7px) saturate(210%) brightness(1.06);
+          backdrop-filter: blur(7px) saturate(210%) brightness(1.06);
           box-shadow:
-            inset 0 1px 0.5px rgba(255, 255, 255, 0.95),
-            inset 0 -1px 1px rgba(255, 255, 255, 0.45),
-            inset 0 0 18px rgba(255, 255, 255, 0.25),
-            0 8px 28px rgba(16, 20, 20, 0.16),
-            0 1px 2px rgba(16, 20, 20, 0.08);
+            inset 1.5px 1.5px 0 -0.5px rgba(255, 255, 255, 1),
+            inset -1.5px -1.5px 0 -0.5px rgba(255, 255, 255, 0.55),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+            inset 0 0 14px rgba(255, 255, 255, 0.16),
+            0 6px 20px rgba(16, 20, 20, 0.14);
           color: #14201f;
           cursor: pointer;
           text-align: left;
           transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
         }
         .tour-pill:hover {
-          background: rgba(255, 255, 255, 0.55);
+          background: rgba(255, 255, 255, 0.4);
           transform: translateY(-1px);
           box-shadow:
-            inset 0 1px 0.5px rgba(255, 255, 255, 1),
-            inset 0 -1px 1px rgba(255, 255, 255, 0.5),
-            inset 0 0 18px rgba(255, 255, 255, 0.3),
-            0 12px 34px rgba(16, 20, 20, 0.2),
-            0 1px 2px rgba(16, 20, 20, 0.08);
+            inset 1.5px 1.5px 0 -0.5px rgba(255, 255, 255, 1),
+            inset -1.5px -1.5px 0 -0.5px rgba(255, 255, 255, 0.6),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+            inset 0 0 14px rgba(255, 255, 255, 0.2),
+            0 10px 26px rgba(16, 20, 20, 0.18);
         }
         .tour-pill-text { display: flex; flex-direction: column; line-height: 1.25; }
         .tour-pill-title { font-size: 14px; font-weight: 500; }

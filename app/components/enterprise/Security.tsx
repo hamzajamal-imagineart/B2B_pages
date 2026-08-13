@@ -1,4 +1,5 @@
 import { SectionGuides } from "@/components/primitives/SectionGuides";
+import { withBasePath } from "@/lib/assets";
 
 export default function Security() {
   return (
@@ -23,7 +24,7 @@ export default function Security() {
             <Graphic><IconPeople /></Graphic>
           </Tile>
 
-          <Tile grain="grain-charcoal" n="02" title="SOC 2" body="Aligned to the highest security and audit standards, independently verified.">
+          <Tile grain="grain-charcoal" bg="/media/card-soc2.jpg" n="02" title="SOC 2" body="Aligned to the highest security and audit standards, independently verified.">
             <Graphic><IconCheckCircle /></Graphic>
           </Tile>
 
@@ -35,20 +36,20 @@ export default function Security() {
             <Graphic><IconLayers /></Graphic>
           </Tile>
 
-          <Tile grain="grain-teal" n="05" title="No data training" body="We never train our models on your data. It's processed, delivered, and not kept." wide>
+          <Tile grain="grain-teal" bg="/media/card-generate-wide.jpg" n="05" title="No data training" body="We never train our models on your data. It's processed, delivered, and not kept." wide>
             <div className="flow">
               <div className="flow-node">
-                <span className="flow-chip"><IconPerson /></span>
+                <span className="flow-chip glass"><IconPerson /></span>
                 <span className="flow-label">Your data</span>
               </div>
               <span className="flow-line" />
               <div className="flow-node">
-                <span className="flow-chip flow-chip-lg"><IconShield /></span>
+                <span className="flow-chip flow-chip-lg glass glass-strong"><IconShield /></span>
                 <span className="flow-label">Blocked in the boundary</span>
               </div>
               <span className="flow-x">×</span>
               <div className="flow-node">
-                <span className="flow-chip flow-chip-dark"><IconSpark /></span>
+                <span className="flow-chip glass"><IconSpark /></span>
                 <span className="flow-label">AI model</span>
               </div>
             </div>
@@ -65,7 +66,10 @@ export default function Security() {
         .tile {
           position: relative;
           grid-column: span 1;
-          background: var(--grain-2);
+          background-color: var(--grain-2);
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
           color: var(--grain-fg);
           min-height: 320px;
           display: flex;
@@ -105,13 +109,12 @@ export default function Security() {
           align-self: flex-end;
           display: grid;
           place-items: center;
-          width: 64px;
-          height: 64px;
-          border-radius: 18px;
-          background: var(--grain-chip, #fff);
-          border: 1px solid var(--grain-chip-bd, var(--line));
+          width: 44px;
+          height: 44px;
+          border-radius: 14px;
           color: currentColor;
         }
+        .tile-graphic svg { width: 20px; height: 20px; }
 
         .flow {
           flex: 1;
@@ -128,12 +131,15 @@ export default function Security() {
         }
         .flow-label { font-size: 12px; color: currentColor; opacity: 0.75; line-height: 1.35; text-align: center; }
         .flow-chip {
-          width: 48px; height: 48px; border-radius: 13px;
+          width: 44px; height: 44px; border-radius: 14px;
           display: grid; place-items: center; flex: 0 0 auto;
-          background: var(--grain-chip, #fff); border: 1px solid var(--grain-chip-bd, var(--line)); color: currentColor;
+          color: currentColor;
         }
-        .flow-chip-lg { width: 56px; height: 56px; border-radius: 15px; background: currentColor; border-color: transparent; }
-        .flow-chip-lg svg { color: var(--grain-2); }
+        .flow-chip svg { width: 20px; height: 20px; }
+        /* One step up: it's the focal node of the diagram. */
+        .flow-chip-lg { width: 52px; height: 52px; border-radius: 16px; }
+        .flow-chip-lg svg { width: 22px; height: 22px; }
+        .flow-chip-lg svg { color: #fff; }
         .flow-line { width: 28px; height: 1px; margin-top: 24px; background: currentColor; opacity: 0.3; }
         .flow-x { margin-top: 14px; font-size: 16px; color: currentColor; opacity: 0.5; }
 
@@ -152,18 +158,24 @@ function Tile({
   body,
   wide,
   grain = "grain-mineral",
+  bg,
   children,
 }: {
   n: string;
   title: string;
   body: string;
   wide?: boolean;
+  /** Optional image backdrop; the palette fill stays underneath as fallback. */
+  bg?: string;
   /** Palette modifier from globals.css (.grain-fog / -sage / -moss / …). */
   grain?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className={`tile ${grain} ${wide ? "tile-wide" : ""}`}>
+    <div
+      className={`tile ${grain} ${wide ? "tile-wide" : ""}`}
+      style={bg ? { backgroundImage: `url(${withBasePath(bg)})` } : undefined}
+    >
       <span className="tile-n">{n}</span>
       <div className="tile-title">{title}</div>
       <p className="tile-body">{body}</p>
@@ -173,7 +185,7 @@ function Tile({
 }
 
 function Graphic({ children }: { children: React.ReactNode }) {
-  return <div className="tile-graphic">{children}</div>;
+  return <div className="tile-graphic glass glass-on-light">{children}</div>;
 }
 
 /* ── icons (monochrome, single stroke/fill weight throughout) ── */
