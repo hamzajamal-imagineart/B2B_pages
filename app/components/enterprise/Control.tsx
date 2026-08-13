@@ -49,7 +49,7 @@ export default function Control() {
           body="Model agnostic. For everyone in the company."
           bg="/media/card-generate.jpg"
         >
-          <PromptMock />
+          <CardVideo src="/media/card-generate.mp4" />
         </StackCard>
         <StackCard tone="2" title="Workflows" body="Build powerful, node-based AI pipelines.">
           <CardVideo src="/media/variable-demo.mp4" />
@@ -160,11 +160,16 @@ export default function Control() {
         }
         /* Embeds bleed to the card's edges and are clipped by it, so a demo
            reads as part of the card rather than a pasted-in box. */
+        /* One 16:9 frame for every card, bottom-anchored, so the media lines
+           up across cards regardless of each source's own ratio. Sources are
+           full width and cropped only top/bottom — never at the sides, which
+           is where trimming would actually cut content off. */
         .stack-embed {
           position: absolute;
-          /* Clear of the arrow button above; the media still bleeds to the
-             card's left/right/bottom edges. */
-          inset: 14px 0 0 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          aspect-ratio: 16 / 9;
           border-radius: 14px 0 0 0;
           overflow: hidden;
         }
@@ -172,6 +177,7 @@ export default function Control() {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center;
           display: block;
         }
         /* Each model sits on its own lens rather than being separated by a
@@ -204,44 +210,6 @@ export default function Control() {
           color: rgba(255, 255, 255, 0.85);
         }
         .model-name { font-size: 12.5px; letter-spacing: -0.01em; }
-
-        /* Prompt bar: neutral greys only, and the send button anchored to the
-           corner rather than floated on its own row. */
-        .prompt-card {
-          position: absolute;
-          left: 0; right: -8px; bottom: 0;
-          background: #fff;
-          border-radius: 14px 0 0 0;
-          padding: 13px 14px 14px;
-          color: var(--ink);
-        }
-        .prompt-chip {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 11px;
-          color: var(--ink-2);
-          background: #f1f2f3;
-          border-radius: 999px;
-          padding: 4px 9px;
-        }
-        .prompt-text {
-          margin-top: 10px;
-          padding-right: 34px;
-          font-size: 12.5px;
-          line-height: 1.45;
-          color: var(--ink-3);
-        }
-        .prompt-send {
-          position: absolute;
-          right: 22px;
-          bottom: 14px;
-          width: 26px; height: 26px;
-          border-radius: 999px;
-          background: var(--ink);
-          color: #fff;
-          display: grid; place-items: center;
-        }
 
         .stack-mock {
           margin-top: auto;
@@ -356,30 +324,6 @@ function StackCard({
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 12h12M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </span>
       <div className="stack-mock">{children}</div>
-    </div>
-  );
-}
-
-/* ── Generate: the prompt bar, mirroring the brief used in the pipeline. ── */
-function PromptMock() {
-  return (
-    <div className="prompt-card">
-      <span className="prompt-chip">
-        Gen-4 Image
-        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-        </svg>
-      </span>
-
-      <p className="prompt-text">
-        Winter campaign, a snow-covered street in New York City.
-      </p>
-
-      <span className="prompt-send" aria-hidden>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-          <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </span>
     </div>
   );
 }

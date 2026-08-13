@@ -51,7 +51,7 @@ export default function Hero() {
 
         {/* Single full-width banner. The grain sits underneath as the fill,
             so nothing flashes white before the video paints. */}
-        <div className="hero-banner grain grain-diagonal grain-sage mt-7">
+        <div className="hero-banner grain grain-diagonal grain-sage mt-14 md:mt-16">
           <video
             className="hero-video"
             src={withBasePath(VIDEO_SRC)}
@@ -145,7 +145,7 @@ export default function Hero() {
            the section is simply as tall as its content needs. */
         .hero-section {
           position: relative;
-          padding-top: clamp(104px, 12vh, 150px);
+          padding-top: clamp(140px, 17vh, 210px);
           padding-bottom: clamp(40px, 6vh, 72px);
         }
 
