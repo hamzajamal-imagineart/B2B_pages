@@ -13,7 +13,7 @@ import { useRef } from "react";
  * approximations; GDRIVE_SRC is inlined because Drive's mark is multi-colour
  * and the CDN only serves single-colour fills.
  */
-const BG = "#0F0F13";
+const BG = "transparent";
 const BORDER = "1px solid rgba(255,255,255,0.05)";
 
 // ── Integrations: parallax icon grid ────────────────────────────────────────
@@ -70,8 +70,8 @@ export function IntegrationsGrid() {
         width: "100%",
         height: "100%",
         background: BG,
-        border: BORDER,
-        borderRadius: 16,
+        border: 0,
+        borderRadius: 0,
         overflow: "hidden",
       }}
     >
@@ -127,7 +127,7 @@ export function IntegrationsGrid() {
         style={{
           position: "absolute",
           inset: 0,
-          background: `radial-gradient(ellipse 65% 65% at 50% 50%, transparent 25%, ${BG} 100%)`,
+          background: 'radial-gradient(ellipse 70% 70% at 50% 50%, transparent 30%, rgba(0,0,0,0.35) 100%)',
           pointerEvents: "none",
         }}
       />

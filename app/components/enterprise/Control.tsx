@@ -162,7 +162,9 @@ export default function Control() {
            reads as part of the card rather than a pasted-in box. */
         .stack-embed {
           position: absolute;
-          inset: 0;
+          /* Clear of the arrow button above; the media still bleeds to the
+             card's left/right/bottom edges. */
+          inset: 14px 0 0 0;
           border-radius: 14px 0 0 0;
           overflow: hidden;
         }
@@ -172,6 +174,75 @@ export default function Control() {
           object-fit: cover;
           display: block;
         }
+        /* Each model sits on its own lens rather than being separated by a
+           divider rule — reads calmer, and matches the glass used elsewhere. */
+        .models-list {
+          position: absolute;
+          left: 0; right: 0; bottom: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 7px;
+          color: #fff;
+        }
+        /* Flat translucent fill, no rim or shadow: the glass treatment read
+           as a button and these are just a list. */
+        .model-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 9px 12px;
+          border: 0;
+          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.055);
+        }
+        .model-tick {
+          width: 17px; height: 17px;
+          border-radius: 999px;
+          display: grid; place-items: center;
+          flex: 0 0 auto;
+          background: rgba(255, 255, 255, 0.14);
+          color: rgba(255, 255, 255, 0.85);
+        }
+        .model-name { font-size: 12.5px; letter-spacing: -0.01em; }
+
+        /* Prompt bar: neutral greys only, and the send button anchored to the
+           corner rather than floated on its own row. */
+        .prompt-card {
+          position: absolute;
+          left: 0; right: -8px; bottom: 0;
+          background: #fff;
+          border-radius: 14px 0 0 0;
+          padding: 13px 14px 14px;
+          color: var(--ink);
+        }
+        .prompt-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          color: var(--ink-2);
+          background: #f1f2f3;
+          border-radius: 999px;
+          padding: 4px 9px;
+        }
+        .prompt-text {
+          margin-top: 10px;
+          padding-right: 34px;
+          font-size: 12.5px;
+          line-height: 1.45;
+          color: var(--ink-3);
+        }
+        .prompt-send {
+          position: absolute;
+          right: 22px;
+          bottom: 14px;
+          width: 26px; height: 26px;
+          border-radius: 999px;
+          background: var(--ink);
+          color: #fff;
+          display: grid; place-items: center;
+        }
+
         .stack-mock {
           margin-top: auto;
           flex: 1;
@@ -289,33 +360,44 @@ function StackCard({
   );
 }
 
-/* ── Generate: a floating prompt bar. ── */
+/* ── Generate: the prompt bar, mirroring the brief used in the pipeline. ── */
 function PromptMock() {
   return (
-    <div style={{ position: "absolute", left: 0, right: -8, bottom: 0, background: "#fff", borderRadius: "14px 0 0 0", padding: 12, color: "var(--ink)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "var(--ink-3)" }}>
-        <span style={{ background: "var(--panel-2)", borderRadius: 999, padding: "3px 8px" }}>Gen-4 Image ✕</span>
-      </div>
-      <p style={{ marginTop: 9, fontSize: 12, lineHeight: 1.4, color: "var(--ink-2)" }}>
+    <div className="prompt-card">
+      <span className="prompt-chip">
+        Gen-4 Image
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+        </svg>
+      </span>
+
+      <p className="prompt-text">
         Winter campaign, a snow-covered street in New York City.
       </p>
-      <div style={{ marginTop: 9, display: "flex", justifyContent: "flex-end" }}>
-        <span style={{ width: 24, height: 24, borderRadius: 999, background: "var(--ink)", color: "#fff", display: "grid", placeItems: "center", fontSize: 11 }}>↑</span>
-      </div>
+
+      <span className="prompt-send" aria-hidden>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
     </div>
   );
 }
 
 
-/* ── Models: partner/model checklist, real names from the logo wall. ── */
+/* ── Models: real model names from the logo wall, as glass rows. ── */
 function ModelsMock() {
-  const rows = ["Gen-4 Image", "Gen-4 Video", "Kling AI"];
+  const rows = ["Gen-4 Image", "Gen-4 Video", "Kling AI", "MINIMAX"];
   return (
-    <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, padding: "0 2px 2px", color: "#fff" }}>
-      {rows.map((r, i) => (
-        <div key={r} style={{ display: "flex", alignItems: "center", gap: 9, padding: "8px 0", borderTop: i === 0 ? "none" : "1px solid rgba(255,255,255,0.1)" }}>
-          <span style={{ width: 16, height: 16, borderRadius: 999, background: "rgba(255,255,255,0.16)", display: "grid", placeItems: "center", fontSize: 9 }}>✓</span>
-          <span style={{ fontSize: 12 }}>{r}</span>
+    <div className="models-list">
+      {rows.map((r) => (
+        <div key={r} className="model-row">
+          <span className="model-tick" aria-hidden>
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+          <span className="model-name">{r}</span>
         </div>
       ))}
     </div>

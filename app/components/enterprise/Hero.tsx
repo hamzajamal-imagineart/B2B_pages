@@ -150,7 +150,7 @@ export default function Hero() {
         }
 
         .hero-h1 {
-          font-size: clamp(32px, 4.8vw, 60px);
+          font-size: clamp(30px, 4.2vw, 52px);
         }
         /* Eyebrow centres with the title above it. */
         .hero-eyebrow { display: flex; justify-content: center; }
@@ -172,6 +172,22 @@ export default function Hero() {
           height: 100%;
           object-fit: contain;
           display: block;
+          transform-origin: center;
+          /* Scroll-driven rather than a scroll listener: this runs on the
+             compositor, needs no JS, and browsers without scroll timelines
+             simply render the first keyframe (scale 1) with no fallback
+             needed. The video scales inside the banner's existing clip, so
+             nothing below it shifts. */
+          animation: hero-zoom linear both;
+          animation-timeline: scroll(root block);
+          animation-range: 0 620px;
+        }
+        @keyframes hero-zoom {
+          from { transform: scale(1); }
+          to   { transform: scale(1.05); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-video { animation: none; }
         }
 
         /* Glass pill over the looping preview. Sits above the video but
