@@ -1,22 +1,49 @@
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Partners from "./components/Partners";
-import Security from "./components/Security";
-import Workflows from "./components/Workflows";
-import Control from "./components/Control";
-import SiteFooter from "./components/SiteFooter";
+import { SiteNav } from "@/components/SiteNav";
+import { withBasePath } from "@/lib/assets";
+import { SiteFooter } from "@/components/SiteFooter";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { NAV_VARIANT } from "@/lib/theme";
+import Hero from "./components/enterprise/Hero";
+import Partners from "./components/enterprise/Partners";
+import Security from "./components/enterprise/Security";
+import Control from "./components/enterprise/Control";
+import ClosingCta from "./components/enterprise/ClosingCta";
+
+// SEO. Kept in sync with layout.tsx's metadata.
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "ImagineArt Enterprise",
+  applicationCategory: "DesignApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
 
 export default function Home() {
   return (
     <>
-      <Navbar />
-      <main id="platform">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+      />
+
+      {/* Nav variant stays in lockstep with the hero behind it — see lib/theme.ts */}
+      <SiteNav variant={NAV_VARIANT} />
+
+      {/* One source for every two-tone heading's clipped fill. */}
+      <main
+        style={{
+          ["--fill" as string]: `url(${withBasePath("/media/card-generate.jpg")})`,
+        }}
+      >
         <Hero />
         <Partners />
-        <Security />
-        <Workflows />
         <Control />
+        <Security />
+        <TestimonialsSection />
+        <ClosingCta />
       </main>
+
       <SiteFooter />
     </>
   );
