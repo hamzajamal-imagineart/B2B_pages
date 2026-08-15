@@ -28,7 +28,12 @@ const BRANDS: Brand[] = [
   { name: "Grok", logo: "/media/partners/grok.svg", paint: "#0A0A0A" },
 ];
 
-export default function Partners() {
+export default function Partners({
+  /** Optional thin caption under the logo row (Business page's social-proof strip). */
+  caption,
+}: {
+  caption?: string;
+} = {}) {
   return (
     <section className="relative border-t border-black/[0.08] py-16 md:py-20 lg:border-t-0">
       <SectionGuides edge="top" />
@@ -57,9 +62,18 @@ export default function Partners() {
             </span>
           ))}
         </div>
+
+        {caption && <p className="partner-caption mt-8">{caption}</p>}
       </div>
 
       <style>{`
+        .partner-caption {
+          text-align: center;
+          font-size: 13px;
+          line-height: 1.5;
+          color: var(--ink-3);
+          font-weight: 400;
+        }
         .partner {
           display: inline-flex;
           align-items: center;

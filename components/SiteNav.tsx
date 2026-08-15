@@ -15,12 +15,12 @@ const CTA_HREF = "https://www.imagine.art/business/enterprise/contact-us";
 type NavLink = { label: string; href: string; activeRoute?: string; exact?: boolean };
 
 const NAV_LINKS: NavLink[] = [
-  { label: "Solutions", href: `${HOME}/business` },
-  { label: "Case Studies", href: `${HOME}/business/case-studies` },
-  { label: "Platform", href: "#platform" },
+  { label: "Solutions", href: "/solutions", activeRoute: "/solutions" },
+  { label: "Case Studies", href: "/case-studies", activeRoute: "/case-studies" },
+  { label: "Platform", href: "/platform", activeRoute: "/platform" },
   { label: "Workflows", href: "/workflows", activeRoute: "/workflows" },
   { label: "Enterprise", href: "/", activeRoute: "/", exact: true },
-  { label: "Business", href: `${HOME}/business` },
+  { label: "Business", href: "/business", activeRoute: "/business" },
 ];
 
 const isExternal = (href: string) => href.startsWith("http");
