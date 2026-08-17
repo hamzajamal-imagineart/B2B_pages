@@ -102,6 +102,10 @@ export default function Apps() {
         /* A card with footage carries its own copy colour, since the scrim
            underneath is dark whatever the palette is. */
         .app-has-video { color: #fff; }
+        /* .grain's noise tile is z-index 0, so it sits *above* the video and
+           veils it. A card running footage doesn't need the tooth — the
+           footage is the surface — so the tile is dropped entirely there. */
+        .app-has-video::after { content: none; }
 
         .app-card {
           position: relative;
