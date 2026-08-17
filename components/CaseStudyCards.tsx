@@ -332,7 +332,7 @@ export function StatMosaic({
 }) {
   const [a, b, c] = stats;
   // Supplied noise gradients, one per card.
-  const grounds = ["/media/noise/moss.jpg", "/media/noise/amber.jpg", "/media/noise/ember.jpg"];
+  const grounds = ["/media/noise/moss.jpg", "/media/noise/ember.jpg", "/media/noise/amber.jpg"];
 
   return (
     <div className="csm">
@@ -341,8 +341,8 @@ export function StatMosaic({
         <span className="csm-box csm-box-a" aria-hidden />
       </div>
 
-      <div className="csm-col csm-col-mid">
-        {b && <StatCard stat={b} ground={grounds[1]} tall />}
+      <div className="csm-col">
+        {b && <StatCard stat={b} ground={grounds[1]} />}
       </div>
 
       <div className="csm-col">
@@ -351,29 +351,31 @@ export function StatMosaic({
       </div>
 
       <style>{`
+        /* All three columns start on the same line; the stagger comes from
+           the centre card being taller and from where each grey square sits,
+           not from offsetting the columns. The middle column is wider, so its
+           card is larger while every card stays square. */
         .csm {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
+          grid-template-columns: 1fr 1.52fr 1fr;
+          gap: 14px;
           align-items: start;
         }
-        .csm-col { display: flex; flex-direction: column; gap: 16px; }
-        /* The stagger. Fixed offsets rather than a masonry library — with
-           three columns the rhythm is known, so it is one declaration. */
-        .csm-col-mid { padding-top: 26px; }
+        .csm-col { display: flex; flex-direction: column; gap: 22px; }
 
         /* Small squares, not column-width blocks: they punctuate the stagger
            rather than reading as two more cards. One tucks under the first
            card toward the right, the other sits above the last card at the
            left, matching the reference. */
         .csm-box {
-          width: clamp(96px, 11vw, 148px);
+          width: 45%;
           aspect-ratio: 1;
           border-radius: 18px;
           background: var(--panel-2);
           border: 1px solid var(--line);
         }
-        .csm-box-a { align-self: flex-end; margin-right: 12%; }
+        /* Flush with the edge of the card each one hangs off. */
+        .csm-box-a { align-self: flex-end; }
         .csm-box-c { align-self: flex-start; }
 
         .csm-stat {
@@ -385,11 +387,10 @@ export function StatMosaic({
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
-          min-height: 260px;
+          aspect-ratio: 1;
           padding: 26px;
           border-radius: 22px;
         }
-        .csm-stat-tall { min-height: 340px; }
         .csm-stat-value {
           font-size: clamp(30px, 3.4vw, 46px);
           line-height: 1.02;
@@ -421,9 +422,8 @@ export function StatMosaic({
 
         @media (max-width: 860px) {
           .csm { grid-template-columns: 1fr 1fr; }
-          .csm-col-mid { padding-top: 0; }
           .csm-box { display: none; }
-          .csm-stat, .csm-stat-tall { min-height: 190px; }
+          .csm-stat { aspect-ratio: 4 / 3; }
         }
       `}</style>
     </div>
@@ -433,14 +433,12 @@ export function StatMosaic({
 function StatCard({
   stat,
   ground,
-  tall,
 }: {
   stat: { value: string; label: string };
   ground: string;
-  tall?: boolean;
 }) {
   return (
-    <div className={`csm-stat ${tall ? "csm-stat-tall" : ""}`}>
+    <div className="csm-stat">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="csm-ground" src={withBasePath(ground)} alt="" aria-hidden />
       <span className="csm-ground-scrim" aria-hidden />
