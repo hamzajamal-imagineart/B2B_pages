@@ -31,8 +31,8 @@ export default function BusinessPage() {
     <>
       <PageTint palette="sand" />
 
-      {/* Dark full-bleed hero, so the nav opens in its onDark colours. */}
-      <SiteNav variant={navVariantFor("dark")} />
+      {/* Light banner hero, same as / and /solutions. */}
+      <SiteNav variant={navVariantFor("light")} />
 
       <main>
         <Hero />

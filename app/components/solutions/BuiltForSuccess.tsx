@@ -57,7 +57,7 @@ export default function BuiltForSuccess() {
           grid-column: span 2;
           display: flex;
           flex-direction: column;
-          background: #e5ece5;
+          background: var(--tile);
           border-radius: 24px;
           padding: 30px;
           min-height: 216px;

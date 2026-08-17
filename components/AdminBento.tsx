@@ -48,7 +48,7 @@ export function AdminBento({ className = "" }: { className?: string }) {
           grid-column: span 1;
           display: flex;
           flex-direction: column;
-          background: #e5ece5;
+          background: var(--tile);
           border-radius: 24px;
           padding: 32px 32px 0;
           overflow: hidden;

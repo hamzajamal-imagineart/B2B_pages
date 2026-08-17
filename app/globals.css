@@ -43,8 +43,17 @@
   --line-strong: rgba(0, 0, 0, 0.14);
 
   --paper: #ffffff;      /* page background */
+  /* White stays white: against a tinted page wash it is the elevation cue,
+     so the dashboards and chips inside a tile read as raised rather than
+     as a hole punched in the surface. */
   --panel: #ffffff;      /* elevated surface for the rare real card */
-  --panel-2: #f1f2f3;   /* neutral grey; a warm value read as beige */
+
+  /* Both of these are re-declared per route by <PageTint>. The values here
+     are the sage defaults, so anything rendered outside a tinted page still
+     has a sane surface. --tile carries a clear step up in saturation from
+     the page wash; --panel-2 sits just off it. */
+  --tile: #e5ece5;      /* bento tile fill */
+  --panel-2: #eaeee8;   /* recessed panel / chip / card fill */
 
   --radius-lg: 20px;
   --maxw: 1240px;
