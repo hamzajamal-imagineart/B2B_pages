@@ -15,12 +15,14 @@ const CTA_HREF = "https://www.imagine.art/business/enterprise/contact-us";
 type NavLink = { label: string; href: string; activeRoute?: string; exact?: boolean };
 
 const NAV_LINKS: NavLink[] = [
-  { label: "Solutions", href: "/solutions", activeRoute: "/solutions" },
-  { label: "Case Studies", href: "/case-studies", activeRoute: "/case-studies" },
-  { label: "Platform", href: "/platform", activeRoute: "/platform" },
-  { label: "Workflows", href: "/workflows", activeRoute: "/workflows" },
-  { label: "Enterprise", href: "/", activeRoute: "/", exact: true },
   { label: "Business", href: "/business", activeRoute: "/business" },
+  { label: "Enterprise", href: "/", activeRoute: "/", exact: true },
+  { label: "Industry/Solutions", href: "/solutions", activeRoute: "/solutions" },
+  { label: "Platform", href: "/platform", activeRoute: "/platform" },
+  { label: "Case Studies", href: "/case-studies", activeRoute: "/case-studies" },
+  // Not in the supplied ordering, which lists only the five pages with content
+  // specs. Kept, and placed last, because /workflows is a live route.
+  { label: "Workflows", href: "/workflows", activeRoute: "/workflows" },
 ];
 
 const isExternal = (href: string) => href.startsWith("http");
