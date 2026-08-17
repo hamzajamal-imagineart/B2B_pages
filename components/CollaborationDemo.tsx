@@ -1,29 +1,35 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { withBasePath } from "@/lib/assets";
 
 /**
- * Real-time collaboration demo: named cursors flying in over a canvas, with a
- * "You" bubble tracking the pointer.
+ * Real-time collaboration demo: a comment thread on a dotted canvas, with
+ * named cursors flying in on hover and a "You" bubble tracking the pointer.
  *
- * Lifted out of the Workflows page's BentoSection so the Enterprise and
- * Business pages can use it in place of the illustrated collaboration panel
- * that stood there before. Both surfaces render this one component.
+ * Shared by the Workflows page's bento and the admin bento on the Enterprise
+ * and Business pages.
  *
- * The canvas stays dark wherever it sits. On the Workflows page that matches
- * the page; inside a light bento tile it reads as an inset screen, the same
- * way the Models panel does. Retinting it light would have meant re-picking
- * four cursor colours that are already legible against it.
+ * There is no screenshot here on purpose. The canvas is drawn — dot grid,
+ * comment card, composer — so it reads as the product surface rather than a
+ * picture of one, and it recolours per tone instead of needing two exports.
+ * It replaced a random picsum.photos placeholder.
+ *
+ * `tone` sets the surface: "light" for the light bento tiles, "dark" for the
+ * Workflows page. Everything else is driven off custom properties, so one
+ * markup serves both.
  */
 const CURSORS = [
-  { name: "Nima", color: "#7B9EFF", x: "16%", y: "32%", enter: "translateY(-60px)" },
-  { name: "Sophia", color: "#F47A7A", x: "78%", y: "26%", enter: "translateX(60px)" },
-  { name: "Bogdan", color: "#5CB8FF", x: "70%", y: "70%", enter: "translateX(60px)" },
-  { name: "Francisco", color: "#F5C06A", x: "20%", y: "70%", enter: "translateX(-60px)" },
+  { name: "Nima", color: "#4F7DF3", x: "10%", y: "22%", enter: "translateY(-60px)" },
+  { name: "Sophia", color: "#E2574C", x: "80%", y: "18%", enter: "translateX(60px)" },
+  { name: "Bogdan", color: "#2F9BE8", x: "78%", y: "74%", enter: "translateX(60px)" },
+  { name: "Francisco", color: "#D9A03F", x: "12%", y: "72%", enter: "translateX(-60px)" },
 ];
 
-export function CollaborationDemo() {
+export function CollaborationDemo({
+  tone = "light",
+}: {
+  tone?: "light" | "dark";
+}) {
   const [hovered, setHovered] = useState(false);
   const youBubbleRef = useRef<HTMLDivElement>(null);
 
@@ -37,18 +43,57 @@ export function CollaborationDemo() {
 
   return (
     <div
-      className="collab-demo"
+      className={`collab-demo collab-${tone}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={onMouseMove}
     >
       <span className="collab-dots" aria-hidden />
 
-      {/* The canvas the team is working on. A real ImagineArt output rather
-          than the random picsum.photos placeholder this carried before. */}
-      <div className="collab-canvas">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={withBasePath("/media/card-generate.jpg")} alt="" aria-hidden />
+      {/* The thing being collaborated on. */}
+      <div className="collab-thread">
+        <span className="collab-badge collab-badge-dc" aria-hidden>DC</span>
+
+        <div className="collab-card">
+          <div className="collab-card-top">
+            <span className="collab-card-title">Comment</span>
+            <span className="collab-card-actions" aria-hidden>
+              <span className="collab-dot-menu">···</span>
+              <span className="collab-icon collab-icon-solid">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+              <span className="collab-icon">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+                </svg>
+              </span>
+            </span>
+          </div>
+
+          <span className="collab-avatar" aria-hidden />
+
+          <p className="collab-byline">
+            <strong>Daniel Craig</strong> <span>Just now</span>
+          </p>
+          <p className="collab-body">
+            In the spring gymnasium, a golden retriever runs on the football
+            field, chasing the ball to play.
+          </p>
+
+          <div className="collab-composer">
+            <span className="collab-badge collab-badge-as" aria-hidden>AS</span>
+            <span className="collab-input">
+              Leave a comment…
+              <span className="collab-send" aria-hidden>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 19V5M6 11l6-6 6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
       </div>
 
       {CURSORS.map((c, i) => (
@@ -87,36 +132,158 @@ export function CollaborationDemo() {
           width: 100%;
           height: 100%;
           min-height: 220px;
-          background: #0f0f13;
-          border: 1px solid rgba(255, 255, 255, 0.05);
           border-radius: 16px;
           overflow: hidden;
+          background: var(--cl-bg);
+          border: 1px solid var(--cl-line);
+          container-type: inline-size;
         }
+        .collab-light {
+          --cl-bg: #ffffff;
+          --cl-line: rgba(0, 0, 0, 0.07);
+          --cl-dot: rgba(0, 0, 0, 0.10);
+          --cl-card: #ffffff;
+          --cl-card-line: rgba(0, 0, 0, 0.07);
+          --cl-ink: #16181d;
+          --cl-ink-soft: rgba(22, 24, 29, 0.5);
+          --cl-field: #f6f7f9;
+          --cl-shadow: 0 8px 26px rgba(16, 20, 30, 0.10);
+          --cl-you-bg: #16181d;
+          --cl-you-fg: #ffffff;
+        }
+        .collab-dark {
+          --cl-bg: #0f0f13;
+          --cl-line: rgba(255, 255, 255, 0.05);
+          --cl-dot: rgba(255, 255, 255, 0.07);
+          --cl-card: #191a20;
+          --cl-card-line: rgba(255, 255, 255, 0.08);
+          --cl-ink: #f2f3f5;
+          --cl-ink-soft: rgba(242, 243, 245, 0.5);
+          --cl-field: rgba(255, 255, 255, 0.05);
+          --cl-shadow: 0 8px 26px rgba(0, 0, 0, 0.4);
+          --cl-you-bg: #ffffff;
+          --cl-you-fg: #0a0a0b;
+        }
+
         .collab-dots {
           position: absolute;
           inset: 0;
-          background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+          background-image: radial-gradient(circle, var(--cl-dot) 1px, transparent 1px);
           background-size: 22px 22px;
         }
-        .collab-canvas {
+
+        /* Offset from centre so the cursors have room at the corners. */
+        .collab-thread {
           position: absolute;
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
-          width: 62%;
-          aspect-ratio: 16 / 10;
-          border-radius: 10px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          overflow: hidden;
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          width: min(78%, 340px);
         }
-        .collab-canvas img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
+        .collab-card {
+          flex: 1;
+          min-width: 0;
+          background: var(--cl-card);
+          border: 1px solid var(--cl-card-line);
+          border-radius: 12px;
+          box-shadow: var(--cl-shadow);
+          padding: 12px 13px 13px;
+          color: var(--cl-ink);
+        }
+        .collab-card-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+        .collab-card-title {
+          font-size: 12.5px;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+        }
+        .collab-card-actions {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          color: var(--cl-ink-soft);
+        }
+        .collab-dot-menu { font-size: 12px; line-height: 1; letter-spacing: 0.5px; }
+        .collab-icon {
+          width: 17px; height: 17px;
+          border-radius: 999px;
+          display: grid; place-items: center;
+        }
+        .collab-icon-solid {
+          background: var(--cl-field);
+          color: var(--cl-ink);
+        }
+
+        .collab-avatar {
           display: block;
-          filter: brightness(0.65);
+          margin-top: 9px;
+          width: 20px; height: 20px;
+          border-radius: 999px;
+          background: linear-gradient(140deg, #8a6a52, #43342a);
         }
+        .collab-byline {
+          margin-top: 5px;
+          font-size: 11px;
+          letter-spacing: -0.01em;
+        }
+        .collab-byline strong { font-weight: 600; }
+        .collab-byline span { color: var(--cl-ink-soft); }
+        .collab-body {
+          margin-top: 3px;
+          font-size: 11px;
+          line-height: 1.45;
+          color: var(--cl-ink);
+        }
+
+        .collab-composer {
+          margin-top: 11px;
+          display: flex;
+          align-items: center;
+          gap: 7px;
+        }
+        .collab-input {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          background: var(--cl-field);
+          border: 1px solid var(--cl-card-line);
+          border-radius: 9px;
+          padding: 6px 6px 6px 9px;
+          font-size: 10.5px;
+          color: var(--cl-ink-soft);
+        }
+        .collab-send {
+          width: 16px; height: 16px;
+          border-radius: 999px;
+          display: grid; place-items: center;
+          background: var(--cl-card);
+          border: 1px solid var(--cl-card-line);
+          color: var(--cl-ink-soft);
+          flex: 0 0 auto;
+        }
+
+        .collab-badge {
+          flex: 0 0 auto;
+          width: 22px; height: 22px;
+          border-radius: 999px;
+          display: grid; place-items: center;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          color: #fff;
+        }
+        .collab-badge-dc { background: #2f6bf3; }
+        .collab-badge-as { background: #3f63e0; width: 20px; height: 20px; }
 
         .collab-cursor {
           position: absolute;
@@ -146,15 +313,21 @@ export function CollaborationDemo() {
         }
         .collab-you span {
           display: inline-block;
-          background: #fff;
-          color: #0a0a0b;
+          background: var(--cl-you-bg);
+          color: var(--cl-you-fg);
           font-size: 11px;
           font-weight: 600;
           letter-spacing: -0.01em;
           padding: 4px 10px;
           border-radius: 8px;
           white-space: nowrap;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+          box-shadow: var(--cl-shadow);
+        }
+
+        /* In a narrow tile the cursor labels crowd the card. */
+        @container (max-width: 380px) {
+          .collab-thread { width: 86%; }
+          .collab-name { font-size: 10px; padding: 3px 8px; }
         }
 
         /* The fly-in is decorative; hold the cursors in place instead. */

@@ -1,6 +1,7 @@
 "use client";
 
 import { CollaborationDemo } from "@/components/CollaborationDemo";
+import { withBasePath } from "@/lib/assets";
 
 /**
  * The four-tile admin bento.
@@ -142,34 +143,30 @@ function UsagePanel() {
   );
 }
 
-/* Fold 02, asset library */
+/* Fold 02, asset library — the real folders panel, in place of the search
+   bar and grey placeholder thumbnails that stood here before. */
 function AssetLibrary() {
-  // Monochrome placeholder tiles — real thumbnails would supply the colour.
-  const tiles = [
-    "linear-gradient(135deg,#d8d8d8,#bdbdbd)",
-    "linear-gradient(135deg,#cbcbcb,#a9a9a9)",
-    "linear-gradient(135deg,#e0e0e0,#c6c6c6)",
-    "linear-gradient(135deg,#c2c2c2,#9f9f9f)",
-    "linear-gradient(135deg,#dcdcdc,#b8b8b8)",
-    "linear-gradient(135deg,#d0d0d0,#b0b0b0)",
-  ];
   return (
-    <div className="viz-panel">
-      <div className="viz-search">
-        <SearchIcon />
-        <span>Search 12,480 assets…</span>
-        <span style={{ marginLeft: "auto" }} className="viz-chip">On-brand</span>
-      </div>
-      <div style={{ display: "flex", gap: 7, marginTop: 12, flexWrap: "wrap" }}>
-        {["All", "Images", "Video", "Campaigns", "Logos"].map((f, i) => (
-          <span key={f} className={i === 0 ? "viz-filter viz-filter-on" : "viz-filter"}>{f}</span>
-        ))}
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, marginTop: 12 }}>
-        {tiles.map((g, i) => (
-          <div key={i} style={{ aspectRatio: "1 / 1", borderRadius: 10, background: g }} />
-        ))}
-      </div>
+    <div className="asset-shot">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={withBasePath("/media/admin/asset-folders.jpg")} alt="" aria-hidden />
+      <style>{`
+        /* The source is tall and portrait while the tile is wide, so it is
+           anchored top-left and cropped from the bottom: that keeps the
+           "Team folders" heading and the folder list in view. */
+        .asset-shot {
+          aspect-ratio: 16 / 10;
+          border-radius: 16px;
+          border: 1px solid var(--line);
+          background: var(--panel);
+          overflow: hidden;
+        }
+        .asset-shot img {
+          display: block;
+          width: 100%;
+          height: auto;
+        }
+      `}</style>
     </div>
   );
 }
@@ -264,10 +261,4 @@ function Toggle({ label, on }: { label: string; on: boolean }) {
       </span>
     </div>
   );
-}
-function SearchIcon() {
-  return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.2-3.2" strokeLinecap="round" /></svg>;
-}
-function CheckMini() {
-  return <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 }

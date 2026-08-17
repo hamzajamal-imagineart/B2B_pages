@@ -318,7 +318,7 @@ export default function BentoSection() {
           height={500}
           big
         >
-          <CollaborationDemo />
+          <CollaborationDemo tone="dark" />
         </Card>
 
         <Card
