@@ -20,6 +20,7 @@ export default function ClosingCta({
   lede = "Talk to us about rollout, security review, and what unlimited seats look like for an organization your size.",
   primary = { label: "Contact Sales", href: CONTACT_HREF },
   secondary = { label: "See Workflows", href: "/workflows" },
+  backdrop = "/media/cta-fog-grass.jpg",
 }: {
   title?: string;
   /** Second clause, rendered with the clipped-image fill. */
@@ -28,12 +29,15 @@ export default function ClosingCta({
   lede?: string | null;
   primary?: Cta;
   secondary?: Cta;
+  /** Photograph behind the band. Pass one matching the page's palette — the
+   *  default fog/grass is cool green, which fights the warmer routes. */
+  backdrop?: string;
 } = {}) {
   return (
     <section
       className="cta-section relative border-t border-black/[0.08] py-28 md:py-36 lg:border-t-0"
       style={{
-        ["--cta-bg" as string]: `url(${withBasePath("/media/cta-fog-grass.jpg")})`,
+        ["--cta-bg" as string]: `url(${withBasePath(backdrop)})`,
       }}
     >
       <SectionGuides edge="top" />

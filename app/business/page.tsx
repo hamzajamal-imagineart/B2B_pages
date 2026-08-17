@@ -51,6 +51,9 @@ export default function BusinessPage() {
           lede="From your first asset to your thousandth campaign, ImagineArt grows with your team."
           primary={{ label: "Get Started", href: START_HREF }}
           secondary={{ label: "Contact Sales", href: CONTACT_HREF }}
+          /* Warm cream and olive, so the band matches the sand palette. The
+             default fog/grass is cool green and read as off-page here. */
+          backdrop="/media/cta-reeded-glass.jpg"
         />
       </main>
 
