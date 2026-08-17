@@ -57,7 +57,7 @@ export default function CaseStudies() {
 
         <div className="cs-grid mt-4">
           {stories.map((s) => (
-            <StoryCard key={s.id} story={s} />
+            <StoryCard key={s.slug} story={s} />
           ))}
         </div>
 

@@ -1,78 +1,46 @@
 /**
- * Case-study data and card presentation, shared by the Business page's proof
- * section and the standalone /case-studies index.
+ * Card presentation for case studies, shared by the /case-studies index and
+ * the Business page's proof section.
  *
- * Both surfaces render the same featured card and the same story cards; only
- * the filtering affordance differs (chips on Business, search + chips on the
- * index). Keeping the data and the markup here means adding a story is a
- * one-place edit.
+ * Data comes from content/caseStudies — this file only renders it. Both
+ * surfaces show the same featured card and the same story cards; only the
+ * filtering affordance differs (chips on Business, search + chips on the
+ * index).
  *
- * Every number comes from the content spec. Note that Buzz Lab's headline
- * metric is stated two ways across the two source documents — see HANDOFF §6.
+ * A card links to its detail page only once that study has written content;
+ * otherwise it renders without a link rather than pointing at an empty page.
  */
+import {
+  type CaseStudy,
+  caseStudyHref,
+  caseStudyIndustries,
+  featuredCaseStudy,
+  hasPage,
+  supportingCaseStudies,
+} from "@/content/caseStudies";
 
-/** Existing case-study index; none of these stories has its own route yet. */
-export const STORY_HREF = "https://www.imagine.art/business/case-studies";
+export const FEATURED = featuredCaseStudy();
+export const STORIES = supportingCaseStudies();
+export const INDUSTRIES = caseStudyIndustries();
 
-export type Story = {
-  id: string;
-  industry: string;
-  metric: string;
-  title: string;
-  body: string;
-};
-
-export const FEATURED = {
-  industry: "CPG",
-  title: "Scaling campaigns for MNCs",
-  body: "Smarters ran a personalized generative AI campaign for Unilever's Knorr brand in Mexico, featuring real-time celebrity inpainting at scale. 586,000 unique users generated their own personalized images and opted in at nearly 3× the market average.",
-  stats: [
-    { value: "586,000", label: "Unique users" },
-    { value: "68%", label: "Opt-in rate" },
-    { value: "3×", label: "The market average" },
-  ],
-};
-
-export const STORIES: Story[] = [
-  {
-    id: "buzzlab",
-    industry: "Agency",
-    metric: "2 hours instead of days",
-    title: "How a social media agency produces in 2 hours what used to take days",
-    body: "Buzz Lab runs a hybrid AI production model: real footage extended through ImagineArt, 60+ visuals in one session, and more clients served without added headcount.",
-  },
-  {
-    id: "framon",
-    industry: "Manufacturing",
-    metric: "Production time cut in half",
-    title: "How an Italian lighting manufacturer brought visual creation fully in-house",
-    body: "Framon brought all product and campaign imagery in-house, cutting production time in half and removing the dependency on external freelancers.",
-  },
-  {
-    id: "knd",
-    industry: "Engineering",
-    metric: "1–4 hours per concept",
-    title: "How a naval architecture firm visualizes vessels before they're built",
-    body: "KND Naval Design produces concept art and operational visuals in 1 to 4 hours instead of weeks, for vessels that don't exist yet.",
-  },
-];
-
-/** Filter list, derived so a new story's industry shows up without an edit. */
-export const INDUSTRIES = [
-  "All",
-  FEATURED.industry,
-  ...STORIES.map((s) => s.industry).filter((i) => i !== FEATURED.industry),
-].filter((v, i, a) => a.indexOf(v) === i);
-
-/** Case-insensitive match across industry, metric, title and body. */
-export function matchesQuery(s: Story, q: string) {
+/** Case-insensitive match across industry, metric, title and summary. */
+export function matchesQuery(s: CaseStudy, q: string) {
   if (!q.trim()) return true;
-  const hay = `${s.industry} ${s.metric} ${s.title} ${s.body}`.toLowerCase();
+  const hay = `${s.industry} ${s.metric} ${s.title} ${s.titleMuted ?? ""} ${s.summary}`.toLowerCase();
   return q
     .toLowerCase()
     .split(/\s+/)
     .filter(Boolean)
     .every((term) => hay.includes(term));
+}
+
+function ReadStory({ study, dark }: { study: CaseStudy; dark?: boolean }) {
+  if (!hasPage(study)) return null;
+  return (
+    <a href={caseStudyHref(study)} className={`cs-link ${dark ? "cs-link-dark" : ""}`}>
+      Read story →
+    </a>
+  );
 }
 
 export function FeaturedCard() {
@@ -81,10 +49,10 @@ export function FeaturedCard() {
       <div className="cs-featured-copy">
         <span className="cs-eyebrow">Featured · {FEATURED.industry}</span>
         <h3 className="cs-featured-title mt-4">{FEATURED.title}</h3>
-        <p className="cs-featured-body mt-4">{FEATURED.body}</p>
-        <a href={STORY_HREF} className="cs-link mt-6">
-          Read story →
-        </a>
+        <p className="cs-featured-body mt-4">{FEATURED.summary}</p>
+        <div className="mt-6">
+          <ReadStory study={FEATURED} />
+        </div>
       </div>
 
       <dl className="cs-stats">
@@ -99,16 +67,19 @@ export function FeaturedCard() {
   );
 }
 
-export function StoryCard({ story }: { story: Story }) {
+export function StoryCard({ story }: { story: CaseStudy }) {
   return (
     <article className="cs-card">
       <span className="cs-eyebrow cs-eyebrow-dark">{story.industry}</span>
       <span className="cs-metric mt-3">{story.metric}</span>
-      <h3 className="cs-card-title mt-3">{story.title}</h3>
-      <p className="cs-card-body mt-3">{story.body}</p>
-      <a href={STORY_HREF} className="cs-link cs-link-dark mt-auto pt-5">
-        Read story →
-      </a>
+      <h3 className="cs-card-title mt-3">
+        {story.title}
+        {story.titleMuted ? ` ${story.titleMuted}` : ""}
+      </h3>
+      <p className="cs-card-body mt-3">{story.summary}</p>
+      <div className="mt-auto pt-5">
+        <ReadStory study={story} dark />
+      </div>
     </article>
   );
 }

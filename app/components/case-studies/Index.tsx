@@ -37,13 +37,7 @@ export default function CaseStudyIndex() {
   const featuredMatches =
     (active === "All" || active === FEATURED.industry) &&
     matchesQuery(
-      {
-        id: "featured",
-        industry: FEATURED.industry,
-        metric: FEATURED.stats.map((s) => `${s.value} ${s.label}`).join(" "),
-        title: FEATURED.title,
-        body: FEATURED.body,
-      },
+      FEATURED,
       query,
     );
 
@@ -100,7 +94,7 @@ export default function CaseStudyIndex() {
 
         <div className="cs-grid mt-4">
           {stories.map((s) => (
-            <StoryCard key={s.id} story={s} />
+            <StoryCard key={s.slug} story={s} />
           ))}
         </div>
 
