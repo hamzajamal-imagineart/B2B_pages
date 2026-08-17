@@ -4,21 +4,22 @@ import { useMemo, useState } from "react";
 import { SectionGuides } from "@/components/primitives/SectionGuides";
 import {
   CaseStudyStyles,
-  FEATURED,
   FilterChips,
   matchesQuery,
   STORIES,
-  StatMosaic,
   StoryCard,
 } from "@/components/CaseStudyCards";
 
 /**
  * Case-study index.
  *
- * The search bar the spec asks for lives here rather than on the Business
- * page's teaser section. Search and the industry chips compose: a query
- * narrows within whatever industry is selected, and the featured card
- * participates in both so it can't sit stale above a filtered grid.
+ * The page hero carries the heading and standfirst; this section is the
+ * search bar, the industry chips and the grid, in that order and close
+ * together, so the controls sit with the cards they filter rather than
+ * floating above unrelated content.
+ *
+ * Search and the chips compose: a query narrows within whatever industry is
+ * selected.
  */
 export default function CaseStudyIndex() {
   const [query, setQuery] = useState("");
@@ -32,16 +33,6 @@ export default function CaseStudyIndex() {
     [active, query],
   );
 
-  // The featured card is filtered on the same terms as the grid, matched
-  // against its own copy rather than being pinned unconditionally.
-  const featuredMatches =
-    (active === "All" || active === FEATURED.industry) &&
-    matchesQuery(
-      FEATURED,
-      query,
-    );
-
-  // The featured study is in `stories` too, so the count is just the grid.
   const total = stories.length;
 
   return (
@@ -87,20 +78,7 @@ export default function CaseStudyIndex() {
           {total} {total === 1 ? "case study" : "case studies"}
         </p>
 
-        {/* Featured study leads with its heading and paragraph, its numbers
-            as the stat mosaic — the same treatment the Business page uses. */}
-        {featuredMatches && (
-          <div className="csi-featured mt-10">
-            <p className="eyebrow">Featured · {FEATURED.industry}</p>
-            <h2 className="h2 csi-featured-title mt-4">{FEATURED.title}</h2>
-            <p className="lede mt-5 max-w-[62ch]">{FEATURED.summary}</p>
-            <div className="mt-12">
-              <StatMosaic stats={FEATURED.stats} />
-            </div>
-          </div>
-        )}
-
-        <div className="cs-grid mt-16">
+        <div className="cs-grid mt-8">
           {stories.map((s) => (
             <StoryCard key={s.slug} story={s} />
           ))}

@@ -45,7 +45,8 @@ export function BannerHero({
   /** Second clause, in the palette's light tint. */
   muted: string;
   titleMaxCh?: number;
-  video: string;
+  /** Omit to render a plain placeholder panel instead of a media banner. */
+  video?: string;
   grain?: string;
   primary: Cta;
   footText: string;
@@ -84,43 +85,47 @@ export function BannerHero({
           {title} <span className="h-muted">{muted}</span>
         </h1>
 
-        {/* Single full-width banner. The grain sits underneath as the fill,
-            so nothing flashes before the video paints. */}
-        <div className={`hero-banner grain grain-diagonal ${grain} mt-14 md:mt-16`}>
-          <video
-            className="hero-video"
-            src={withBasePath(video)}
-            autoPlay
-            muted
-            loop
-            playsInline
-            aria-hidden
-            onLoadedMetadata={(e) =>
-              setDuration(formatDuration(e.currentTarget.duration))
-            }
-          />
+        {video ? (
+          <div className={`hero-banner grain grain-diagonal ${grain} mt-14 md:mt-16`}>
+            <video
+              className="hero-video"
+              src={withBasePath(video)}
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-hidden
+              onLoadedMetadata={(e) =>
+                setDuration(formatDuration(e.currentTarget.duration))
+              }
+            />
 
-          {/* The looping preview keeps playing underneath; this only opens
-              the full clip with sound and controls. */}
-          <button
-            type="button"
-            className="tour-pill"
-            onClick={() => setOpen(true)}
-            aria-haspopup="dialog"
-          >
-            <span className="tour-pill-text">
-              <span className="tour-pill-title">Watch product tour</span>
-              {duration && <span className="tour-pill-sub">{duration}</span>}
-            </span>
-            <span aria-hidden className="tour-pill-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5.5v13l11-6.5z" />
-              </svg>
-            </span>
-          </button>
-        </div>
+            {/* The looping preview keeps playing underneath; this only opens
+                the full clip with sound and controls. */}
+            <button
+              type="button"
+              className="tour-pill"
+              onClick={() => setOpen(true)}
+              aria-haspopup="dialog"
+            >
+              <span className="tour-pill-text">
+                <span className="tour-pill-title">Watch product tour</span>
+                {duration && <span className="tour-pill-sub">{duration}</span>}
+              </span>
+              <span aria-hidden className="tour-pill-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5.5v13l11-6.5z" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        ) : (
+          /* No media yet: a quiet tinted panel holding the banner's exact
+             footprint, so dropping a clip in later changes nothing else. */
+          <div className="hero-banner hero-banner-empty mt-14 md:mt-16" aria-hidden />
+        )}
 
-        {open && (
+        {video && open && (
           <div
             ref={dialogRef}
             className="tour-overlay"
@@ -192,6 +197,10 @@ export function BannerHero({
           padding: 0;
           overflow: hidden;
         }
+        .hero-banner-empty {
+          background: var(--panel-2);
+          border: 1px solid var(--line);
+        }
         .hero-video {
           position: absolute;
           inset: 0;
@@ -209,7 +218,11 @@ export function BannerHero({
           to   { transform: scale(1.05); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .hero-video { animation: none; }
+          .hero-banner-empty {
+          background: var(--panel-2);
+          border: 1px solid var(--line);
+        }
+        .hero-video { animation: none; }
         }
 
         /* Glass pill over the looping preview. Sits above the video but
