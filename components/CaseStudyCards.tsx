@@ -10,6 +10,7 @@
  * A card links to its detail page only once that study has written content;
  * otherwise it renders without a link rather than pointing at an empty page.
  */
+import { withBasePath } from "@/lib/assets";
 import {
   type CaseStudy,
   caseStudyHref,
@@ -70,15 +71,25 @@ export function FeaturedCard() {
 export function StoryCard({ story }: { story: CaseStudy }) {
   return (
     <article className="cs-card">
-      <span className="cs-eyebrow cs-eyebrow-dark">{story.industry}</span>
-      <span className="cs-metric mt-3">{story.metric}</span>
-      <h3 className="cs-card-title mt-3">
-        {story.title}
-        {story.titleMuted ? ` ${story.titleMuted}` : ""}
-      </h3>
-      <p className="cs-card-body mt-3">{story.summary}</p>
-      <div className="mt-auto pt-5">
-        <ReadStory study={story} dark />
+      {/* Rendered even without a cover, so a row of cards keeps its copy on a
+          common baseline. An empty slot reads as a placeholder, not a bug. */}
+      <div className="cs-card-media">
+        {story.cover && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={withBasePath(story.cover)} alt="" aria-hidden />
+        )}
+      </div>
+      <div className="cs-card-inner">
+        <span className="cs-eyebrow cs-eyebrow-dark">{story.industry}</span>
+        <span className="cs-metric mt-3">{story.metric}</span>
+        <h3 className="cs-card-title mt-3">
+          {story.title}
+          {story.titleMuted ? ` ${story.titleMuted}` : ""}
+        </h3>
+        <p className="cs-card-body mt-3">{story.summary}</p>
+        <div className="mt-auto pt-5">
+          <ReadStory study={story} dark />
+        </div>
       </div>
     </article>
   );
@@ -189,20 +200,51 @@ export function CaseStudyStyles() {
         grid-template-columns: repeat(3, 1fr);
         gap: 14px;
       }
+      /* White fill and a hairline, not --panel-2: against a tinted page wash
+         the recessed fill sat within a couple of percent of the background
+         and the cards read as bare text columns. White is the elevation cue
+         everywhere else on the site, so it is the one here too. */
       .cs-card {
         display: flex;
         flex-direction: column;
-        background: var(--panel-2);
+        background: var(--panel);
+        border: 1px solid var(--line);
         border-radius: 24px;
-        padding: 28px;
+        overflow: hidden;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
       }
-      /* The card's headline number, called out ahead of the title. */
+      .cs-card:hover {
+        border-color: var(--line-strong);
+        box-shadow: 0 14px 34px rgba(16, 20, 20, 0.07);
+        transform: translateY(-2px);
+      }
+      .cs-card-inner {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 26px;
+      }
+      /* Fixed ratio so a row of cards keeps its copy on a common baseline
+         whether or not each study has a cover yet. */
+      .cs-card-media {
+        aspect-ratio: 16 / 9;
+        background: var(--panel-2);
+        overflow: hidden;
+      }
+      .cs-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      /* The card's headline number, called out ahead of the title. Filled
+         with the palette's panel tone now the card itself is white. */
       .cs-metric {
         align-self: flex-start;
         font-size: 12.5px;
         font-weight: 500;
         color: var(--ink);
-        background: #fff;
+        background: var(--panel-2);
         border: 1px solid var(--line);
         border-radius: 999px;
         padding: 5px 12px;
