@@ -30,12 +30,9 @@ function CardVideo({ src }: { src: string }) {
  * Ten industry cards, shared by the Business and Solutions pages.
  *
  * Both specs carry this section with identical heading, subtext and card copy,
- * so it lives here rather than being forked per page.
- *
- * Two presentations:
- *  - "grid"  (default) — the panel grid /business uses.
- *  - "track" — the horizontal card rail with chevron pagers, mirroring the
- *    Enterprise page's platform stack. /solutions uses this.
+ * so it lives here rather than being forked per page, and both render it
+ * identically: a horizontal card rail with chevron pagers, mirroring the
+ * Enterprise page's platform stack.
  *
  * The Business spec's UX note wants each card to deep-link to an industry
  * solution page. Those pages don't exist yet, so these render as plain cards
@@ -68,11 +65,7 @@ const PALETTES = [
   "grain-steel",
 ];
 
-export function IndustriesSection({
-  variant = "grid",
-}: {
-  variant?: "grid" | "track";
-} = {}) {
+export function IndustriesSection() {
   const trackRef = useRef<HTMLDivElement | null>(null);
 
   // Plain assignment, animated by `scroll-behavior: smooth` on the track.
@@ -109,94 +102,36 @@ export function IndustriesSection({
         </div>
       </div>
 
-      {variant === "track" ? (
-        <>
-          <div ref={trackRef} className="ind-track no-scrollbar mt-12">
-            {INDUSTRIES.map((i, n) => (
-              <div
-                key={i.name}
-                className={`ind-slide grain ${PALETTES[n % PALETTES.length]} ${i.video ? "ind-has-video" : ""}`}
-              >
-                {i.video && <CardVideo src={i.video} />}
-                <h3 className="ind-slide-name">{i.name}</h3>
-                <p className="ind-slide-body">{i.body}</p>
-                <span className="ind-slide-arrow glass" aria-hidden>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                    <path d="M6 12h12M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </div>
-            ))}
+      <div ref={trackRef} className="ind-track no-scrollbar mt-12">
+        {INDUSTRIES.map((i, n) => (
+          <div
+            key={i.name}
+            className={`ind-slide grain ${PALETTES[n % PALETTES.length]} ${i.video ? "ind-has-video" : ""}`}
+          >
+            {i.video && <CardVideo src={i.video} />}
+            <h3 className="ind-slide-name">{i.name}</h3>
+            <p className="ind-slide-body">{i.body}</p>
+            <span className="ind-slide-arrow glass" aria-hidden>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M6 12h12M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
           </div>
+        ))}
+      </div>
 
-          <div className="container-page">
-            <div className="mt-6 flex items-center justify-end gap-3">
-              <button onClick={() => scrollByCards(-1)} aria-label="Previous industries" className="ind-pager">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              </button>
-              <button onClick={() => scrollByCards(1)} aria-label="Next industries" className="ind-pager">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              </button>
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="container-page">
-          <div className="ind-grid mt-14">
-            {INDUSTRIES.map((i) => (
-              <div key={i.name} className={`ind-card ${i.video ? "ind-has-video" : ""}`}>
-                {i.video && <CardVideo src={i.video} />}
-                <h3 className="ind-name">{i.name}</h3>
-                <p className="ind-body">{i.body}</p>
-              </div>
-            ))}
-          </div>
+      <div className="container-page">
+        <div className="mt-6 flex items-center justify-end gap-3">
+          <button onClick={() => scrollByCards(-1)} aria-label="Previous industries" className="ind-pager">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </button>
+          <button onClick={() => scrollByCards(1)} aria-label="Next industries" className="ind-pager">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </button>
         </div>
-      )}
+      </div>
 
       <style>{`
-        /* ── grid variant ── */
-        .ind-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 14px;
-        }
-        .ind-card {
-          position: relative;
-          isolation: isolate;
-          overflow: hidden;
-          background: var(--panel-2);
-          border-radius: 20px;
-          padding: 26px 26px 28px;
-          min-height: 300px;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-        }
-        .ind-name {
-          font-size: 17px;
-          font-weight: 500;
-          letter-spacing: -0.01em;
-          color: var(--ink);
-        }
-        .ind-body {
-          margin-top: 10px;
-          font-size: 14px;
-          line-height: 1.55;
-          color: var(--ink-3);
-        }
-        /* A card with footage carries its own copy colours, since the scrim
-           underneath is dark whatever the page tint is. */
-        .ind-card.ind-has-video .ind-name { color: #fff; }
-        .ind-card.ind-has-video .ind-body { color: rgba(255, 255, 255, 0.76); }
-        @media (max-width: 980px) {
-          .ind-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 620px) {
-          .ind-grid { grid-template-columns: 1fr; }
-        }
-
-        /* ── track variant ── */
         /* Gutters match .container-page so the first card lines up with the
            heading above it rather than hugging the viewport edge. */
         .ind-track {

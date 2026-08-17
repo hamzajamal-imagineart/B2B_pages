@@ -40,7 +40,7 @@ export default function SolutionsPage() {
         }}
       >
         <Hero />
-        <IndustriesSection variant="track" />
+        <IndustriesSection />
         <Partners caption="Partnering with global industry leaders to power your creativity output" />
         <BuiltForSuccess />
         <CaseStudies />
