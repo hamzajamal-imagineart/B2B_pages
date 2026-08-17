@@ -68,9 +68,23 @@ export function FeaturedCard() {
   );
 }
 
+/**
+ * Story card: inset cover, then an industry/arrow row, title and summary.
+ *
+ * The whole card is the link when the study has a page — the arrow is the
+ * affordance, which is why there is no separate "Read story" line and no
+ * metric chip. The metric still lives on the study and drives search; it just
+ * isn't a badge on the card any more.
+ */
 export function StoryCard({ story }: { story: CaseStudy }) {
+  const linked = hasPage(story);
+  const Tag = linked ? "a" : "div";
+
   return (
-    <article className="cs-card">
+    <Tag
+      {...(linked ? { href: caseStudyHref(story) } : {})}
+      className={`cs-card ${linked ? "cs-card-linked" : ""}`}
+    >
       {/* Rendered even without a cover, so a row of cards keeps its copy on a
           common baseline. An empty slot reads as a placeholder, not a bug. */}
       <div className="cs-card-media">
@@ -80,18 +94,23 @@ export function StoryCard({ story }: { story: CaseStudy }) {
         )}
       </div>
       <div className="cs-card-inner">
-        <span className="cs-eyebrow cs-eyebrow-dark">{story.industry}</span>
-        <span className="cs-metric mt-3">{story.metric}</span>
-        <h3 className="cs-card-title mt-3">
+        <div className="cs-card-top">
+          <span className="cs-card-label">{story.industry}</span>
+          {linked && (
+            <span className="cs-card-arrow" aria-hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M5 12h13M12.5 6l6 6-6 6" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          )}
+        </div>
+        <h3 className="cs-card-title">
           {story.title}
           {story.titleMuted ? ` ${story.titleMuted}` : ""}
         </h3>
-        <p className="cs-card-body mt-3">{story.summary}</p>
-        <div className="mt-auto pt-5">
-          <ReadStory study={story} dark />
-        </div>
+        <p className="cs-card-body">{story.summary}</p>
       </div>
-    </article>
+    </Tag>
   );
 }
 
@@ -200,34 +219,36 @@ export function CaseStudyStyles() {
         grid-template-columns: repeat(3, 1fr);
         gap: 14px;
       }
-      /* White fill and a hairline, not --panel-2: against a tinted page wash
-         the recessed fill sat within a couple of percent of the background
-         and the cards read as bare text columns. White is the elevation cue
-         everywhere else on the site, so it is the one here too. */
+      /* Sleek card: inset cover with its own radius, soft shadow, generous
+         corner. Light fill rather than white — the cover carries the contrast,
+         so the surface underneath should stay quiet. */
       .cs-card {
         display: flex;
         flex-direction: column;
         background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        overflow: hidden;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        border-radius: 26px;
+        padding: 8px 8px 4px;
+        box-shadow: 0 1px 2px rgba(16, 20, 20, 0.04), 0 8px 24px rgba(16, 20, 20, 0.05);
+        transition: box-shadow 0.22s ease, transform 0.22s ease;
       }
-      .cs-card:hover {
-        border-color: var(--line-strong);
-        box-shadow: 0 14px 34px rgba(16, 20, 20, 0.07);
-        transform: translateY(-2px);
+      .cs-card-linked { cursor: pointer; }
+      .cs-card-linked:hover {
+        box-shadow: 0 2px 4px rgba(16, 20, 20, 0.05), 0 18px 40px rgba(16, 20, 20, 0.1);
+        transform: translateY(-3px);
       }
+      .cs-card-linked:hover .cs-card-arrow { transform: translateX(3px); color: var(--ink); }
+
       .cs-card-inner {
         display: flex;
         flex-direction: column;
         flex: 1;
-        padding: 26px;
+        padding: 18px 16px 20px;
       }
-      /* Fixed ratio so a row of cards keeps its copy on a common baseline
-         whether or not each study has a cover yet. */
+      /* Rendered whether or not the study has a cover, so a row keeps its copy
+         on a common baseline. */
       .cs-card-media {
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 4 / 3;
+        border-radius: 19px;
         background: var(--panel-2);
         overflow: hidden;
       }
@@ -237,26 +258,39 @@ export function CaseStudyStyles() {
         object-fit: cover;
         display: block;
       }
-      /* The card's headline number, called out ahead of the title. Filled
-         with the palette's panel tone now the card itself is white. */
-      .cs-metric {
-        align-self: flex-start;
-        font-size: 12.5px;
-        font-weight: 500;
-        color: var(--ink);
-        background: var(--panel-2);
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        padding: 5px 12px;
+
+      /* Industry left, arrow right — the arrow is the card's only affordance,
+         which is why there is no separate "Read story" line. */
+      .cs-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
       }
+      .cs-card-label {
+        font-size: 13.5px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        color: var(--ink-3);
+      }
+      .cs-card-arrow {
+        color: var(--ink-3);
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        transition: transform 0.22s ease, color 0.22s ease;
+      }
+
       .cs-card-title {
-        font-size: 18px;
-        line-height: 1.3;
+        margin-top: 10px;
+        font-size: 17px;
+        line-height: 1.32;
         letter-spacing: -0.015em;
         font-weight: 500;
         color: var(--ink);
       }
       .cs-card-body {
+        margin-top: 8px;
         font-size: 14px;
         line-height: 1.55;
         color: var(--ink-3);

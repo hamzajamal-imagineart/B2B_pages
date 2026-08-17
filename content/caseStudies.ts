@@ -91,15 +91,15 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "How a social media agency produces",
     titleMuted: "in 2 hours what used to take days",
     summary:
-      "Buzz Lab runs hybrid production — real footage extended through AI. ImagineArt covers their full content stack: social campaigns, branded video, and fast-turnaround client deliverables.",
+      "Buzz Lab runs hybrid production: real footage extended through AI. ImagineArt covers their full content stack: social campaigns, branded video, and fast-turnaround client deliverables.",
 
     pageTitle:
       "How Buzz Lab produces 60+ visuals in the same session that previously yielded one",
-    deck: "Buzz Lab rebuilt its social media production workflow around ImagineArt — moving from approximately one visual per two-hour session to 60+, eliminating multi-day revision cycles, and scaling client capacity without adding a single headcount.",
+    deck: "Buzz Lab rebuilt its social media production workflow around ImagineArt, moving from approximately one visual per two-hour session to 60+, eliminating multi-day revision cycles, and scaling client capacity without adding a single headcount.",
     cover: "/media/case-studies/buzz-lab.jpg",
     stats: [
       { value: "1 → 60+", label: "Visuals per two-hour session" },
-      { value: "Real-time", label: "Iteration — from multi-day cycles to now" },
+      { value: "Real-time", label: "Iteration, from multi-day cycles to now" },
       { value: "0 headcount", label: "Added to scale output capacity" },
     ],
     facts: [
@@ -120,7 +120,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         blocks: [
           {
             kind: "para",
-            text: "Buzz Lab is a social media agency producing high-volume creative content for brands. The team builds almost entirely AI-powered content workflows — filming base footage and real-world content first, then enhancing or extending through AI.",
+            text: "Buzz Lab is a social media agency producing high-volume creative content for brands. The team builds almost entirely AI-powered content workflows: filming base footage and real-world content first, then enhancing or extending through AI.",
           },
           {
             kind: "para",
@@ -141,7 +141,7 @@ export const CASE_STUDIES: CaseStudy[] = [
             kind: "list",
             items: [
               "Multi-day revision cycles meant client feedback wasn't acted on until the following week",
-              "More clients required more headcount — the only path to scale was cost",
+              "More clients required more headcount, and the only path to scale was cost",
               "Output volume capped at a level that made certain campaign briefs undeliverable",
             ],
           },
@@ -153,7 +153,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         blocks: [
           {
             kind: "para",
-            text: "Rapid ideation and generation capabilities drew the team in. Younger creatives explore trends and new effects organically through ImagineArt — internal adoption spread without a formal training programme.",
+            text: "Rapid ideation and generation capabilities drew the team in. Younger creatives explore trends and new effects organically through ImagineArt, and internal adoption spread without a formal training programme.",
           },
           {
             kind: "para",
@@ -168,8 +168,8 @@ export const CASE_STUDIES: CaseStudy[] = [
           {
             kind: "list",
             items: [
-              "Film base footage first — real-world content as the brand foundation",
-              "Enhance and extend through ImagineArt — AI multiplies outputs from a single shoot",
+              "Film base footage first: real-world content as the brand foundation",
+              "Enhance and extend through ImagineArt, so AI multiplies outputs from a single shoot",
               "Social media campaigns, branded video, fast-turnaround client deliverables",
               "Creative concept generation and rapid visual experimentation",
             ],
@@ -179,14 +179,14 @@ export const CASE_STUDIES: CaseStudy[] = [
       {
         label: "The Impact",
         heading:
-          "Volume, speed, capacity, and margins — all moved in the right direction",
+          "Volume, speed, capacity, and margins all moved in the right direction",
         blocks: [
           {
             kind: "results",
             items: [
               {
                 label: "Volume",
-                text: "Previously ~1 visual per 2-hour session. Now 60+ in the same window — without changing team size or timeline.",
+                text: "Previously ~1 visual per 2-hour session. Now 60+ in the same window, without changing team size or timeline.",
               },
               {
                 label: "Speed",
@@ -194,17 +194,17 @@ export const CASE_STUDIES: CaseStudy[] = [
               },
               {
                 label: "Capacity",
-                text: "The team handles significantly more clients and campaigns simultaneously — without adding headcount or extending delivery timelines.",
+                text: "The team handles significantly more clients and campaigns simultaneously, without adding headcount or extending delivery timelines.",
               },
               {
                 label: "Margins",
-                text: "AI adoption enabled lower costs for clients while increasing internal efficiency — improving both retention and margins.",
+                text: "AI adoption enabled lower costs for clients while increasing internal efficiency, improving both retention and margins.",
               },
             ],
           },
           {
             kind: "quote",
-            text: "The ROI and time savings strongly validated the subscription value. We can now handle significantly more clients — and we've been able to lower costs for them while increasing our own efficiency.",
+            text: "The ROI and time savings strongly validated the subscription value. We can now handle significantly more clients, and we've been able to lower costs for them while increasing our own efficiency.",
             attribution: "Buzz Lab",
           },
         ],
@@ -215,7 +215,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         blocks: [
           {
             kind: "para",
-            text: "Buzz Lab continues developing its hybrid model — real footage as the foundation, AI as the multiplier. The core workflow isn't changing; the scale of it is.",
+            text: "Buzz Lab continues developing its hybrid model: real footage as the foundation, AI as the multiplier. The core workflow isn't changing; the scale of it is.",
           },
         ],
       },
