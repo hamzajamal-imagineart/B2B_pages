@@ -47,7 +47,7 @@ export default function CaseStudyIndex() {
         <div className="csi-featured">
           <p className="eyebrow">Featured · {FEATURED.industry}</p>
           <h2 className="h2 csi-featured-title mt-4">{FEATURED.title}</h2>
-          <p className="lede mt-5 max-w-[64ch]">{FEATURED.summary}</p>
+          <p className="lede mt-5">{FEATURED.summary}</p>
           <div className="mt-12">
             <StatMosaic stats={FEATURED.stats} />
           </div>
@@ -161,7 +161,16 @@ export default function CaseStudyIndex() {
           font-size: 13px;
           color: var(--ink-3);
         }
-        .csi-featured-title { font-size: clamp(26px, 3vw, 38px); max-width: 22ch; }
+        /* Centred and given a wider measure: at 22ch the headline broke onto
+           three cramped lines against a lot of empty space to its right. */
+        .csi-featured { text-align: center; }
+        .csi-featured .eyebrow { display: flex; justify-content: center; }
+        .csi-featured-title {
+          font-size: clamp(26px, 3vw, 38px);
+          max-width: 30ch;
+          margin-inline: auto;
+        }
+        .csi-featured .lede { max-width: 66ch; margin-inline: auto; }
 
         @media (max-width: 720px) {
           .cs-search { max-width: none; }

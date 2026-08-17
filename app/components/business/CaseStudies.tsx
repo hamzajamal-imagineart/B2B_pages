@@ -25,10 +25,10 @@ export default function CaseStudies() {
     >
       <SectionGuides edge="top" />
       <div className="container-page">
-        <div className="max-w-[660px]">
+        <div className="cs-featured-head">
           <p className="eyebrow">Proof</p>
-          <h2 className="h2 mt-4">{FEATURED.title}</h2>
-          <p className="lede mt-5 max-w-[62ch]">{FEATURED.summary}</p>
+          <h2 className="h2 cs-featured-heading mt-4">{FEATURED.title}</h2>
+          <p className="lede mt-5">{FEATURED.summary}</p>
         </div>
 
         <div className="mt-14">
@@ -55,6 +55,12 @@ export default function CaseStudies() {
       <CaseStudyStyles />
       <style>{`
         .cs-studies-heading { font-size: clamp(26px, 3vw, 38px); }
+        /* Centred and given a wider measure: at 22ch the headline broke onto
+           three cramped lines against a lot of empty space to its right. */
+        .cs-featured-head { text-align: center; }
+        .cs-featured-head .eyebrow { display: flex; justify-content: center; }
+        .cs-featured-heading { max-width: 30ch; margin-inline: auto; }
+        .cs-featured-head .lede { max-width: 66ch; margin-inline: auto; }
         .cs-all {
           display: inline-block;
           font-size: 14px;
