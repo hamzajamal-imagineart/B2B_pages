@@ -10,35 +10,58 @@
  * industry filter chips and the page metadata all derive from it — no
  * component needs editing.
  *
- * A study only gets a detail page once it has `body` content. Until then its
- * card renders without a link rather than pointing at an empty page, which is
- * why `hasPage()` exists.
+ * A study only gets a detail page once it has `sections`. Until then its card
+ * renders without a link rather than pointing at an empty page, which is why
+ * `hasPage()` exists.
+ *
+ * Note the card copy and the page copy are deliberately separate fields. The
+ * card is a teaser with its own shorter headline; the page opens on the full
+ * one. Sharing them forced one to read badly.
  */
 
 export type Block =
-  | { kind: "heading"; text: string }
   | { kind: "para"; text: string }
   | { kind: "list"; items: string[] }
-  | { kind: "quote"; text: string; attribution?: string };
+  | { kind: "quote"; text: string; attribution?: string }
+  /** Labelled result items — the "Volume / Speed / Capacity / Margins" grid. */
+  | { kind: "results"; items: { label: string; text: string }[] };
+
+/** A titled run of blocks. `label` is the small eyebrow above the heading. */
+export type Section = {
+  label?: string;
+  heading?: string;
+  blocks: Block[];
+};
 
 export type CaseStudy = {
   slug: string;
   company: string;
   industry: string;
-  /** The one number that sells it — card chip and hero kicker. */
+
+  /* ── card ── */
+  /** Chip on the card. */
   metric: string;
-  /** Card and hero heading, first clause. */
+  /** Card heading, first clause. */
   title: string;
-  /** Second clause, rendered in the palette's light tint. Optional. */
+  /** Card heading, second clause — the palette's light tint. */
   titleMuted?: string;
-  /** Card body and meta description. Keep to ~2 sentences. */
+  /** Card body and meta description. */
   summary: string;
+
+  /* ── page ── */
+  /** Full headline for the detail page. Falls back to `title`. */
+  pageTitle?: string;
+  /** Standfirst under the page headline. Falls back to `summary`. */
+  deck?: string;
+  /** Cover image, full-bleed under the hero. */
+  cover?: string;
   /** Hero stat strip. Three reads best; two or four also lay out. */
   stats: { value: string; label: string }[];
-  /** Right-rail facts on the detail page. */
+  /** The "Company details" rail at the foot of the page. */
   facts?: { label: string; value: string }[];
   /** Empty until the written content lands — see hasPage(). */
-  body: Block[];
+  sections: Section[];
+
   featured?: boolean;
 };
 
@@ -57,58 +80,148 @@ export const CASE_STUDIES: CaseStudy[] = [
       { value: "3×", label: "The market average" },
     ],
     featured: true,
-    body: [],
+    sections: [],
   },
+
   {
     slug: "buzz-lab",
     company: "Buzz Lab",
     industry: "Agency",
-    metric: "2 hours instead of days",
+    metric: "60x output in the same window",
     title: "How a social media agency produces",
     titleMuted: "in 2 hours what used to take days",
     summary:
-      "Buzz Lab runs a hybrid AI production model: real footage extended through ImagineArt, 60+ visuals in one session, and more clients served without added headcount.",
+      "Buzz Lab runs hybrid production — real footage extended through AI. ImagineArt covers their full content stack: social campaigns, branded video, and fast-turnaround client deliverables.",
+
+    pageTitle:
+      "How Buzz Lab produces 60+ visuals in the same session that previously yielded one",
+    deck: "Buzz Lab rebuilt its social media production workflow around ImagineArt — moving from approximately one visual per two-hour session to 60+, eliminating multi-day revision cycles, and scaling client capacity without adding a single headcount.",
+    cover: "/media/case-studies/buzz-lab.jpg",
     stats: [
-      { value: "2 hrs", label: "Per deliverable, down from days" },
-      { value: "60+", label: "Visuals in one session" },
-      { value: "0", label: "Added headcount" },
+      { value: "1 → 60+", label: "Visuals per two-hour session" },
+      { value: "Real-time", label: "Iteration — from multi-day cycles to now" },
+      { value: "0 headcount", label: "Added to scale output capacity" },
     ],
     facts: [
-      { label: "Industry", value: "Social media agency" },
-      { label: "Model", value: "Hybrid — real footage extended with AI" },
-      { label: "Used for", value: "Social campaigns, branded video, client deliverables" },
+      { label: "Company", value: "Buzz Lab" },
+      { label: "Industry", value: "Social Media Agency" },
+      { label: "Team", value: "Small agency team" },
+      { label: "Plan", value: "ImagineArt" },
+      {
+        label: "Use Cases",
+        value:
+          "Social campaigns · AI-enhanced branded video · Fast-turnaround deliverables",
+      },
     ],
-    body: [
+    sections: [
       {
-        kind: "para",
-        text: "Buzz Lab is a social media agency running a hybrid production model: real footage shot in-house, then extended and multiplied through ImagineArt. What used to take days of turnaround now takes about two hours.",
-      },
-      {
-        kind: "heading",
-        text: "The approach",
-      },
-      {
-        kind: "para",
-        text: "Rather than replacing production, ImagineArt sits on top of it. The team shoots the anchor footage, then uses the platform to extend clips, generate variants and fill out a full content stack from a single session.",
-      },
-      {
-        kind: "list",
-        items: [
-          "Social campaigns across formats and ratios",
-          "Branded video extended from real footage",
-          "Fast-turnaround client deliverables",
+        label: "About",
+        heading: "About Buzz Lab",
+        blocks: [
+          {
+            kind: "para",
+            text: "Buzz Lab is a social media agency producing high-volume creative content for brands. The team builds almost entirely AI-powered content workflows — filming base footage and real-world content first, then enhancing or extending through AI.",
+          },
+          {
+            kind: "para",
+            text: "ImagineArt was their first AI subscription and remains foundational to the production model.",
+          },
         ],
       },
       {
-        kind: "heading",
-        text: "The outcome",
+        label: "The Challenge",
+        heading:
+          "One visual per two hours. A hard ceiling on revenue and growth.",
+        blocks: [
+          {
+            kind: "para",
+            text: "Before AI, production economics were straightforward and constrained: approximately 1 visual in 2 hours. Traditional videography set a ceiling that couldn't be moved without hiring.",
+          },
+          {
+            kind: "list",
+            items: [
+              "Multi-day revision cycles meant client feedback wasn't acted on until the following week",
+              "More clients required more headcount — the only path to scale was cost",
+              "Output volume capped at a level that made certain campaign briefs undeliverable",
+            ],
+          },
+        ],
       },
       {
-        kind: "para",
-        text: "One session now yields 60+ visuals. The agency has taken on more clients without adding headcount, because the constraint moved from production capacity to creative direction.",
+        label: "The Decision",
+        heading: "The platform the team actually adopted",
+        blocks: [
+          {
+            kind: "para",
+            text: "Rapid ideation and generation capabilities drew the team in. Younger creatives explore trends and new effects organically through ImagineArt — internal adoption spread without a formal training programme.",
+          },
+          {
+            kind: "para",
+            text: "ImagineArt was the first AI subscription they committed to, and they haven't replaced it.",
+          },
+        ],
+      },
+      {
+        label: "How They Use It",
+        heading: "A hybrid production model built for volume",
+        blocks: [
+          {
+            kind: "list",
+            items: [
+              "Film base footage first — real-world content as the brand foundation",
+              "Enhance and extend through ImagineArt — AI multiplies outputs from a single shoot",
+              "Social media campaigns, branded video, fast-turnaround client deliverables",
+              "Creative concept generation and rapid visual experimentation",
+            ],
+          },
+        ],
+      },
+      {
+        label: "The Impact",
+        heading:
+          "Volume, speed, capacity, and margins — all moved in the right direction",
+        blocks: [
+          {
+            kind: "results",
+            items: [
+              {
+                label: "Volume",
+                text: "Previously ~1 visual per 2-hour session. Now 60+ in the same window — without changing team size or timeline.",
+              },
+              {
+                label: "Speed",
+                text: "Iteration that required multi-day revision cycles now happens in real time. Client feedback is acted on the same day.",
+              },
+              {
+                label: "Capacity",
+                text: "The team handles significantly more clients and campaigns simultaneously — without adding headcount or extending delivery timelines.",
+              },
+              {
+                label: "Margins",
+                text: "AI adoption enabled lower costs for clients while increasing internal efficiency — improving both retention and margins.",
+              },
+            ],
+          },
+          {
+            kind: "quote",
+            text: "The ROI and time savings strongly validated the subscription value. We can now handle significantly more clients — and we've been able to lower costs for them while increasing our own efficiency.",
+            attribution: "Buzz Lab",
+          },
+        ],
+      },
+      {
+        label: "What's Next",
+        heading: "More volume, new workflows",
+        blocks: [
+          {
+            kind: "para",
+            text: "Buzz Lab continues developing its hybrid model — real footage as the foundation, AI as the multiplier. The core workflow isn't changing; the scale of it is.",
+          },
+        ],
       },
     ],
   },
+
   {
     slug: "framon",
     company: "Framon",
@@ -123,8 +236,9 @@ export const CASE_STUDIES: CaseStudy[] = [
       { value: "3", label: "Person marketing team" },
       { value: "80", label: "Person company" },
     ],
-    body: [],
+    sections: [],
   },
+
   {
     slug: "knd-naval-design",
     company: "KND Naval Design",
@@ -139,12 +253,12 @@ export const CASE_STUDIES: CaseStudy[] = [
       { value: "0", label: "External rendering artists" },
       { value: "100%", label: "Confidential programs kept in-house" },
     ],
-    body: [],
+    sections: [],
   },
 ];
 
 /** A study is linkable only once it has written content. */
-export const hasPage = (s: CaseStudy) => s.body.length > 0;
+export const hasPage = (s: CaseStudy) => s.sections.length > 0;
 
 export const publishedCaseStudies = () => CASE_STUDIES.filter(hasPage);
 
@@ -165,3 +279,8 @@ export const caseStudyIndustries = () => [
 ];
 
 export const caseStudyHref = (s: CaseStudy) => `/case-studies/${s.slug}`;
+
+/** Shared CTA destinations, supplied with the Buzz Lab copy. */
+export const DEMO_HREF =
+  "https://www.imagine.art/business/enterprise#enterprise-contact-form";
+export const TEAMS_HREF = "https://www.imagine.art/teams";
