@@ -650,4 +650,5 @@ export const caseStudyHref = (s: CaseStudy) => `/case-studies/${s.slug}`;
 /** Shared CTA destinations, supplied with the Buzz Lab copy. */
 export const DEMO_HREF =
   "https://www.imagine.art/business/enterprise#enterprise-contact-form";
-export const TEAMS_HREF = "https://www.imagine.art/teams";
+// imagine.art/teams 404s; the subscription page is the live equivalent.
+export const TEAMS_HREF = "https://www.imagine.art/enterprise/subscription";
