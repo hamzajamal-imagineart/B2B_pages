@@ -1,4 +1,5 @@
 import { SectionGuides } from "@/components/primitives/SectionGuides";
+import { withBasePath } from "@/lib/assets";
 
 /**
  * Apps.
@@ -10,7 +11,7 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
 /* `light` selects the denser lens fill — the default .glass disappears into a
    pale palette, same reason Security's tile graphics carry .glass-on-light. */
 const APPS = [
-  { name: "Outfit Tryon", grain: "grain-mineral", light: true },
+  { name: "Outfit Tryon", grain: "grain-mineral", video: "/media/apps/outfit-tryon.mp4" },
   { name: "Variate", grain: "grain-sand", light: true },
   { name: "Video Reframe", grain: "grain-olive" },
   { name: "Topaz Video Upscale", grain: "grain-steel" },
@@ -38,7 +39,25 @@ export default function Apps() {
 
         <div className="apps-row mt-14">
           {APPS.map((a) => (
-            <div key={a.name} className={`app-card grain ${a.grain}`}>
+            <div
+              key={a.name}
+              className={`app-card grain ${a.grain} ${a.video ? "app-has-video" : ""}`}
+            >
+              {a.video && (
+                <>
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <video
+                    className="app-video"
+                    src={withBasePath(a.video)}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    aria-hidden
+                  />
+                  <span className="app-scrim" aria-hidden />
+                </>
+              )}
               <span className="app-name">{a.name}</span>
               <span
                 className={`app-arrow glass ${a.light ? "glass-on-light" : ""}`}
@@ -61,7 +80,33 @@ export default function Apps() {
         }
         /* Name and lens share the baseline row rather than stacking, so the
            card's copy reads as a label with an affordance beside it. */
+        /* Footage sits behind the card's own copy but above the palette fill,
+           which stays underneath so nothing flashes before the video paints.
+           .grain's noise tile is z-index 0, hence -1 / -2 here. */
+        .app-video {
+          position: absolute;
+          inset: 0;
+          z-index: -2;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .app-scrim {
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          pointer-events: none;
+          background: linear-gradient(to top, rgba(8,11,9,0.82) 0%, rgba(8,11,9,0.4) 52%, rgba(8,11,9,0.16) 100%);
+        }
+        /* A card with footage carries its own copy colour, since the scrim
+           underneath is dark whatever the palette is. */
+        .app-has-video { color: #fff; }
+
         .app-card {
+          position: relative;
+          isolation: isolate;
+          overflow: hidden;
           border-radius: 20px;
           padding: 22px;
           aspect-ratio: 4 / 5;
