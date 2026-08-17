@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 
 import { SiteNav } from "@/components/SiteNav";
+import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
 import { withBasePath } from "@/lib/assets";
+import { NAV_VARIANT } from "@/lib/theme";
 import { IndustriesSection } from "@/components/IndustriesSection";
 
 import Hero from "../components/solutions/Hero";
+import BuiltForSuccess from "../components/solutions/BuiltForSuccess";
 
 // Shared with the Business, Platform and Enterprise pages rather than forked.
 import Partners from "../components/enterprise/Partners";
 import ClosingCta, { CONTACT_HREF, START_HREF } from "../components/enterprise/ClosingCta";
-import Suite, { SOLUTIONS_CAPABILITIES } from "../components/platform/Suite";
 import CaseStudies from "../components/business/CaseStudies";
 
 // Meta copy is verbatim from the content spec — this page targets
@@ -25,8 +27,11 @@ export const metadata: Metadata = {
 export default function SolutionsPage() {
   return (
     <>
-      {/* Dark full-bleed hero, same as /business, so the nav opens onDark. */}
-      <SiteNav variant="onDark" />
+      <PageTint palette="mineral" />
+
+      {/* Light hero, same composition as the Enterprise page, so the nav
+          theme resolves the same way — see lib/theme.ts */}
+      <SiteNav variant={NAV_VARIANT} />
 
       {/* One source for every two-tone heading's clipped fill. */}
       <main
@@ -35,16 +40,9 @@ export default function SolutionsPage() {
         }}
       >
         <Hero />
-        <IndustriesSection />
+        <IndustriesSection variant="track" />
         <Partners caption="Partnering with global industry leaders to power your creativity output" />
-        <Suite
-          id="capabilities"
-          eyebrow="Capabilities"
-          heading="Built for"
-          mutedHeading="success"
-          lede="Everything your creative operation needs to produce on-brand assets at scale, governed, consistent, and in one platform."
-          tools={SOLUTIONS_CAPABILITIES}
-        />
+        <BuiltForSuccess />
         <CaseStudies />
         <ClosingCta
           title="The AI tools for business teams"

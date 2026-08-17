@@ -1,4 +1,5 @@
-import Navbar from "../components/workflows/Navbar";
+import { SiteNav } from "@/components/SiteNav";
+import { navVariantFor } from "@/lib/theme";
 import WorkflowPage from "../components/workflows/WorkflowPage";
 import ModelsSection from "../components/workflows/ModelsSection";
 import FAQ from "../components/workflows/FAQ";
@@ -14,7 +15,8 @@ export const metadata = {
 export default function WorkflowsRoute() {
   return (
     <div style={{ background: "#0A0A0B", color: "#fff", minHeight: "100vh" }}>
-      <Navbar />
+      {/* Dark page throughout, so the nav opens in its onDark colours. */}
+      <SiteNav variant={navVariantFor("dark")} />
       <WorkflowPage />
       <ModelsSection />
       <FAQ />

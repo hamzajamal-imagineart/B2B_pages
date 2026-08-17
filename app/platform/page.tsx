@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { SiteNav } from "@/components/SiteNav";
+import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
 import { withBasePath } from "@/lib/assets";
 import { NAV_VARIANT } from "@/lib/theme";
@@ -25,6 +26,8 @@ export const metadata: Metadata = {
 export default function PlatformPage() {
   return (
     <>
+      <PageTint palette="slate" />
+
       {/* Same light hero surface as the Enterprise page, so the nav theme
           resolves identically — see lib/theme.ts */}
       <SiteNav variant={NAV_VARIANT} />

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 
 import { SiteNav } from "@/components/SiteNav";
+import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
 import { withBasePath } from "@/lib/assets";
 
+import { navVariantFor } from "@/lib/theme";
 import { IndustriesSection } from "@/components/IndustriesSection";
 
 import Hero from "../components/business/Hero";
@@ -28,9 +30,10 @@ export const metadata: Metadata = {
 export default function BusinessPage() {
   return (
     <>
-      {/* This page's hero is a dark full-bleed photo, unlike the light heroes
-          on / and /platform, so the nav opens in its onDark colours. */}
-      <SiteNav variant="onDark" />
+      <PageTint palette="sand" />
+
+      {/* Dark full-bleed hero, so the nav opens in its onDark colours. */}
+      <SiteNav variant={navVariantFor("dark")} />
 
       {/* One source for every two-tone heading's clipped fill. */}
       <main

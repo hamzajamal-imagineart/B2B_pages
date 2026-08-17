@@ -74,9 +74,12 @@ export const BUSINESS_TOOLS: Tool[] = [
 ];
 
 /**
- * Solutions-page list: "Built for success". Five capabilities rather than the
- * full tool inventory — note Teams & Enterprise is a capability, not a tool,
- * which is why this list is hand-built instead of sliced from the others.
+ * Solutions-page list: "Built for success", rendered as a bento by
+ * solutions/BuiltForSuccess rather than by this component. It lives here so
+ * all the tool copy and its icons stay in one file. Five capabilities rather
+ * than the full inventory — note Teams & Enterprise is a capability, not a
+ * tool, which is why this list is hand-built instead of sliced from the
+ * others.
  */
 export const SOLUTIONS_CAPABILITIES: Tool[] = [
   BUSINESS_TOOLS[0], // Workflows
@@ -98,35 +101,24 @@ export const SOLUTIONS_CAPABILITIES: Tool[] = [
   },
 ];
 
-export default function Suite({
-  tools = PLATFORM_TOOLS,
-  id = "suite",
-  eyebrow = "The suite",
-  heading = "Everything your team",
-  /** Second clause, rendered with the clipped-image fill. */
-  mutedHeading = "needs to create",
-  lede = "A full suite of tools that take you from idea to finished asset, no stitching together five different products.",
-}: {
-  tools?: Tool[];
-  id?: string;
-  eyebrow?: string;
-  heading?: string;
-  mutedHeading?: string;
-  lede?: string;
-} = {}) {
+export default function Suite({ tools = PLATFORM_TOOLS }: { tools?: Tool[] } = {}) {
   return (
     <section
-      id={id}
+      id="suite"
       className="relative border-t border-black/[0.08] py-24 md:py-32 lg:border-t-0"
     >
       <SectionGuides edge="top" />
       <div className="container-page">
         <div className="max-w-[640px]">
-          <p className="eyebrow">{eyebrow}</p>
+          <p className="eyebrow">The suite</p>
           <h2 className="h2 mt-4">
-            {heading} <span className="h-muted">{mutedHeading}</span>
+            Everything your team{" "}
+            <span className="h-muted">needs to create</span>
           </h2>
-          <p className="lede mt-5">{lede}</p>
+          <p className="lede mt-5">
+            A full suite of tools that take you from idea to finished asset, no
+            stitching together five different products.
+          </p>
         </div>
 
         <div className="attr-grid suite-grid mt-14">

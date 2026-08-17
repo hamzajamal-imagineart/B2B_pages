@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { SiteNav } from "@/components/SiteNav";
+import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
 import { withBasePath } from "@/lib/assets";
 import { NAV_VARIANT } from "@/lib/theme";
@@ -18,6 +19,8 @@ export const metadata: Metadata = {
 export default function CaseStudiesPage() {
   return (
     <>
+      <PageTint palette="stone" />
+
       <SiteNav variant={NAV_VARIANT} />
 
       {/* One source for every two-tone heading's clipped fill. */}

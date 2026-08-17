@@ -1,4 +1,5 @@
 import { SiteNav } from "@/components/SiteNav";
+import { PageTint } from "@/components/PageTint";
 import { withBasePath } from "@/lib/assets";
 import { SiteFooter } from "@/components/SiteFooter";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
@@ -26,6 +27,8 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
       />
+
+      <PageTint palette="sage" />
 
       {/* Nav variant stays in lockstep with the hero behind it — see lib/theme.ts */}
       <SiteNav variant={NAV_VARIANT} />
