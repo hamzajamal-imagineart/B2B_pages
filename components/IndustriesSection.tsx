@@ -39,17 +39,17 @@ function CardVideo({ src }: { src: string }) {
  * rather than as links to nowhere — wrapping each in an <a> is the only change
  * needed once the routes land.
  */
-/* Four of the ten have a real capture; the rest run their flat palette until
-   more land. `video` is optional precisely so adding one is a one-line edit. */
+/* Nine of the ten have a real capture; Telecom still runs its flat palette.
+   `video` is optional precisely so adding one is a one-line edit. */
 const INDUSTRIES = [
   { name: "Fashion & Apparel", video: "/media/industries/fashion.mp4", body: "Design, PDP and e-com imagery, editorials (stills + video), fashion films, lookbooks, social, banners, and static + motion ads." },
   { name: "CPG", video: "/media/industries/cpg.mp4", body: "End-to-end campaigns, static + motion ads, product-window animations, in-store POS, DVCs / TVCs, mascot design, and trend-jacking video." },
-  { name: "Fast Food", body: "Food photography, end-to-end campaigns, static + motion ads, product windows, in-store POS, DVCs / TVCs, mascot design, and trend-jacking video." },
+  { name: "Fast Food", video: "/media/industries/fast-food.mp4", body: "Food photography, end-to-end campaigns, static + motion ads, product windows, in-store POS, DVCs / TVCs, mascot design, and trend-jacking video." },
   { name: "Food & Beverage", video: "/media/industries/food-beverage.mp4", body: "Food photography, end-to-end campaigns, static + motion ads, product-window animations, in-store POS, DVCs / TVCs, and mascot design." },
   { name: "Furniture / Home Décor", video: "/media/industries/furniture.mp4", body: "Furniture and lifestyle renders, editorials (stills + video), social, static + motion ads, DVCs / TVCs, and in-store POS." },
   { name: "Electronics", video: "/media/industries/electronics.mp4", body: "Product and lifestyle renders, editorials (stills + video), banners, social, static + motion ads, DVCs / TVCs, and in-store POS." },
   { name: "Beauty & Cosmetics", video: "/media/industries/beauty.mp4", body: "End-to-end campaigns, static + motion ads, product windows, banners, in-store POS, DVCs / TVCs, mascot design, and trend-jacking video." },
-  { name: "Automotive", body: "Launch films, static + motion ads, banners, and video-based sales training." },
+  { name: "Automotive", video: "/media/industries/automotive.mp4", body: "Launch films, static + motion ads, banners, and video-based sales training." },
   { name: "Telecom", body: "Social, banners, static + motion ads, in-store POS, and video-based compliance training." },
   { name: "E-commerce / Marketplaces", video: "/media/industries/ecommerce.mp4", body: "Seller PDP and listing imagery, on-page product motion, static + motion ads, and store banners." },
 ];
