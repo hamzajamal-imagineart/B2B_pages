@@ -4,9 +4,11 @@ import { useMemo, useState } from "react";
 import { SectionGuides } from "@/components/primitives/SectionGuides";
 import {
   CaseStudyStyles,
+  FEATURED,
   FilterChips,
   matchesQuery,
   STORIES,
+  StatMosaic,
   StoryCard,
 } from "@/components/CaseStudyCards";
 
@@ -39,7 +41,20 @@ export default function CaseStudyIndex() {
     <section id="index" className="relative py-24 md:py-28">
       <SectionGuides edge="top" />
       <div className="container-page">
-        <div className="cs-toolbar">
+        {/* Featured study: heading, paragraph, and its numbers as the stat
+            mosaic. It has no page of its own, so it leads here rather than
+            appearing as a card. */}
+        <div className="csi-featured">
+          <p className="eyebrow">Featured · {FEATURED.industry}</p>
+          <h2 className="h2 csi-featured-title mt-4">{FEATURED.title}</h2>
+          <p className="lede mt-5 max-w-[64ch]">{FEATURED.summary}</p>
+          <div className="mt-12">
+            <StatMosaic stats={FEATURED.stats} />
+          </div>
+        </div>
+
+        {/* Controls sit directly above the cards they filter. */}
+        <div className="cs-toolbar mt-24 md:mt-28">
           <label className="cs-search">
             <span className="cs-search-icon" aria-hidden>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -146,7 +161,7 @@ export default function CaseStudyIndex() {
           font-size: 13px;
           color: var(--ink-3);
         }
-        .csi-featured-title { font-size: clamp(26px, 3vw, 38px); }
+        .csi-featured-title { font-size: clamp(26px, 3vw, 38px); max-width: 22ch; }
 
         @media (max-width: 720px) {
           .cs-search { max-width: none; }

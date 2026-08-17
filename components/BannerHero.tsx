@@ -197,8 +197,10 @@ export function BannerHero({
           padding: 0;
           overflow: hidden;
         }
+        /* White, not the recessed panel tone: against a tinted page wash a
+           white banner reads as a held surface rather than a dent. */
         .hero-banner-empty {
-          background: var(--panel-2);
+          background: var(--panel);
           border: 1px solid var(--line);
         }
         .hero-video {
@@ -218,8 +220,10 @@ export function BannerHero({
           to   { transform: scale(1.05); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .hero-banner-empty {
-          background: var(--panel-2);
+          /* White, not the recessed panel tone: against a tinted page wash a
+           white banner reads as a held surface rather than a dent. */
+        .hero-banner-empty {
+          background: var(--panel);
           border: 1px solid var(--line);
         }
         .hero-video { animation: none; }

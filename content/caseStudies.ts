@@ -73,6 +73,25 @@ export type CaseStudy = {
 
 export const CASE_STUDIES: CaseStudy[] = [
   {
+    slug: "smarters-knorr",
+    company: "Smarters",
+    industry: "CPG",
+    metric: "586K unique users",
+    title: "Scaling campaigns for MNCs with 586K unique users and 68% opt-in rate",
+    summary:
+      "Smarters ran a personalized generative AI campaign for Unilever's Knorr brand in Mexico, featuring real-time celebrity inpainting at scale. 586,000 unique users generated their own personalized images and opted in at nearly 3\u00d7 the market average.",
+    stats: [
+      { value: "586,000", label: "Unique users" },
+      { value: "68%", label: "Opt-in rate" },
+      { value: "3\u00d7", label: "The market average" },
+    ],
+    featured: true,
+    // No sections yet, so it has no page and no card. It appears only as the
+    // featured block, which is the role both content specs give it.
+    sections: [],
+  },
+
+  {
     slug: "unilever",
     company: "Unilever",
     industry: "FMCG",
@@ -103,7 +122,6 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
       { label: "Contact", value: "Humza Mahfooz, Social-First Transformation Lead" },
     ],
-    featured: true,
     sections: [
       {
         label: "Executive Snapshot",
@@ -635,14 +653,18 @@ export const getCaseStudy = (slug: string) =>
 export const featuredCaseStudy = () =>
   CASE_STUDIES.find((s) => s.featured) ?? CASE_STUDIES[0];
 
-/** The card grid lists every study in registry order, featured included:
- *  the featured block above it is a stat showcase, not a substitute entry. */
-export const allCaseStudies = () => CASE_STUDIES;
+/** The card grid lists every study that has a page, in registry order.
+ *  A study without written content appears only as the featured block, never
+ *  as a card that goes nowhere. */
+export const allCaseStudies = () => CASE_STUDIES.filter(hasPage);
 
-/** Filter list, derived so a new study's industry appears without an edit. */
+/** Filter list, derived from the studies the grid actually shows, so a chip
+ *  can never filter down to nothing. */
 export const caseStudyIndustries = () => [
   "All",
-  ...CASE_STUDIES.map((s) => s.industry).filter((v, i, a) => a.indexOf(v) === i),
+  ...allCaseStudies()
+    .map((s) => s.industry)
+    .filter((v, i, a) => a.indexOf(v) === i),
 ];
 
 export const caseStudyHref = (s: CaseStudy) => `/case-studies/${s.slug}`;
