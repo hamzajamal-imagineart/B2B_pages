@@ -57,6 +57,31 @@ export default function ClosingCta({
       </div>
 
       <style>{`
+        /* Legibility scrim, between the photograph and the copy.
+           z-index 1 puts it above ::after (0) and below the content (10), and
+           keeping it a separate layer means the photo's top-fade mask doesn't
+           also eat the scrim.
+
+           A soft radial centred on the copy block rather than a flat wash: the
+           text stays readable while the photograph is left untouched at the
+           edges. Sized off the page wash so the covered area reads as the page
+           itself, not as a panel laid over it. Needed once a backdrop has
+           detail behind the text — the muted heading clause is a light tint by
+           design and vanished over the reeded glass. */
+        .cta-section::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+          background: radial-gradient(
+            58% 52% at 50% 40%,
+            color-mix(in srgb, var(--page-bg) 94%, transparent) 0%,
+            color-mix(in srgb, var(--page-bg) 74%, transparent) 46%,
+            transparent 76%
+          );
+        }
+
         /* The photograph's own composition does the work: fog fills the top
            where the heading sits, grass masses along the bottom. Anchored to
            the bottom so the horizon lands under the copy rather than through
