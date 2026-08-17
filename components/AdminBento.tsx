@@ -1,7 +1,6 @@
 "use client";
 
 import { CollaborationDemo } from "@/components/CollaborationDemo";
-import { withBasePath } from "@/lib/assets";
 
 /**
  * The four-tile admin bento.
@@ -21,17 +20,17 @@ export function AdminBento({ className = "" }: { className?: string }) {
         wide
         title="Complete Admin Control"
         body="One dashboard for your entire organization. Manage roles, monitor usage, and govern access across every team without losing visibility."
-        visual={<UsagePanel />}
+        visual={<PlaceholderPanel />}
       />
       <Tile
         title="Efficient Asset Management"
         body="Every generation organized, searchable, and on-brand."
-        visual={<AssetLibrary />}
+        visual={<PlaceholderPanel />}
       />
       <Tile
         title="Unlimited Members, No Added Cost"
         body="Bring your whole team. Seats don't cost extra."
-        visual={<MembersPanel />}
+        visual={<PlaceholderPanel />}
       />
       <Tile
         wide
@@ -114,81 +113,20 @@ function Tile({
   );
 }
 
-/* Fold 01, usage dashboard */
-function UsagePanel() {
+/* Three of the four tiles are placeholders for now: a plain white panel
+   holding the tile's media footprint, so real visuals drop in without any
+   layout change. Only Collaborate End to End carries its real visual. */
+function PlaceholderPanel() {
   return (
-    <div className="viz-panel">
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <PanelLabel>Manage</PanelLabel>
-        <span className="viz-chip">Live</span>
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 14 }}>
-        <Ring />
-        <div>
-          <div style={{ color: "var(--ink)", fontSize: 26, letterSpacing: "-0.5px" }}>3,504,195</div>
-          <div style={{ color: "var(--ink-3)", fontSize: 13 }}>Credits spent</div>
-          <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 6 }}>
-            <Legend c="#171717" label="Video" />
-            <Legend c="#7a7a7a" label="Image" />
-            <Legend c="#c9c9c9" label="Audio / Speech" />
-          </div>
-        </div>
-      </div>
-      <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
-        <Stat value="295,843" label="Total jobs run" />
-        <Stat value="455" label="Unique users" />
-        <Stat value="104" label="Models used" />
-      </div>
-    </div>
-  );
-}
-
-/* Fold 02, asset library — the real folders panel, in place of the search
-   bar and grey placeholder thumbnails that stood here before. */
-function AssetLibrary() {
-  return (
-    <div className="asset-shot">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={withBasePath("/media/admin/asset-folders.jpg")} alt="" aria-hidden />
+    <div className="admin-placeholder">
       <style>{`
-        /* The source is tall and portrait while the tile is wide, so it is
-           anchored top-left and cropped from the bottom: that keeps the
-           "Team folders" heading and the folder list in view. */
-        .asset-shot {
+        .admin-placeholder {
           aspect-ratio: 16 / 10;
           border-radius: 16px;
-          border: 1px solid var(--line);
           background: var(--panel);
-          overflow: hidden;
-        }
-        .asset-shot img {
-          display: block;
-          width: 100%;
-          height: auto;
+          border: 1px solid var(--line);
         }
       `}</style>
-    </div>
-  );
-}
-
-/* Fold 03, members / unlimited seats */
-function MembersPanel() {
-  return (
-    <div className="viz-panel">
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <PanelLabel>Access management</PanelLabel>
-        <span className="viz-chip">Unlimited seats · $0</span>
-      </div>
-      <div style={{ marginTop: 12, display: "flex", flexDirection: "column" }}>
-        <Row email="alina@imagine.art" role="Owner" spend="No limit" you />
-        <Row email="kadir@imagine.art" role="Admin" spend="500 / 2.5k" />
-        <Row email="maya@imagine.art" role="Editor" spend="120 / 1k" />
-        <Row email="devon@imagine.art" role="Editor" spend="88 / 1k" />
-      </div>
-      <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-        <Toggle label="Auto-refill credits" on={false} />
-        <Toggle label="Top-up credits" on />
-      </div>
     </div>
   );
 }
@@ -208,57 +146,3 @@ function CollabPanel() {
 }
 
 /* ── small shared bits ── */
-function PanelLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <span style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--ink-3)", fontWeight: 600 }}>
-      {children}
-    </span>
-  );
-}
-function Legend({ c, label }: { c: string; label: string }) {
-  return (
-    <span style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, color: "var(--ink-2)" }}>
-      <span style={{ width: 8, height: 8, borderRadius: 2, background: c }} /> {label}
-    </span>
-  );
-}
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <div style={{ flex: 1, background: "var(--panel-2)", border: "1px solid var(--line)", borderRadius: 12, padding: "12px" }}>
-      <div style={{ color: "var(--ink)", fontSize: 17, letterSpacing: "-0.5px" }}>{value}</div>
-      <div style={{ color: "var(--ink-3)", fontSize: 11, marginTop: 3 }}>{label}</div>
-    </div>
-  );
-}
-function Ring() {
-  return (
-    <div style={{ position: "relative", width: 104, height: 104, flex: "0 0 auto" }}>
-      <svg width="104" height="104" viewBox="0 0 104 104">
-        <circle cx="52" cy="52" r="43" fill="none" stroke="rgba(0,0,0,0.08)" strokeWidth="11" />
-        <circle cx="52" cy="52" r="43" fill="none" stroke="var(--ink)" strokeWidth="11" strokeLinecap="round" strokeDasharray="270" strokeDashoffset="76" transform="rotate(-90 52 52)" />
-      </svg>
-      <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "var(--ink)", fontSize: 14 }}>72%</div>
-    </div>
-  );
-}
-function Row({ email, role, spend, you }: { email: string; role: string; spend: string; you?: boolean }) {
-  return (
-    <div style={{ display: "grid", gridTemplateColumns: "1.6fr 0.9fr 1fr", alignItems: "center", gap: 8, padding: "10px 4px", borderBottom: "1px solid var(--line)", fontSize: 12.5 }}>
-      <span style={{ color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-        {email} {you && <span style={{ color: "var(--ink-3)" }}>(you)</span>}
-      </span>
-      <span style={{ color: role === "Owner" ? "var(--ink)" : "var(--ink-2)", fontWeight: role === "Owner" ? 500 : 400 }}>{role}</span>
-      <span style={{ color: "var(--ink-3)", textAlign: "right" }}>{spend}</span>
-    </div>
-  );
-}
-function Toggle({ label, on }: { label: string; on: boolean }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, background: "var(--panel-2)", border: "1px solid var(--line)", borderRadius: 12, padding: "12px 14px" }}>
-      <span style={{ fontSize: 12.5, color: "var(--ink-2)", lineHeight: 1.3 }}>{label}</span>
-      <span style={{ width: 34, height: 20, borderRadius: 999, background: on ? "var(--ink)" : "rgba(0,0,0,0.14)", position: "relative", flex: "0 0 auto" }}>
-        <span style={{ position: "absolute", top: 2, left: on ? 16 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff" }} />
-      </span>
-    </div>
-  );
-}
