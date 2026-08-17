@@ -5,10 +5,10 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
 import {
   CaseStudyStyles,
   FEATURED,
-  FeaturedCard,
   FilterChips,
   matchesQuery,
   STORIES,
+  StatMosaic,
   StoryCard,
 } from "@/components/CaseStudyCards";
 
@@ -86,13 +86,20 @@ export default function CaseStudyIndex() {
           {total} {total === 1 ? "case study" : "case studies"}
         </p>
 
+        {/* Featured study leads with its heading and paragraph, its numbers
+            as the stat mosaic — the same treatment the Business page uses. */}
         {featuredMatches && (
-          <div className="mt-6">
-            <FeaturedCard />
+          <div className="csi-featured mt-10">
+            <p className="eyebrow">Featured · {FEATURED.industry}</p>
+            <h2 className="h2 csi-featured-title mt-4">{FEATURED.title}</h2>
+            <p className="lede mt-5 max-w-[62ch]">{FEATURED.summary}</p>
+            <div className="mt-12">
+              <StatMosaic stats={FEATURED.stats} />
+            </div>
           </div>
         )}
 
-        <div className="cs-grid mt-4">
+        <div className="cs-grid mt-16">
           {stories.map((s) => (
             <StoryCard key={s.slug} story={s} />
           ))}
@@ -160,6 +167,7 @@ export default function CaseStudyIndex() {
           font-size: 13px;
           color: var(--ink-3);
         }
+        .csi-featured-title { font-size: clamp(26px, 3vw, 38px); }
 
         @media (max-width: 720px) {
           .cs-search { max-width: none; }

@@ -100,7 +100,7 @@ export default async function CaseStudyPage({
         <ClosingCta
           title="Ready to transform"
           muted="your creative production?"
-          lede="Join social media agencies using ImagineArt to produce high-volume content without the overhead."
+          lede="Join the teams using ImagineArt to produce high-volume, on-brand content without the overhead."
           primary={{ label: "Book a Demo", href: DEMO_HREF }}
           secondary={{ label: "More Case Studies", href: "/case-studies" }}
         />
@@ -202,6 +202,9 @@ function Cover({ study }: { study: CaseStudy }) {
         src={withBasePath(study.cover!)}
         alt={`${study.company} work produced with ImagineArt`}
       />
+      {study.coverCaption && (
+        <p className="csd-cover-caption">{study.coverCaption}</p>
+      )}
       <style>{`
         .csd-cover {
           display: block;
@@ -209,6 +212,11 @@ function Cover({ study }: { study: CaseStudy }) {
           height: auto;
           border-radius: 22px;
           margin-top: clamp(16px, 2vw, 24px);
+        }
+        .csd-cover-caption {
+          margin-top: 12px;
+          font-size: 13px;
+          color: var(--ink-3);
         }
       `}</style>
     </div>
@@ -242,8 +250,11 @@ function Body({ study }: { study: CaseStudy }) {
                 <ButtonLink href={DEMO_HREF} variant="brand" size="md">
                   Book a Demo
                 </ButtonLink>
-                <a href={TEAMS_HREF} className="csd-fact-link">
-                  View Teams Plan →
+                <a
+                  href={study.planLink?.href ?? TEAMS_HREF}
+                  className="csd-fact-link"
+                >
+                  {study.planLink?.label ?? "View Teams Plan →"}
                 </a>
               </div>
             </aside>
@@ -328,6 +339,32 @@ function Body({ study }: { study: CaseStudy }) {
         }
         @media (max-width: 640px) {
           .csd-results { grid-template-columns: 1fr; }
+        }
+
+        /* Metric / result rows. A hairline table rather than boxes: it is a
+           reference list, and five boxed cards would outweigh the prose it
+           sits inside. */
+        .csd-metrics {
+          border-top: 1px solid var(--line);
+        }
+        .csd-metric {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 20px;
+          padding: 13px 0;
+          border-bottom: 1px solid var(--line);
+        }
+        .csd-metric-label {
+          font-size: 15px;
+          color: var(--ink-2);
+        }
+        .csd-metric-value {
+          font-size: 16px;
+          font-weight: 500;
+          letter-spacing: -0.01em;
+          color: var(--ink-heading);
+          white-space: nowrap;
         }
 
         /* The one moment that breaks the measure. */
@@ -428,6 +465,17 @@ function BlockView({ block }: { block: Block }) {
             </div>
           ))}
         </div>
+      );
+    case "metrics":
+      return (
+        <dl className="csd-metrics">
+          {block.rows.map((r) => (
+            <div key={r.label} className="csd-metric">
+              <dt className="csd-metric-label">{r.label}</dt>
+              <dd className="csd-metric-value">{r.value}</dd>
+            </div>
+          ))}
+        </dl>
       );
     case "quote":
       return (
