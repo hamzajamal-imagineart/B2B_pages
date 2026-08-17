@@ -156,17 +156,17 @@ export function BannerHero({
         )}
 
         <div className="hero-foot mt-6">
-          <div>
-            <ButtonLink href={primary.href} variant="brand" size="lg">
-              {primary.label}
-            </ButtonLink>
-          </div>
-
           <div className="hero-foot-copy">
             <p className="hero-foot-text">{footText}</p>
             <a href={footLink.href} className="hero-link">
               {footLink.label}
             </a>
+          </div>
+
+          <div className="hero-foot-cta">
+            <ButtonLink href={primary.href} variant="brand" size="lg">
+              {primary.label}
+            </ButtonLink>
           </div>
         </div>
       </div>
@@ -298,8 +298,9 @@ export function BannerHero({
         }
         .tour-close:hover { background: rgba(0, 0, 0, 0.75); }
 
-        /* CTA left, supporting copy right — the copy column is deliberately
-           narrow so it reads as a caption, not a second headline. */
+        /* Copy left, CTA right. The copy column is deliberately narrow so it
+           reads as a caption, not a second headline; the CTA column is auto,
+           so the button hugs the container's right edge. */
         .hero-foot {
           display: grid;
           grid-template-columns: 1fr auto;
@@ -307,6 +308,7 @@ export function BannerHero({
           align-items: start;
         }
         .hero-foot-copy { max-width: 52ch; }
+        .hero-foot-cta { justify-self: end; }
         .hero-foot-text {
           font-size: 14.5px;
           line-height: 1.6;
@@ -320,8 +322,11 @@ export function BannerHero({
           color: var(--ink);
           border-bottom: 1px solid var(--line-strong);
         }
+        /* Stacked, the CTA belongs under the copy it follows rather than
+           stranded at the right edge. */
         @media (max-width: 860px) {
           .hero-foot { grid-template-columns: 1fr; gap: 24px; }
+          .hero-foot-cta { justify-self: start; }
         }
       `}</style>
     </section>
