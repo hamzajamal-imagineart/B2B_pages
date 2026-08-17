@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { SiteNav } from "@/components/SiteNav";
 import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
-import { withBasePath } from "@/lib/assets";
 
 import { navVariantFor } from "@/lib/theme";
 import { IndustriesSection } from "@/components/IndustriesSection";
@@ -35,12 +34,7 @@ export default function BusinessPage() {
       {/* Dark full-bleed hero, so the nav opens in its onDark colours. */}
       <SiteNav variant={navVariantFor("dark")} />
 
-      {/* One source for every two-tone heading's clipped fill. */}
-      <main
-        style={{
-          ["--fill" as string]: `url(${withBasePath("/media/card-generate.jpg")})`,
-        }}
-      >
+      <main>
         <Hero />
         <Partners caption="Partnering with global industry leaders to power your creative output" />
         <Pitch />

@@ -1,31 +1,39 @@
 /**
- * Per-route page tint.
+ * Per-route colour.
  *
- * The page grain (`body::before`, globals.css) is a flat wash plus a noise
- * tile. Both are custom properties, so a route only has to redeclare two
- * values to carry its own colour. Each page gets a distinct hue so the set
- * reads as one family rather than one page repeated.
+ * Each page picks one hue and uses it three ways: the page wash, the deep tone
+ * the headings are set in, and the light tint the second clause of a two-tone
+ * heading takes. Because all three come from the same palette, the heading can
+ * never drift from the background behind it.
  *
- * Values are deliberately near-white — these should register as a temperature
- * shift, not as a coloured background. The wash sits under a 0.5 opacity, so
- * the effective difference from #ffffff is a couple of percent.
+ * `bg` is painted on the body itself (globals.css) rather than through the
+ * grain layer, so it reads as a real page colour. The grain tile keeps the
+ * hue too, so the tooth over the wash stays in family.
  *
- * Workflows is excluded: it paints its own near-black over the whole page, so
- * this layer never shows there.
+ * Workflows is excluded: it paints its own near-black over the whole page.
  */
-type Palette = { tint: string; noise: [number, number, number] };
+type Palette = {
+  /** Page wash. */
+  bg: string;
+  /** Deep tone — headings, via --ink-heading. */
+  ink: string;
+  /** Light tint — the .h-muted clause. */
+  muted: string;
+  /** Hue of the noise tile, as an feColorMatrix rgb triple. */
+  noise: [number, number, number];
+};
 
 const PALETTES = {
-  /** Enterprise — the original sage green. Unchanged. */
-  sage: { tint: "#f7f9f6", noise: [0.42, 0.52, 0.4] },
-  /** Platform — cool slate, a step bluer than the sage. */
-  slate: { tint: "#f6f8fb", noise: [0.4, 0.46, 0.58] },
+  /** Enterprise — sage green. */
+  sage: { bg: "#f3f6f1", ink: "#2c332b", muted: "#9dab9c", noise: [0.42, 0.52, 0.4] },
+  /** Platform — slate blue, the coolest of the set. */
+  slate: { bg: "#eef1f5", ink: "#2f4358", muted: "#97aabd", noise: [0.4, 0.46, 0.58] },
   /** Business — warm sand, the only palette warmer than neutral. */
-  sand: { tint: "#faf8f4", noise: [0.56, 0.5, 0.4] },
-  /** Solutions — mineral, sitting between the sage and the slate. */
-  mineral: { tint: "#f5f9f9", noise: [0.38, 0.52, 0.53] },
+  sand: { bg: "#f4f2ed", ink: "#3a352b", muted: "#aca596", noise: [0.56, 0.5, 0.4] },
+  /** Solutions — mineral, between the sage and the slate. */
+  mineral: { bg: "#eef4f4", ink: "#283a3a", muted: "#93abab", noise: [0.38, 0.52, 0.53] },
   /** Case studies — muted stone with a lilac cast. */
-  stone: { tint: "#f8f7fa", noise: [0.48, 0.44, 0.56] },
+  stone: { bg: "#f3f2f6", ink: "#332f3a", muted: "#a39dae", noise: [0.48, 0.44, 0.56] },
 } satisfies Record<string, Palette>;
 
 export type PageTintName = keyof typeof PALETTES;
@@ -47,8 +55,11 @@ function noiseUrl([r, g, b]: [number, number, number]) {
  * one page is mounted at a time.
  */
 export function PageTint({ palette }: { palette: PageTintName }) {
-  const { tint, noise } = PALETTES[palette];
+  const { bg, ink, muted, noise } = PALETTES[palette];
   return (
-    <style>{`:root{--page-tint:${tint};--page-noise:${noiseUrl(noise)};}`}</style>
+    <style>{
+      `:root{--page-bg:${bg};--ink-heading:${ink};--heading-muted:${muted};` +
+      `--page-noise:${noiseUrl(noise)};}`
+    }</style>
   );
 }

@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { SiteNav } from "@/components/SiteNav";
 import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
-import { withBasePath } from "@/lib/assets";
 import { NAV_VARIANT } from "@/lib/theme";
 import { IndustriesSection } from "@/components/IndustriesSection";
 
@@ -33,12 +32,7 @@ export default function SolutionsPage() {
           theme resolves the same way — see lib/theme.ts */}
       <SiteNav variant={NAV_VARIANT} />
 
-      {/* One source for every two-tone heading's clipped fill. */}
-      <main
-        style={{
-          ["--fill" as string]: `url(${withBasePath("/media/card-generate.jpg")})`,
-        }}
-      >
+      <main>
         <Hero />
         <IndustriesSection />
         <Partners caption="Partnering with global industry leaders to power your creativity output" />

@@ -70,7 +70,10 @@
   }
 
   body {
-    background: var(--paper);
+    /* Per-route wash. Painted on the body itself rather than through the
+       grain layer, so it reads as an actual page colour instead of a 50%
+       ghost of one. See <PageTint>. */
+    background: var(--page-bg);
     color: var(--ink);
     font-family: var(--font-sans), var(--font-fallback);
     font-weight: 400;
@@ -400,23 +403,13 @@
 }
 
 /* Second clause of a two-tone heading — the page's one typographic flourish.
-   The image is clipped to the glyphs rather than filling a box.
 
-   --fill is set once on <main> via withBasePath(), because a bare url() in a
-   stylesheet is never basePath-prefixed by Next and would 404 on the mounted
-   deploy (Guidelines §7).
-
-   background-color is the fallback: the text fill is transparent, so without
-   it a failed image would render the clause invisible rather than muted. */
+   Previously this clipped a photograph to the glyphs. It's now a flat colour
+   drawn from the route's own palette: a light tint of the same hue as the page
+   wash, against the deeper --ink-heading the first clause uses. Both values
+   come from <PageTint>, so heading and background always agree. */
 .h-muted {
-  background-color: var(--ink-3);
-  background-image: var(--fill);
-  background-size: cover;
-  background-position: center 62%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: var(--heading-muted);
 }
 
 /* ═════════════════════════════════════════════════════════════
@@ -486,10 +479,11 @@
    over the top, so this layer never shows there.
    ═════════════════════════════════════════════════════════════ */
 :root {
-  --page-tint: #f7f9f6;
+  --page-bg: #f3f6f1;
   --page-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.42  0 0 0 0 0.52  0 0 0 0 0.40  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* Noise only — the wash below it is the body's own background now. */
 body::before {
   content: "";
   position: fixed;
@@ -497,7 +491,6 @@ body::before {
   z-index: -1;
   pointer-events: none;
   opacity: 0.5;
-  background-color: var(--page-tint);
   background-image: var(--page-noise);
   background-size: 140px 140px;
 }

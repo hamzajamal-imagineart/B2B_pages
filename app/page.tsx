@@ -1,6 +1,5 @@
 import { SiteNav } from "@/components/SiteNav";
 import { PageTint } from "@/components/PageTint";
-import { withBasePath } from "@/lib/assets";
 import { SiteFooter } from "@/components/SiteFooter";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { NAV_VARIANT } from "@/lib/theme";
@@ -33,12 +32,7 @@ export default function Home() {
       {/* Nav variant stays in lockstep with the hero behind it — see lib/theme.ts */}
       <SiteNav variant={NAV_VARIANT} />
 
-      {/* One source for every two-tone heading's clipped fill. */}
-      <main
-        style={{
-          ["--fill" as string]: `url(${withBasePath("/media/card-generate.jpg")})`,
-        }}
-      >
+      <main>
         <Hero />
         <Partners />
         <Control />

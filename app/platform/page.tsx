@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { SiteNav } from "@/components/SiteNav";
 import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
-import { withBasePath } from "@/lib/assets";
 import { NAV_VARIANT } from "@/lib/theme";
 
 import Hero from "../components/platform/Hero";
@@ -32,12 +31,7 @@ export default function PlatformPage() {
           resolves identically — see lib/theme.ts */}
       <SiteNav variant={NAV_VARIANT} />
 
-      {/* One source for every two-tone heading's clipped fill. */}
-      <main
-        style={{
-          ["--fill" as string]: `url(${withBasePath("/media/card-generate.jpg")})`,
-        }}
-      >
+      <main>
         <Hero />
         <Partners />
         <Suite />
