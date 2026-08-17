@@ -14,8 +14,8 @@ const APPS = [
   { name: "Outfit Tryon", grain: "grain-mineral", video: "/media/apps/outfit-tryon.mp4" },
   { name: "Variate", grain: "grain-sand", light: true },
   { name: "Video Reframe", grain: "grain-olive" },
-  { name: "Topaz Video Upscale", grain: "grain-steel" },
-  { name: "Sketch to Render", grain: "grain-teal" },
+  { name: "Topaz Video Upscale", grain: "grain-steel", video: "/media/apps/upscale.mp4" },
+  { name: "Sketch to Render", grain: "grain-teal", video: "/media/apps/sketch-to-render.mp4" },
 ];
 
 export default function Apps() {
