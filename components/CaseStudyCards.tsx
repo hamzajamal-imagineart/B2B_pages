@@ -331,22 +331,23 @@ export function StatMosaic({
   stats: { value: string; label: string }[];
 }) {
   const [a, b, c] = stats;
-  const tones = ["grain-charcoal", "grain-teal", "grain-olive"];
+  // Supplied noise gradients, one per card.
+  const grounds = ["/media/noise/moss.jpg", "/media/noise/amber.jpg", "/media/noise/ember.jpg"];
 
   return (
     <div className="csm">
       <div className="csm-col">
-        {a && <StatCard stat={a} tone={tones[0]} />}
-        <span className="csm-box csm-box-sm" aria-hidden />
+        {a && <StatCard stat={a} ground={grounds[0]} />}
+        <span className="csm-box csm-box-a" aria-hidden />
       </div>
 
       <div className="csm-col csm-col-mid">
-        {b && <StatCard stat={b} tone={tones[1]} tall />}
+        {b && <StatCard stat={b} ground={grounds[1]} tall />}
       </div>
 
       <div className="csm-col">
-        <span className="csm-box csm-box-xs" aria-hidden />
-        {c && <StatCard stat={c} tone={tones[2]} />}
+        <span className="csm-box csm-box-c" aria-hidden />
+        {c && <StatCard stat={c} ground={grounds[2]} />}
       </div>
 
       <style>{`
@@ -361,17 +362,26 @@ export function StatMosaic({
            three columns the rhythm is known, so it is one declaration. */
         .csm-col-mid { padding-top: 26px; }
 
-        /* Empty slots, inset so they read as held-open space rather than as a
-           fourth and fifth card. */
+        /* Small squares, not column-width blocks: they punctuate the stagger
+           rather than reading as two more cards. One tucks under the first
+           card toward the right, the other sits above the last card at the
+           left, matching the reference. */
         .csm-box {
-          border-radius: 22px;
+          width: clamp(96px, 11vw, 148px);
+          aspect-ratio: 1;
+          border-radius: 18px;
           background: var(--panel-2);
           border: 1px solid var(--line);
         }
-        .csm-box-sm { aspect-ratio: 5 / 4; margin-right: 30%; }
-        .csm-box-xs { aspect-ratio: 4 / 3; margin-left: 34%; }
+        .csm-box-a { align-self: flex-end; margin-right: 12%; }
+        .csm-box-c { align-self: flex-start; }
 
         .csm-stat {
+          position: relative;
+          isolation: isolate;
+          overflow: hidden;
+          color: #fff;
+          background: var(--ink);
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
@@ -389,7 +399,24 @@ export function StatMosaic({
         .csm-stat-label {
           margin-top: 8px;
           font-size: 14px;
-          opacity: 0.7;
+          opacity: 0.78;
+        }
+        .csm-ground {
+          position: absolute;
+          inset: 0;
+          z-index: -2;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        /* The gradients are bright; the copy sits at the base, so darken only
+           there and leave the top of each card at full saturation. */
+        .csm-ground-scrim {
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background: linear-gradient(to top, rgba(10,12,10,0.72) 0%, rgba(10,12,10,0.28) 42%, transparent 72%);
         }
 
         @media (max-width: 860px) {
@@ -405,15 +432,18 @@ export function StatMosaic({
 
 function StatCard({
   stat,
-  tone,
+  ground,
   tall,
 }: {
   stat: { value: string; label: string };
-  tone: string;
+  ground: string;
   tall?: boolean;
 }) {
   return (
-    <div className={`csm-stat grain ${tone} ${tall ? "csm-stat-tall" : ""}`}>
+    <div className={`csm-stat ${tall ? "csm-stat-tall" : ""}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="csm-ground" src={withBasePath(ground)} alt="" aria-hidden />
+      <span className="csm-ground-scrim" aria-hidden />
       <div className="csm-stat-value">{stat.value}</div>
       <div className="csm-stat-label">{stat.label}</div>
     </div>
