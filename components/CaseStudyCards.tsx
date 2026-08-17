@@ -315,3 +315,199 @@ export function CaseStudyStyles() {
     `}</style>
   );
 }
+
+/**
+ * Staggered showcase mosaic.
+ *
+ * The reference layout: image-led cards at varying vertical offsets with
+ * empty tinted boxes filling the gaps. The boxes aren't decoration — they
+ * read as "more coming", which is true: 13 studies are in the pipeline.
+ *
+ * Used on the Business page, which is a showcase. The /case-studies index
+ * keeps the uniform grid, because a mosaic reflows badly under search and
+ * filtering — cards would jump columns on every keystroke.
+ *
+ * The featured study takes the tall centre slot and keeps its numbers, since
+ * they are the strongest thing on the page.
+ */
+export function CaseStudyMosaic() {
+  const [left, right] = [STORIES[0], STORIES[1]];
+  const rest = STORIES.slice(2);
+
+  return (
+    <div className="csm">
+      <div className="csm-col csm-col-a">
+        {left && <MosaicCard story={left} />}
+        <span className="csm-box csm-box-sm" aria-hidden />
+      </div>
+
+      <div className="csm-col csm-col-b">
+        <MosaicCard story={FEATURED} tall stats />
+      </div>
+
+      <div className="csm-col csm-col-c">
+        <span className="csm-box csm-box-xs" aria-hidden />
+        {right && <MosaicCard story={right} />}
+        {rest.map((s) => (
+          <MosaicCard key={s.slug} story={s} />
+        ))}
+      </div>
+
+      <style>{`
+        .csm {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+          align-items: start;
+        }
+        .csm-col { display: flex; flex-direction: column; gap: 16px; }
+        /* The stagger. Offsets rather than a masonry library — with three
+           columns the rhythm is fixed, so it is two declarations. */
+        .csm-col-a { padding-top: 0; }
+        .csm-col-b { padding-top: 0; }
+        .csm-col-c { padding-top: 34px; }
+
+        /* Empty slots. Tinted, never bordered — a border would read as a
+           broken image rather than as space held open. */
+        .csm-box {
+          border-radius: 22px;
+          background: var(--panel-2);
+          border: 1px solid var(--line);
+        }
+        .csm-box-sm { aspect-ratio: 4 / 3; margin-left: 22%; }
+        .csm-box-xs { aspect-ratio: 5 / 4; margin-right: 26%; }
+
+        .csm-card {
+          position: relative;
+          isolation: isolate;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          min-height: 300px;
+          padding: 24px;
+          border-radius: 22px;
+          overflow: hidden;
+          background: var(--ink);
+          color: #fff;
+          transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+        .csm-card-tall { min-height: 470px; }
+        /* No cover yet: a light card, not a black slab. A dark card with no
+           image behind it reads as a failed image rather than as a study
+           waiting for artwork. */
+        .csm-card-plain {
+          background: var(--panel);
+          border: 1px solid var(--line);
+          color: var(--ink);
+        }
+        .csm-card-plain .csm-label { color: var(--ink-3); }
+        .csm-card-plain .csm-stats { border-top-color: var(--line); }
+        .csm-card-plain .csm-stat-label { color: var(--ink-3); }
+        .csm-card-linked { cursor: pointer; }
+        .csm-card-linked:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 18px 40px rgba(16, 20, 20, 0.16);
+        }
+        .csm-media {
+          position: absolute;
+          inset: 0;
+          z-index: -2;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .csm-scrim {
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background: linear-gradient(to top, rgba(8,11,9,0.88) 0%, rgba(8,11,9,0.42) 48%, rgba(8,11,9,0.12) 100%);
+        }
+        .csm-label {
+          font-size: 11px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          font-weight: 600;
+          color: rgba(255,255,255,0.62);
+        }
+        .csm-title {
+          margin-top: 10px;
+          font-size: clamp(17px, 1.5vw, 20px);
+          line-height: 1.28;
+          letter-spacing: -0.015em;
+          font-weight: 500;
+        }
+        /* Compact inline numbers, so the featured study keeps its proof
+           without the wide stats table it used to need. */
+        .csm-stats {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          margin-top: 18px;
+          padding-top: 16px;
+          border-top: 1px solid rgba(255,255,255,0.18);
+        }
+        .csm-stat-value {
+          font-size: 21px;
+          line-height: 1.1;
+          letter-spacing: -0.02em;
+          font-weight: 500;
+        }
+        .csm-stat-label {
+          margin-top: 2px;
+          font-size: 11.5px;
+          color: rgba(255,255,255,0.62);
+        }
+
+        @media (max-width: 900px) {
+          .csm { grid-template-columns: 1fr; }
+          .csm-col-c { padding-top: 0; }
+          .csm-box { display: none; }
+          .csm-card-tall { min-height: 340px; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function MosaicCard({
+  story,
+  tall,
+  stats,
+}: {
+  story: CaseStudy;
+  tall?: boolean;
+  stats?: boolean;
+}) {
+  const linked = hasPage(story);
+  const Tag = linked ? "a" : "div";
+  return (
+    <Tag
+      {...(linked ? { href: caseStudyHref(story) } : {})}
+      className={`csm-card ${tall ? "csm-card-tall" : ""} ${linked ? "csm-card-linked" : ""} ${story.cover ? "" : "csm-card-plain"}`}
+    >
+      {story.cover && (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="csm-media" src={withBasePath(story.cover)} alt="" aria-hidden />
+          <span className="csm-scrim" aria-hidden />
+        </>
+      )}
+      <span className="csm-label">{story.industry}</span>
+      <h3 className="csm-title">
+        {story.title}
+        {story.titleMuted ? ` ${story.titleMuted}` : ""}
+      </h3>
+      {stats && (
+        <div className="csm-stats">
+          {story.stats.map((s) => (
+            <div key={s.label}>
+              <div className="csm-stat-value">{s.value}</div>
+              <div className="csm-stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </Tag>
+  );
+}

@@ -1,30 +1,15 @@
-"use client";
-
-import { useState } from "react";
 import { SectionGuides } from "@/components/primitives/SectionGuides";
-import {
-  CaseStudyStyles,
-  FEATURED,
-  FeaturedCard,
-  FilterChips,
-  STORIES,
-  StoryCard,
-} from "@/components/CaseStudyCards";
+import { CaseStudyMosaic, CaseStudyStyles } from "@/components/CaseStudyCards";
 
 /**
- * Proof section: one featured card plus a 3-up row, with industry filtering.
+ * Proof section: the staggered showcase mosaic.
  *
- * The spec asks for a search bar above the grid. On this page the section is a
- * teaser, so it ships chips only and links through to /case-studies, which
- * carries the full search. Cards and data are shared — see
- * components/CaseStudyCards.
+ * This page is a shop window, so it shows the studies rather than offering
+ * tools to sift them. The filter chips moved to /case-studies, which is the
+ * page built for finding a specific one, and which this section links to.
+ * Cards and data are shared — see components/CaseStudyCards.
  */
 export default function CaseStudies() {
-  const [active, setActive] = useState("All");
-
-  const showFeatured = active === "All" || active === FEATURED.industry;
-  const stories = STORIES.filter((s) => active === "All" || s.industry === active);
-
   return (
     <section
       id="case-studies"
@@ -45,27 +30,11 @@ export default function CaseStudies() {
           </p>
         </div>
 
-        <div className="mt-10">
-          <FilterChips active={active} onChange={setActive} />
+        <div className="mt-12">
+          <CaseStudyMosaic />
         </div>
 
-        {showFeatured && (
-          <div className="mt-8">
-            <FeaturedCard />
-          </div>
-        )}
-
-        <div className="cs-grid mt-4">
-          {stories.map((s) => (
-            <StoryCard key={s.slug} story={s} />
-          ))}
-        </div>
-
-        {!showFeatured && stories.length === 0 && (
-          <p className="cs-empty mt-8">No case studies in this industry yet.</p>
-        )}
-
-        <a href="/case-studies" className="cs-all mt-10">
+        <a href="/case-studies" className="cs-all mt-12">
           See all case studies →
         </a>
       </div>
