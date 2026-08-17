@@ -17,11 +17,11 @@ import {
   caseStudyIndustries,
   featuredCaseStudy,
   hasPage,
-  supportingCaseStudies,
+  allCaseStudies,
 } from "@/content/caseStudies";
 
 export const FEATURED = featuredCaseStudy();
-export const STORIES = supportingCaseStudies();
+export const STORIES = allCaseStudies();
 export const INDUSTRIES = caseStudyIndustries();
 
 /** Case-insensitive match across industry, metric, title and summary. */

@@ -41,7 +41,8 @@ export default function CaseStudyIndex() {
       query,
     );
 
-  const total = stories.length + (featuredMatches ? 1 : 0);
+  // The featured study is in `stories` too, so the count is just the grid.
+  const total = stories.length;
 
   return (
     <section id="index" className="relative py-24 md:py-28">
