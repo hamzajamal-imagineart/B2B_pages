@@ -1,3 +1,7 @@
+"use client";
+
+import { CollaborationDemo } from "@/components/CollaborationDemo";
+
 /**
  * The four-tile admin bento.
  *
@@ -192,22 +196,16 @@ function MembersPanel() {
   );
 }
 
-/* Fold 04, collaboration / approvals */
+/* Fold 04, collaboration — the live cursor demo shared with the Workflows
+   page, in place of the illustrated review panel that stood here before. */
 function CollabPanel() {
   return (
-    <div className="viz-panel">
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <PanelLabel>Review</PanelLabel>
-        <span className="viz-chip viz-chip-approved"><CheckMini /> Approved</span>
-      </div>
-      <div style={{ marginTop: 14, position: "relative", aspectRatio: "16 / 8", borderRadius: 12, background: "linear-gradient(135deg,#3a3a3a,#6b6b6b)", overflow: "hidden" }}>
-        <Pin x="26%" y="34%" n="1" />
-        <Pin x="63%" y="60%" n="2" />
-      </div>
-      <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 10 }}>
-        <Comment initial="M" name="Maya" text="Love this direction, can we warm up the grade?" />
-        <Comment initial="A" name="Alina" text="Approved for the Q3 launch set." solid />
-      </div>
+    <div className="collab-frame">
+      <CollaborationDemo />
+      <style>{`
+        /* Sets the height the demo fills; it is otherwise 100% of its box. */
+        .collab-frame { aspect-ratio: 16 / 9; }
+      `}</style>
     </div>
   );
 }
@@ -264,26 +262,6 @@ function Toggle({ label, on }: { label: string; on: boolean }) {
       <span style={{ width: 34, height: 20, borderRadius: 999, background: on ? "var(--ink)" : "rgba(0,0,0,0.14)", position: "relative", flex: "0 0 auto" }}>
         <span style={{ position: "absolute", top: 2, left: on ? 16 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff" }} />
       </span>
-    </div>
-  );
-}
-function Pin({ x, y, n }: { x: string; y: string; n: string }) {
-  return (
-    <span style={{ position: "absolute", left: x, top: y, transform: "translate(-50%,-50%)", width: 24, height: 24, borderRadius: "50% 50% 50% 2px", background: "#fff", color: "var(--ink)", display: "grid", placeItems: "center", fontSize: 11.5, fontWeight: 500 }}>
-      {n}
-    </span>
-  );
-}
-function Comment({ initial, name, text, solid }: { initial: string; name: string; text: string; solid?: boolean }) {
-  return (
-    <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-      <span style={{ flex: "0 0 auto", width: 26, height: 26, borderRadius: "50%", background: solid ? "var(--ink)" : "var(--panel-2)", color: solid ? "#fff" : "var(--ink)", display: "grid", placeItems: "center", fontSize: 12, fontWeight: 500 }}>
-        {initial}
-      </span>
-      <div style={{ background: "var(--panel-2)", border: "1px solid var(--line)", borderRadius: 12, padding: "8px 12px" }}>
-        <span style={{ fontSize: 12, color: "var(--ink)", fontWeight: 500 }}>{name}</span>
-        <p style={{ fontSize: 12.5, color: "var(--ink-2)", marginTop: 2, lineHeight: 1.4 }}>{text}</p>
-      </div>
     </div>
   );
 }
