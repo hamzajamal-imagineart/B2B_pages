@@ -991,7 +991,6 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
         scrollMarginTop: 100,
       }}
     >
-      <SectionGuides edge="top" />
       {/* Centered heading + arrows on the right (grid keeps heading visually centered) */}
       <div
         style={{
@@ -1126,9 +1125,7 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
                   overflow: "hidden",
                   position: "relative",
                   border: "1px solid var(--line)",
-                  opacity: isActive ? 1 : 0.5,
-                  transform: isActive ? "scale(1)" : "scale(0.96)",
-                  transition: "opacity 380ms ease, transform 520ms cubic-bezier(0.22,1,0.36,1), box-shadow 380ms ease",
+                  transition: "transform 520ms cubic-bezier(0.22,1,0.36,1)",
                   cursor: isActive ? "default" : "pointer",
                 }}
               >
