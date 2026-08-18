@@ -1297,7 +1297,9 @@ function UseCasesFlora() {
                   <button
                     onClick={() => jumpTo(i)}
                     style={{
-                      display: "block",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 14,
                       width: "100%",
                       textAlign: "left",
                       background: "transparent",
@@ -1321,7 +1323,26 @@ function UseCasesFlora() {
                       transition: "color 360ms ease, transform 360ms cubic-bezier(0.22,1,0.36,1)",
                     }}
                   >
-                    {u.label}
+                    {/* Leading rule, the same hairline vocabulary as the
+                        section guides. scaleX from a fixed width keeps it on
+                        the compositor, so marking the active item never
+                        reflows the list mid-scroll. */}
+                    <span
+                      aria-hidden
+                      style={{
+                        flex: "0 0 auto",
+                        width: 28,
+                        height: 1,
+                        background: "currentColor",
+                        transformOrigin: "left center",
+                        /* The rule always occupies its 28px, so the labels
+                           keep one left edge whichever item is active. */
+                        transform: isActive ? "scaleX(1)" : "scaleX(0)",
+                        opacity: isActive ? 1 : 0,
+                        transition: "transform 360ms cubic-bezier(0.22,1,0.36,1), opacity 240ms ease",
+                      }}
+                    />
+                    <span>{u.label}</span>
                   </button>
                 </li>
               );
@@ -1415,13 +1436,16 @@ function UseCasesFlora() {
 // ────────────────────────────────────────────────────────────────────────────
 const TPL_CATEGORIES = ["All", "Fashion", "Advertising", "Product", "VFX", "Branding", "Character"];
 
+/* Each card runs a real capture from the Enterprise video set, picked to match
+   the template it illustrates. 768w and eight seconds: the cards render around
+   370px, so the source resolution was wasted bytes. */
 const TEMPLATES = [
-  { cat: "Fashion",     title: "Garment Try-Ons",         desc: "Outfit swaps and lifestyle visuals from a single product image.",    seed: "wf-tpl-fashion-tryon"   },
-  { cat: "Advertising", title: "Campaign Variants",       desc: "One brief into every format and market, on-brand by default.",       seed: "wf-tpl-ad-campaign"     },
-  { cat: "Product",     title: "Studio Product Shots",    desc: "Photorealistic SKU imagery in any setting. No studio required.",    seed: "wf-tpl-product-studio"  },
-  { cat: "VFX",         title: "Scene Compositing",       desc: "Chain image and video models into one narrative pipeline.",          seed: "wf-tpl-vfx-scene"       },
-  { cat: "Branding",    title: "Brand Kit Application",   desc: "Lock your identity once. Generate infinite on-brand assets.",        seed: "wf-tpl-brand-kit"       },
-  { cat: "Character",   title: "Consistent Characters",   desc: "Build characters that stay on-model across every medium.",           seed: "wf-tpl-character"       },
+  { cat: "Fashion",     title: "Garment Try-Ons",         desc: "Outfit swaps and lifestyle visuals from a single product image.",    seed: "wf-tpl-fashion-tryon",  video: "/media/templates/fashion-tryon.mp4"  },
+  { cat: "Advertising", title: "Campaign Variants",       desc: "One brief into every format and market, on-brand by default.",       seed: "wf-tpl-ad-campaign",    video: "/media/templates/ad-campaign.mp4"    },
+  { cat: "Product",     title: "Studio Product Shots",    desc: "Photorealistic SKU imagery in any setting. No studio required.",    seed: "wf-tpl-product-studio", video: "/media/templates/product-studio.mp4" },
+  { cat: "VFX",         title: "Scene Compositing",       desc: "Chain image and video models into one narrative pipeline.",          seed: "wf-tpl-vfx-scene",      video: "/media/templates/vfx-scene.mp4"      },
+  { cat: "Branding",    title: "Brand Kit Application",   desc: "Lock your identity once. Generate infinite on-brand assets.",        seed: "wf-tpl-brand-kit",      video: "/media/templates/brand-kit.mp4"      },
+  { cat: "Character",   title: "Consistent Characters",   desc: "Build characters that stay on-model across every medium.",           seed: "wf-tpl-character",      video: "/media/templates/character.mp4"      },
 ];
 
 function TemplatesPreview() {
@@ -1506,7 +1530,26 @@ function TemplatesPreview() {
                   border: `1px solid ${isHov ? "var(--line-strong)" : "var(--line)"}`,
                 }}
               >
-                <MediaPlaceholder tone="light" label={t.title} />
+                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                <video
+                  src={withBasePath(t.video)}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload={i < 3 ? "auto" : "metadata"}
+                  aria-label={t.title}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                    transform: isHov ? "scale(1.04)" : "scale(1)",
+                    transition: "transform 600ms cubic-bezier(0.25,0.46,0.45,0.94)",
+                  }}
+                />
               </div>
               <div>
                 <div
