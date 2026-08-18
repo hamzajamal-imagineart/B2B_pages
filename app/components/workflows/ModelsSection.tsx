@@ -1,14 +1,17 @@
 "use client";
 
+import { CONTAINER_PAD, SECTION_Y, TYPE } from "./scale";
+
+import { MediaPlaceholder } from "./MediaPlaceholder";
+
 const FONT = "var(--font-sans), sans-serif";
-const CONTAINER_PAD = "calc((100vw - min(86vw, 1360px)) / 2)";
 
 type ModelType = "image" | "video" | "audio";
 
 // Hero — full-width feature card
 const HERO = {
   name: "Seedance 2.0",
-  desc: "Cinematic video, multi-shot scenes, and native sound — in seconds.",
+  desc: "Cinematic video, multi-shot scenes, and native sound, in seconds.",
   // TODO Fal: replace with hero output from Seedance 2.0 (cinematic landscape, golden hour)
   seed: "seedance-tuscany-villa",
 };
@@ -105,19 +108,8 @@ function FeatureCard({
         border: "1px solid rgba(255,255,255,0.06)",
       }}
     >
-      {/* TODO Fal: replace with model-generated image */}
-      <img
-        src={`https://picsum.photos/seed/${seed}/1600/900`}
-        alt={name}
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-        }}
-      />
+      {/* Awaiting model-generated hero output. */}
+      <MediaPlaceholder label={name} />
       <div
         aria-hidden
         style={{
@@ -206,7 +198,6 @@ function FeatureCard({
 
 // ── Visual pill — small thumbnail card with overlaid name + type icon ──
 function ModelPill({ name, type }: { name: string; type: ModelType }) {
-  // Stable seed per model so picsum returns the same image each render.
   const seed = `model-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   return (
     <a
@@ -237,21 +228,8 @@ function ModelPill({ name, type }: { name: string; type: ModelType }) {
         if (img) img.style.transform = "scale(1)";
       }}
     >
-      {/* TODO Fal: replace with model-specific output thumbnail */}
-      <img
-        src={`https://picsum.photos/seed/${seed}/480/270`}
-        alt={name}
-        loading="lazy"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-          transition: "transform 600ms cubic-bezier(0.25,0.46,0.45,0.94)",
-        }}
-      />
+      {/* Awaiting model-specific output thumbnail. */}
+      <MediaPlaceholder label={name} />
       <div
         aria-hidden
         style={{
@@ -301,7 +279,7 @@ export default function ModelsSection() {
     <section
       style={{
         backgroundColor: "#0A0A0B",
-        padding: `120px ${CONTAINER_PAD}`,
+        padding: `${SECTION_Y} ${CONTAINER_PAD}`,
       }}
     >
       {/* Heading — left-aligned */}
@@ -309,7 +287,7 @@ export default function ModelsSection() {
         <h2
           style={{
             fontFamily: FONT,
-            fontSize: "clamp(32px, 4.2vw, 60px)",
+            fontSize: TYPE.h2,
             fontWeight: 400,
             color: "#fff",
             letterSpacing: "-0.03em",

@@ -1,21 +1,22 @@
 "use client";
+
+import { CONTAINER_PAD, SECTION_Y_LG, TYPE } from "./scale";
 import { useState } from "react";
 
 const FONT = "var(--font-sans), sans-serif";
-const CONTAINER_PAD = "calc((100vw - min(86vw, 1360px)) / 2)";
 
 const ITEMS = [
   {
     q: "How is ImagineArt Workflows different from other creative AI tools?",
-    a: "Most creative AI tools give you a single model and a single output. Workflows let you chain image, video, audio, and text models into a single pipeline — generate, iterate, and ship from one canvas without re-exporting between four apps.",
+    a: "Most creative AI tools give you a single model and a single output. Workflows let you chain image, video, audio, and text models into a single pipeline: generate, iterate, and ship from one canvas without re-exporting between four apps.",
   },
   {
     q: "What content types does it support?",
-    a: "Image, video, audio, and text — all in one workflow. Pull from any model in our catalog (Seedance, Kling, Nano Banana, OpenAI, and 60+ more) and combine them in a single canvas.",
+    a: "Image, video, audio, and text, all in one workflow. Pull from any model in our catalog (Seedance, Kling, Nano Banana, OpenAI, and 60+ more) and combine them in a single canvas.",
   },
   {
     q: "Can I train it with my own brand assets?",
-    a: "Yes. Upload your brand kit — logos, fonts, color tokens, and reference imagery — once, and every output across the workflow stays on-brand by default.",
+    a: "Yes. Upload your brand kit once, with logos, fonts, color tokens, and reference imagery, and every output across the workflow stays on-brand by default.",
   },
   {
     q: "Will the agents follow my brand style, including do's and don'ts (colors, fonts, tone, layout)?",
@@ -27,7 +28,7 @@ const ITEMS = [
   },
   {
     q: "Who is ImagineArt Workflows for?",
-    a: "Creative teams shipping at scale — brand studios, in-house marketing, content agencies, and solo creators who want production-grade output without cobbling together four tools.",
+    a: "Creative teams shipping at scale: brand studios, in-house marketing, content agencies, and solo creators who want production-grade output without cobbling together four tools.",
   },
   {
     q: "Does ImagineArt train on my creations?",
@@ -65,7 +66,7 @@ export default function FAQ() {
     <section
       style={{
         backgroundColor: "#ffffff",
-        padding: `120px ${CONTAINER_PAD}`,
+        padding: `${SECTION_Y_LG} ${CONTAINER_PAD}`,
       }}
     >
       {/* Heading — centered */}
@@ -93,7 +94,7 @@ export default function FAQ() {
         <h2
           style={{
             fontFamily: FONT,
-            fontSize: "clamp(36px, 5vw, 72px)",
+            fontSize: TYPE.h2Faq,
             fontWeight: 400,
             color: "#0a0a0b",
             letterSpacing: "-0.035em",

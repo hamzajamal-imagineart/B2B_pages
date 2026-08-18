@@ -1,10 +1,13 @@
 "use client";
+
+import { CONTAINER_PAD, SECTION_Y, TYPE } from "./scale";
 import { useRef, useState } from "react";
 import { IntegrationsGrid } from "@/components/IntegrationsGrid";
 import { CollaborationDemo } from "@/components/CollaborationDemo";
+import { MediaPlaceholder } from "./MediaPlaceholder";
+import { withBasePath } from "@/lib/assets";
 
 const FONT = "var(--font-sans), sans-serif";
-const CONTAINER_PAD = "calc((100vw - min(86vw, 1360px)) / 2)";
 
 const CARD_BG = "#ffffff";
 const CARD_BORDER = "1px solid rgba(0,0,0,0.08)";
@@ -28,7 +31,7 @@ function OrbitalAgents() {
       }}
     >
       <video
-        src="https://static.cdn-luma.com/files/sanity/d1ef7d37-b306-43d4-ad3c-8c5ecf9b7d55.mp4#t=0.001"
+        src={withBasePath("/media/apps/video-reframe.mp4")}
         autoPlay
         muted
         loop
@@ -95,7 +98,9 @@ function BrandKitDemo() {
             transition: "transform 420ms cubic-bezier(0.34,1.56,0.64,1) 55ms",
           }}
         >
-          <img src="https://picsum.photos/seed/portrait/220/220" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <div style={{ position: "relative", width: "100%", aspectRatio: "1 / 1" }}>
+            <MediaPlaceholder />
+          </div>
         </div>
 
         {/* 3 — Color swatches */}
@@ -126,7 +131,9 @@ function BrandKitDemo() {
             transition: "transform 420ms cubic-bezier(0.34,1.56,0.64,1) 30ms",
           }}
         >
-          <img src="https://picsum.photos/seed/dark-studio/220/220" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "brightness(0.65) saturate(0.8)" }} />
+          <div style={{ position: "relative", width: "100%", aspectRatio: "1 / 1" }}>
+            <MediaPlaceholder />
+          </div>
         </div>
 
         {/* 5 — Brand identity grid */}
@@ -185,19 +192,8 @@ function ScaledDemo() {
         overflow: "hidden",
       }}
     >
-      {/* TODO: replace with the attached headphones mosaic once saved at /public/scaled-production.jpg */}
-      <img
-        src="https://picsum.photos/seed/scaled-production-mosaic/1200/750"
-        alt="Batched product variants — packaging, key shots, product pages"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-        }}
-      />
+      {/* Awaiting the batched-variants mosaic; see HANDOFF open items. */}
+      <MediaPlaceholder label="Batched product variants: packaging, key shots, product pages" />
     </div>
   );
 }
@@ -281,7 +277,7 @@ function Card({
 // ── Section ─────────────────────────────────────────────────────────────────
 export default function BentoSection() {
   return (
-    <section style={{ padding: `100px ${CONTAINER_PAD} 120px`, backgroundColor: "#ffffff", display: "flow-root" }}>
+    <section style={{ padding: `${SECTION_Y} ${CONTAINER_PAD}`, backgroundColor: "#ffffff", display: "flow-root" }}>
       <div style={{ marginBottom: 100 }} />
 
       {/* Heading */}
@@ -299,11 +295,11 @@ export default function BentoSection() {
         >
           Capabilities
         </div>
-        <h2 style={{ ...TEXT_STYLE, fontSize: "clamp(32px, 4.5vw, 60px)", fontWeight: 400, color: "#0a0a0b", letterSpacing: "-0.03em", lineHeight: 1, margin: 0 }}>
+        <h2 style={{ ...TEXT_STYLE, fontSize: TYPE.h2, fontWeight: 400, color: "#0a0a0b", letterSpacing: "-0.03em", lineHeight: 1, margin: 0 }}>
           Built for teams that{" "}
           <em style={{ fontStyle: "italic", fontWeight: 400, color: "rgba(10,10,11,0.5)" }}>scale.</em>
         </h2>
-        <p style={{ ...TEXT_STYLE, fontSize: "clamp(13px, 1.1vw, 15px)", color: "rgba(10,10,11,0.55)", marginTop: 12 }}>
+        <p style={{ ...TEXT_STYLE, fontSize: TYPE.body, color: "rgba(10,10,11,0.55)", marginTop: 12 }}>
           Real-time collaboration, brand consistency, and deep integrations — all in one place.
         </p>
       </div>
@@ -313,7 +309,7 @@ export default function BentoSection() {
         <Card
           num="01"
           title="Real-time collaboration."
-          desc="See every change live. Comment, edit, and iterate alongside your whole team on the same canvas — no exports, no version sprawl."
+          desc="See every change live. Comment, edit, and iterate alongside your whole team on the same canvas. No exports, no version sprawl."
           span={2}
           height={500}
           big
@@ -324,7 +320,7 @@ export default function BentoSection() {
         <Card
           num="02"
           title="Agents with shared context."
-          desc="Creative agents that carry context across image, video, audio, and text — so work moves from concept to delivery without fragmentation."
+          desc="Creative agents that carry context across image, video, audio, and text, so work moves from concept to delivery without fragmentation."
           height={500}
         >
           <OrbitalAgents />

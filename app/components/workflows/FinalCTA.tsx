@@ -1,8 +1,9 @@
 "use client";
+
+import { CONTAINER_PAD, SECTION_Y_LG, TYPE } from "./scale";
 import { usePathname } from "next/navigation";
 
 const FONT = "var(--font-sans), sans-serif";
-const CONTAINER_PAD = "calc((100vw - min(86vw, 1360px)) / 2)";
 
 // Sparkle path from the logo lab — the ImagineArt 4-point star.
 const STAR_PATH =
@@ -156,7 +157,7 @@ export default function FinalCTA() {
       style={{
         position: "relative",
         backgroundColor: "#ffffff",
-        padding: `160px ${CONTAINER_PAD} 200px`,
+        padding: `${SECTION_Y_LG} ${CONTAINER_PAD}`,
         overflow: "hidden",
       }}
     >
@@ -362,7 +363,7 @@ export default function FinalCTA() {
         <h2
           style={{
             fontFamily: FONT,
-            fontSize: "clamp(40px, 6vw, 84px)",
+            fontSize: TYPE.h2Cta,
             fontWeight: 600,
             color: "#0a0a0b",
             letterSpacing: "-0.035em",

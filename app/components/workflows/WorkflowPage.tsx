@@ -1,11 +1,15 @@
 "use client";
+
+import { CONTAINER_PAD, SECTION_Y, SECTION_Y_LG, TYPE } from "./scale";
+
+import { MediaPlaceholder } from "./MediaPlaceholder";
+import { withBasePath } from "@/lib/assets";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import HeroPromptBox from "./HeroPromptBox";
 import BentoSection from "./BentoSection";
 
 const FONT = "var(--font-sans), sans-serif";
-const CONTAINER_PAD = "calc((100vw - min(86vw, 1360px)) / 2)";
 
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -478,7 +482,7 @@ function CanvasHero() {
           alignItems: "center",
           justifyContent: "flex-end",
           gap: "clamp(40px, 5vh, 64px)",
-          padding: `clamp(96px, 12vh, 160px) ${CONTAINER_PAD} clamp(56px, 7vh, 96px)`,
+          padding: `${SECTION_Y_LG} ${CONTAINER_PAD} ${SECTION_Y}`,
           textAlign: "center",
           boxSizing: "border-box",
           pointerEvents: "none",
@@ -502,7 +506,7 @@ function CanvasHero() {
           <h1
             style={{
               fontFamily: FONT,
-              fontSize: "clamp(40px, 6.4vw, 92px)",
+              fontSize: TYPE.h1,
               fontWeight: 400,
               color: "#ffffff",
               letterSpacing: "-0.035em",
@@ -519,7 +523,7 @@ function CanvasHero() {
           <p
             style={{
               fontFamily: FONT,
-              fontSize: "clamp(15px, 1.2vw, 17px)",
+              fontSize: TYPE.lede,
               color: "rgba(255,255,255,0.7)",
               letterSpacing: "-0.01em",
               lineHeight: 1.6,
@@ -702,9 +706,9 @@ function AgenticCard3() {
           position: "relative",
           overflow: "hidden",
         }}>
-          <div style={{ position: "absolute", top: 16, left: 16, padding: "4px 10px", background: "#fff", borderRadius: 12, fontFamily: FONT, fontSize: 10, fontWeight: 700, color: "#0a0a0b", letterSpacing: "0.06em" }}>BRAND</div>
+          <div style={{ position: "absolute", top: 16, left: 16, padding: "4px 10px", background: "#fff", borderRadius: 12, fontFamily: FONT, fontSize: 10, fontWeight: 600, color: "#0a0a0b", letterSpacing: "0.06em" }}>BRAND</div>
           <div style={{ position: "absolute", bottom: 18, left: 18, right: 18 }}>
-            <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: "#fff", lineHeight: 1.1, marginBottom: 6 }}>Holiday 2026</div>
+            <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 500, color: "#fff", lineHeight: 1.1, marginBottom: 6 }}>Holiday 2026</div>
             <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>Limited drop · Shop now</div>
           </div>
         </div>
@@ -844,7 +848,7 @@ function WorkflowCard2() {
           </div>
           <div style={{ position: "absolute", bottom: 20, left: 20, right: 20 }}>
             <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>Brand approved</div>
-            <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 600, color: "#fff", lineHeight: 1.15 }}>Style · Brand Kit</div>
+            <div style={{ fontFamily: FONT, fontSize: TYPE.h3, fontWeight: 500, color: "#fff", lineHeight: 1.15 }}>Style · Brand Kit</div>
           </div>
         </div>
       </div>
@@ -872,7 +876,6 @@ function VideoCard({ src }: { src: string }) {
       loop
       playsInline
       preload="auto"
-      crossOrigin="anonymous"
       style={{
         position: "absolute",
         inset: 0,
@@ -994,7 +997,7 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
         position: "relative",
         background: "#ffffff",
         color: "#0a0a0b",
-        padding: `120px 0`,
+        padding: `${SECTION_Y} 0`,
         overflow: "hidden",
         scrollMarginTop: 100,
       }}
@@ -1028,7 +1031,7 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
           <h2
             style={{
               fontFamily: FONT,
-              fontSize: "clamp(36px, 5vw, 72px)",
+              fontSize: TYPE.h2,
               fontWeight: 500,
               color: "#0a0a0b",
               letterSpacing: "-0.035em",
@@ -1171,7 +1174,7 @@ const USE_CASES: UseCase[] = [
   { id: "fashion",      label: "Fashion",        visualTitle: "Editorial Lookbooks",          desc: "Editorial fashion stories. On-model, every time.",         video: "/editor-demo.mp4"   },
   { id: "advertising",  label: "Advertising",    visualTitle: "Performance Ad Pack",          desc: "Hooks, statics, motion. Built for paid social.",           video: "/simple-demo.mp4"   },
   { id: "photography",  label: "Photography",    visualTitle: "Studio Product Shots",         desc: "Photoreal SKU shots. No studio.",                          video: "/iterate-demo.mp4"  },
-  { id: "concepting",   label: "Concepting",     visualTitle: "Concept Art & Worldbuilding",  desc: "Characters, environments, props — on-style.",             video: "/media/variable-demo.mp4" },
+  { id: "concepting",   label: "Concepting",     visualTitle: "Concept Art & Worldbuilding",  desc: "Characters, environments, props, on-style.",             video: "/media/variable-demo.mp4" },
   { id: "branding",     label: "Branding",       visualTitle: "Brand Kit Application",        desc: "Lock your brand once. Generate forever.",                  video: "/models-bg.mp4"     },
   { id: "product",      label: "Product",        visualTitle: "Packshots & Renders",          desc: "Studio-grade visuals for every PDP.",                      video: "/workflow-hero.mp4" },
   { id: "motion",       label: "Motion",         visualTitle: "Animated Brand Moments",       desc: "Statics into motion. Loops, transitions, hero moments.",   video: "/editor-demo.mp4"   },
@@ -1247,7 +1250,7 @@ function UseCasesFlora() {
         position: "relative",
         background: "#0A0A0B",
         color: "#fff",
-        padding: `120px 0 160px`,
+        padding: `${SECTION_Y} 0`,
       }}
     >
       {/* Background — only the active category's video is mounted, blurred and
@@ -1311,7 +1314,7 @@ function UseCasesFlora() {
           <h2
             style={{
               fontFamily: FONT,
-              fontSize: "clamp(36px, 3.6vw, 56px)",
+              fontSize: TYPE.h2,
               fontWeight: 500,
               letterSpacing: "-0.03em",
               lineHeight: 1.05,
@@ -1394,7 +1397,7 @@ function UseCasesFlora() {
                       // forces a layout reflow on every active-index change, which
                       // is what was shifting the page mid-scroll. Active state is
                       // now expressed via transform: scale (compositor-only).
-                      fontSize: "clamp(34px, 3.2vw, 50px)",
+                      fontSize: TYPE.h2,
                       fontWeight: 400,
                       letterSpacing: "-0.03em",
                       lineHeight: 1.05,
@@ -1458,7 +1461,7 @@ function UseCasesFlora() {
               key={`title-${current.id}`}
               style={{
                 fontFamily: FONT,
-                fontSize: 22,
+                fontSize: TYPE.h3,
                 fontWeight: 600,
                 color: "rgb(238,238,238)",
                 letterSpacing: "-0.03em",
@@ -1519,7 +1522,7 @@ const TPL_CATEGORIES = ["All", "Fashion", "Advertising", "Product", "VFX", "Bran
 const TEMPLATES = [
   { cat: "Fashion",     title: "Garment Try-Ons",         desc: "Outfit swaps and lifestyle visuals from a single product image.",    seed: "wf-tpl-fashion-tryon"   },
   { cat: "Advertising", title: "Campaign Variants",       desc: "One brief into every format and market, on-brand by default.",       seed: "wf-tpl-ad-campaign"     },
-  { cat: "Product",     title: "Studio Product Shots",    desc: "Photorealistic SKU imagery in any setting — no studio required.",    seed: "wf-tpl-product-studio"  },
+  { cat: "Product",     title: "Studio Product Shots",    desc: "Photorealistic SKU imagery in any setting. No studio required.",    seed: "wf-tpl-product-studio"  },
   { cat: "VFX",         title: "Scene Compositing",       desc: "Chain image and video models into one narrative pipeline.",          seed: "wf-tpl-vfx-scene"       },
   { cat: "Branding",    title: "Brand Kit Application",   desc: "Lock your identity once. Generate infinite on-brand assets.",        seed: "wf-tpl-brand-kit"       },
   { cat: "Character",   title: "Consistent Characters",   desc: "Build characters that stay on-model across every medium.",           seed: "wf-tpl-character"       },
@@ -1531,7 +1534,7 @@ function TemplatesPreview() {
   const visible = activeCat === "All" ? TEMPLATES : TEMPLATES.filter((t) => t.cat === activeCat);
 
   return (
-    <section style={{ background: "#ffffff", padding: `120px ${CONTAINER_PAD}`, color: "#0a0a0b" }}>
+    <section style={{ background: "#ffffff", padding: `${SECTION_Y} ${CONTAINER_PAD}`, color: "#0a0a0b" }}>
       <div
         style={{
           display: "flex",
@@ -1559,7 +1562,7 @@ function TemplatesPreview() {
           <h2
             style={{
               fontFamily: FONT,
-              fontSize: "clamp(32px, 4vw, 56px)",
+              fontSize: TYPE.h2,
               fontWeight: 400,
               color: "#0a0a0b",
               letterSpacing: "-0.03em",
@@ -1640,20 +1643,7 @@ function TemplatesPreview() {
                   boxShadow: isHov ? "0 12px 28px rgba(10,10,11,0.08)" : "0 1px 2px rgba(10,10,11,0.03)",
                 }}
               >
-                <img
-                  src={`https://picsum.photos/seed/${t.seed}/640/480`}
-                  alt={t.title}
-                  loading="lazy"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                    transform: isHov ? "scale(1.04)" : "scale(1)",
-                    transition: "transform 600ms cubic-bezier(0.25,0.46,0.45,0.94)",
-                    filter: "brightness(0.92)",
-                  }}
-                />
+                <MediaPlaceholder tone="light" label={t.title} />
               </div>
               <div>
                 <div
@@ -1728,9 +1718,9 @@ export default function WorkflowPage() {
         description="Iterate fast on ideas. Scale production with repeatable workflows. Multiply output with creative agents."
         tabs={["Quick Iterations", "Full Creative Pipelines", "Autonomous Agent"]}
         cards={[
-          <VideoCard key="a1" src="https://www.kyoso.com/video/works-with-all-channels.webm" />,
-          <VideoCard key="a2" src="https://www.kyoso.com/video/access-multiple-content-types.webm" />,
-          <VideoCard key="a3" src="https://www.kyoso.com/video/cares-about-quality-and-guidelines.webm" />,
+          <VideoCard key="a1" src={withBasePath("/media/card-generate.mp4")} />,
+          <VideoCard key="a2" src={withBasePath("/media/variable-demo.mp4")} />,
+          <VideoCard key="a3" src={withBasePath("/media/apps/sketch-to-render.mp4")} />,
         ]}
       />
 
