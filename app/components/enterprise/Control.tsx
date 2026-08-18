@@ -59,8 +59,12 @@ export default function Control() {
           <ModelsMock />
         </StackCard>
         <StackCard tone="4" title="Integrations" body="Fits into the tools your team already runs.">
-          <div className="stack-embed">
-            <IntegrationsGrid />
+          {/* Fills the card's remaining height rather than sitting in the
+              16:9 embed frame: the grid has no fixed aspect of its own, and
+              at 16:9 pinned to the bottom the logos bunched at the base of
+              the card. Vignette off, so the marks stay evenly lit. */}
+          <div className="stack-fill">
+            <IntegrationsGrid vignette={false} />
           </div>
         </StackCard>
         <StackCard tone="5" title="Control" body="Central governance and admin oversight.">
@@ -147,6 +151,14 @@ export default function Control() {
           right: 0;
           bottom: 22px;
           aspect-ratio: 16 / 9;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        /* Same clip as .stack-embed, but top-anchored and free of a fixed
+           ratio, so content starts right under the card's copy. */
+        .stack-fill {
+          position: absolute;
+          inset: 0 0 22px 0;
           border-radius: 12px;
           overflow: hidden;
         }
