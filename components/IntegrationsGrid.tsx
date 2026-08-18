@@ -31,7 +31,7 @@ const ICON_POOL = [
 
 function sr(seed: number) { const x = Math.sin(seed + 1) * 10000; return x - Math.floor(x); }
 
-export function IntegrationsGrid() {
+export function IntegrationsGrid({ vignette = true }: { vignette?: boolean } = {}) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -121,16 +121,20 @@ export function IntegrationsGrid() {
         ))}
       </div>
 
-      {/* Vignette */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: 'radial-gradient(ellipse 70% 70% at 50% 50%, transparent 30%, rgba(0,0,0,0.35) 100%)',
-          pointerEvents: "none",
-        }}
-      />
+      {/* Vignette. Fades the grid into a dark card on the Enterprise stack
+          rail; on a light tile it reads as a dark blob, so that caller turns
+          it off. Default on, so existing usage is unchanged. */}
+      {vignette && (
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: 'radial-gradient(ellipse 70% 70% at 50% 50%, transparent 30%, rgba(0,0,0,0.35) 100%)',
+            pointerEvents: "none",
+          }}
+        />
+      )}
     </div>
   );
 }

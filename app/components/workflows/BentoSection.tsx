@@ -13,8 +13,8 @@ const FONT = "var(--font-sans), sans-serif";
 
 const CARD_BG = "#ffffff";
 const CARD_BORDER = "1px solid rgba(0,0,0,0.08)";
-const DEMO_BG = "#0F0F13";
-const DEMO_BORDER = "1px solid rgba(255,255,255,0.05)";
+const DEMO_BG = "var(--panel)";
+const DEMO_BORDER = "1px solid var(--line)";
 
 const TEXT_STYLE: React.CSSProperties = { fontFamily: FONT };
 
@@ -101,7 +101,7 @@ function BrandKitDemo() {
           }}
         >
           <div style={{ position: "relative", width: "100%", aspectRatio: "1 / 1" }}>
-            <MediaPlaceholder />
+            <MediaPlaceholder tone="light" />
           </div>
         </div>
 
@@ -134,7 +134,7 @@ function BrandKitDemo() {
           }}
         >
           <div style={{ position: "relative", width: "100%", aspectRatio: "1 / 1" }}>
-            <MediaPlaceholder />
+            <MediaPlaceholder tone="light" />
           </div>
         </div>
 
@@ -290,7 +290,7 @@ export default function BentoSection() {
           span={2}
           big
         >
-          <CollaborationDemo tone="dark" />
+          <CollaborationDemo tone="light" />
         </Card>
 
         <Card
@@ -319,7 +319,7 @@ export default function BentoSection() {
           title="Integrations."
           desc="Connect Figma, Slack, Notion, and 100+ tools your team already uses. No accounts required."
         >
-          <IntegrationsGrid />
+          <IntegrationsGrid vignette={false} />
         </Card>
 
         <style>{`

@@ -1281,7 +1281,7 @@ function UseCasesFlora() {
             From product shots to VFX, from lookbooks to motion ads, a workflow for every kind of creative work.
           </p>
           <div style={{ display: "flex", gap: 10, marginBottom: 80 }}>
-            <ButtonLink href="#" variant="ghost" size="md">
+            <ButtonLink href="#" variant="brand" size="md">
               Open the app
             </ButtonLink>
             <ButtonLink href="/templates" variant="muted" size="md">
@@ -1404,7 +1404,7 @@ function UseCasesFlora() {
             >
               {current.desc}
             </p>
-            <ButtonLink href="/templates" variant="ghost" size="md">
+            <ButtonLink href="/templates" variant="muted" size="md">
               Explore this Flow →
             </ButtonLink>
           </div>
@@ -1453,7 +1453,7 @@ function TemplatesPreview() {
             Pre-built workflows, <span className="h-muted">ready to use</span>
           </h2>
         </div>
-        <ButtonLink href="/templates" variant="ghost" size="md">
+        <ButtonLink href="/templates" variant="muted" size="md">
           See all the templates
         </ButtonLink>
       </div>
