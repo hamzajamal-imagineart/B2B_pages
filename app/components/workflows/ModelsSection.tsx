@@ -2,7 +2,7 @@
 
 import { CONTAINER_PAD, SECTION_Y, TYPE, SURFACE } from "./scale";
 
-import { withBasePath } from "@/lib/assets";
+import { MediaPlaceholder } from "./MediaPlaceholder";
 import { ButtonLink } from "@/components/Button";
 import { SectionGuides } from "@/components/primitives/SectionGuides";
 
@@ -15,14 +15,13 @@ const HERO = {
   name: "Seedance 2.0",
   desc: "Cinematic video, multi-shot scenes, and native sound, in seconds.",
   seed: "seedance-tuscany-villa",
-  image: "/media/models/hero-seedance.jpg",
 };
 
 // Split row — three side-by-side feature cards
-const FEATURED: { name: string; desc: string; seed: string; image: string }[] = [
-  { name: "Kling",       desc: "Cinematic video with high motion fidelity.", seed: "kling-cinematic-cliff", image: "/media/models/kling.jpg" },
-  { name: "OpenAI",      desc: "Sharp, prompt-faithful imagery and reasoning.", seed: "openai-orbital-render", image: "/media/models/openai.jpg" },
-  { name: "Nano Banana", desc: "Fast, low-cost image edits and variants at scale.", seed: "nano-banana-watchtower", image: "/media/models/nano-banana.jpg" },
+const FEATURED: { name: string; desc: string; seed: string }[] = [
+  { name: "Kling",       desc: "Cinematic video with high motion fidelity.", seed: "kling-cinematic-cliff" },
+  { name: "OpenAI",      desc: "Sharp, prompt-faithful imagery and reasoning.", seed: "openai-orbital-render" },
+  { name: "Nano Banana", desc: "Fast, low-cost image edits and variants at scale.", seed: "nano-banana-watchtower" },
 ];
 
 // Compact pills, grouped by modality (5+ per row, no overlap with hero/featured)
@@ -90,14 +89,12 @@ function FeatureCard({
   name,
   desc,
   seed,
-  image,
   height,
   big = false,
 }: {
   name: string;
   desc?: string;
   seed: string;
-  image: string;
   height: number;
   big?: boolean;
 }) {
@@ -112,12 +109,8 @@ function FeatureCard({
         border: `1px solid ${SURFACE.line}`,
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={withBasePath(image)}
-        alt=""
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-      />
+      {/* Awaiting real model output. */}
+      <MediaPlaceholder tone="light" label={name} />
       <div
         aria-hidden
         style={{
@@ -178,12 +171,7 @@ function FeatureCard({
 }
 
 // ── Visual pill — small thumbnail card with overlaid name + type icon ──
-/* Six stills cycled across the catalogue. These illustrate the kind of work the
-   models produce; they are not per-model outputs, which is why no card claims
-   a specific one. */
-const PILL_IMAGES = [1, 2, 3, 4, 5, 6].map((n) => `/media/models/pill-${n}.jpg`);
-
-function ModelPill({ name, type, index = 0 }: { name: string; type: ModelType; index?: number }) {
+function ModelPill({ name, type }: { name: string; type: ModelType }) {
   return (
     <a
       href="#"
@@ -213,21 +201,8 @@ function ModelPill({ name, type, index = 0 }: { name: string; type: ModelType; i
         if (img) img.style.transform = "scale(1)";
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={withBasePath(PILL_IMAGES[index % PILL_IMAGES.length])}
-        alt=""
-        loading="lazy"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-          transition: "transform 400ms cubic-bezier(0.22,1,0.36,1)",
-        }}
-      />
+      {/* Awaiting real model output. */}
+      <MediaPlaceholder tone="light" label={name} />
       <div
         aria-hidden
         style={{
@@ -298,7 +273,6 @@ export default function ModelsSection() {
           name={HERO.name}
           desc={HERO.desc}
           seed={HERO.seed}
-          image={HERO.image}
           height={400}
           big
         />
@@ -317,7 +291,6 @@ export default function ModelsSection() {
               name={m.name}
               desc={m.desc}
               seed={m.seed}
-              image={m.image}
               height={300}
             />
           ))}
@@ -325,18 +298,18 @@ export default function ModelsSection() {
 
         {/* Hug-width pill rows — image / video / audio */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(6, minmax(0, 1fr))", gap: 10, marginTop: 6 }}>
-          {PILLS_IMAGE.map((name, i) => (
-            <ModelPill key={name} name={name} type="image" index={i + 0} />
+          {PILLS_IMAGE.map((name) => (
+            <ModelPill key={name} name={name} type="image" />
           ))}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(6, minmax(0, 1fr))", gap: 10 }}>
-          {PILLS_VIDEO.map((name, i) => (
-            <ModelPill key={name} name={name} type="video" index={i + 6} />
+          {PILLS_VIDEO.map((name) => (
+            <ModelPill key={name} name={name} type="video" />
           ))}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(6, minmax(0, 1fr))", gap: 10 }}>
-          {PILLS_AUDIO.map((name, i) => (
-            <ModelPill key={name} name={name} type="audio" index={i + 12} />
+          {PILLS_AUDIO.map((name) => (
+            <ModelPill key={name} name={name} type="audio" />
           ))}
         </div>
       </div>
