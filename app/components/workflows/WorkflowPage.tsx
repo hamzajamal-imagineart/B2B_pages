@@ -1239,56 +1239,50 @@ function UseCasesFlora() {
     >
       <SectionGuides edge="top" />
 
-      {/* Foreground content — left scrolls normally, right is sticky */}
+      {/* Centred header, full width. It used to sit at the top of the left
+          column, which pushed the category list far below the preview card
+          beside it and left the two visually unrelated. */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          padding: `0 ${CONTAINER_PAD}`,
+          textAlign: "center",
+          marginBottom: 64,
+        }}
+      >
+        <h2 className="h2" style={{ margin: "0 auto" }}>
+          Scale every idea <span className="h-muted">into a workflow</span>
+        </h2>
+        <p className="lede" style={{ margin: "16px auto 0", textAlign: "center" }}>
+          From product shots to VFX, from lookbooks to motion ads, a workflow for every kind of creative work.
+        </p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 28 }}>
+          <ButtonLink href="#" variant="brand" size="md">
+            Open the app
+          </ButtonLink>
+          <ButtonLink href="/templates" variant="muted" size="md">
+            Browse workflows
+          </ButtonLink>
+        </div>
+      </div>
+
+      {/* List and preview now start on the same line, so the active category
+          and the visual it drives read as one pair. */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
           padding: `0 ${CONTAINER_PAD}`,
           display: "grid",
-          gridTemplateColumns: "minmax(0, 0.78fr) minmax(0, 1.22fr)",
-          gap: 64,
-          alignItems: "stretch",
+          gridTemplateColumns: "minmax(0, 0.62fr) minmax(0, 1.38fr)",
+          gap: 56,
+          alignItems: "start",
         }}
       >
-        {/* Left — header + vertical category list, normal flow.
-            paddingBottom extends the row height so the sticky right column
-            stays pinned through every category, not just the first few. */}
-        <div style={{ paddingBottom: "30vh" }}>
-          <h2
-            style={{
-              fontFamily: FONT,
-              fontSize: TYPE.h2,
-              fontWeight: 500,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-              margin: "0 0 16px",
-            }}
-          >
-            Scale every idea into a workflow.
-          </h2>
-          <p
-            style={{
-              fontFamily: FONT,
-              fontSize: 15,
-              color: SURFACE.ink2,
-              lineHeight: 1.5,
-              letterSpacing: "-0.005em",
-              margin: "0 0 28px",
-              maxWidth: 480,
-            }}
-          >
-            From product shots to VFX, from lookbooks to motion ads, a workflow for every kind of creative work.
-          </p>
-          <div style={{ display: "flex", gap: 10, marginBottom: 80 }}>
-            <ButtonLink href="#" variant="brand" size="md">
-              Open the app
-            </ButtonLink>
-            <ButtonLink href="/templates" variant="muted" size="md">
-              Browse workflows
-            </ButtonLink>
-          </div>
-
+        {/* paddingBottom extends the row so the sticky preview stays pinned
+            through every category rather than only the first few. */}
+        <div style={{ paddingBottom: "8vh" }}>
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 0 }}>
             {USE_CASES.map((u, i) => {
               const isActive = i === activeIndex;
@@ -1298,7 +1292,7 @@ function UseCasesFlora() {
                   ref={(el) => {
                     itemRefs.current[i] = el;
                   }}
-                  style={{ minHeight: "8vh", display: "flex", alignItems: "center" }}
+                  style={{ minHeight: 62, display: "flex", alignItems: "center" }}
                 >
                   <button
                     onClick={() => jumpTo(i)}
@@ -1311,16 +1305,17 @@ function UseCasesFlora() {
                       padding: 0,
                       cursor: "pointer",
                       fontFamily: FONT,
-                      // Single base font-size for every item — animating font-size
-                      // forces a layout reflow on every active-index change, which
-                      // is what was shifting the page mid-scroll. Active state is
-                      // now expressed via transform: scale (compositor-only).
-                      fontSize: TYPE.h2,
+                      // One base font-size for every item: animating font-size
+                      // reflows on each active-index change, which shifted the
+                      // page mid-scroll. Active state is a compositor-only
+                      // transform instead. Sized well below the section h2 so a
+                      // list entry no longer competes with the heading.
+                      fontSize: "clamp(19px, 1.7vw, 26px)",
                       fontWeight: 400,
-                      letterSpacing: "-0.03em",
-                      lineHeight: 1.05,
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1.15,
                       color: isActive ? SURFACE.ink : SURFACE.ink4,
-                      transform: isActive ? "scale(1)" : "scale(0.74)",
+                      transform: isActive ? "scale(1)" : "scale(0.9)",
                       transformOrigin: "left center",
                       willChange: "transform",
                       transition: "color 360ms ease, transform 360ms cubic-bezier(0.22,1,0.36,1)",
