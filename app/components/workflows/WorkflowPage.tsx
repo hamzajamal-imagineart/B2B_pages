@@ -898,38 +898,23 @@ function SlideArrow({ dir, onClick, disabled }: { dir: "left" | "right"; onClick
       onClick={onClick}
       disabled={disabled}
       aria-label={dir === "left" ? "Previous" : "Next"}
+      /* Same pager as the Enterprise platform rail and the industry rail:
+         38px circle, hairline border, white fill, no shadow. */
       style={{
-        width: 56,
-        height: 56,
-        borderRadius: 14,
-        border: disabled ? "1px solid rgba(10,10,11,0.08)" : "1px solid rgba(10,10,11,0.12)",
-        background: "#ffffff",
-        color: disabled ? "rgba(10,10,11,0.28)" : "#0a0a0b",
+        width: 38,
+        height: 38,
+        borderRadius: 999,
+        border: "1px solid var(--line)",
+        background: "#fff",
+        color: disabled ? "var(--ink-3)" : "var(--ink)",
         cursor: disabled ? "default" : "pointer",
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: disabled ? "none" : "0 8px 22px rgba(10,10,11,0.08)",
-        transition: "transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease",
+        display: "grid",
+        placeItems: "center",
         flexShrink: 0,
       }}
-      onMouseEnter={(e) => {
-        if (disabled) return;
-        const el = e.currentTarget as HTMLElement;
-        el.style.transform = "translateY(-2px)";
-        el.style.boxShadow = "0 14px 32px rgba(10,10,11,0.14)";
-        el.style.borderColor = "rgba(10,10,11,0.28)";
-      }}
-      onMouseLeave={(e) => {
-        if (disabled) return;
-        const el = e.currentTarget as HTMLElement;
-        el.style.transform = "translateY(0)";
-        el.style.boxShadow = "0 8px 22px rgba(10,10,11,0.08)";
-        el.style.borderColor = "rgba(10,10,11,0.12)";
-      }}
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden style={{ transform: dir === "left" ? "scaleX(-1)" : "none" }}>
-        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d={dir === "left" ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </button>
   );
@@ -946,7 +931,9 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
   const GAP = 20;
   // Slideshow gets its own wider container so the active card is larger than
   // the centered heading column above it.
-  const SLIDESHOW_PAD = "calc((100vw - min(94vw, 1600px)) / 2)";
+  // The rail sits on the page container like every other section, so the
+  // active card is exactly container width instead of overhanging it.
+  const SLIDESHOW_PAD = CONTAINER_PAD;
 
   const trackTransform = `translateX(calc(${PEEK}px - ${activeTab} * (100% - ${2 * PEEK}px) - ${activeTab * GAP}px))`;
 
@@ -1134,14 +1121,11 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
                 style={{
                   flex: `0 0 calc(100% - ${2 * PEEK}px)`,
                   aspectRatio: "16 / 9",
-                  borderRadius: 22,
+                  borderRadius: 24,
                   background: "#ffffff",
-                  border: "1px solid rgba(10,10,11,0.06)",
                   overflow: "hidden",
                   position: "relative",
-                  boxShadow: isActive
-                    ? "0 30px 70px rgba(10,10,11,0.14)"
-                    : "0 14px 40px rgba(10,10,11,0.08)",
+                  border: "1px solid var(--line)",
                   opacity: isActive ? 1 : 0.5,
                   transform: isActive ? "scale(1)" : "scale(0.96)",
                   transition: "opacity 380ms ease, transform 520ms cubic-bezier(0.22,1,0.36,1), box-shadow 380ms ease",
