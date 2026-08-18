@@ -1237,50 +1237,7 @@ function UseCasesFlora() {
         padding: `${SECTION_Y} 0`,
       }}
     >
-      {/* Background — only the active category's video is mounted, blurred and
-          dimmed. Keyed by id so React swaps the element on change (no decoder
-          pile-up). Blur kept light (32px) to halve paint cost vs. the original. */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-          overflow: "hidden",
-        }}
-      >
-        <video
-          key={current.id}
-          src={current.video}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            transform: "scale(1.15)",
-            filter: "blur(32px) brightness(0.45) saturate(1.1)",
-            animation: "wp-bg-fade 600ms ease both",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              // Inverted with the surface: the section is light now, so the
-              // scrim lifts the blurred category video toward the page wash
-              // instead of sinking it toward black.
-              "linear-gradient(to bottom, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.94) 100%)",
-          }}
-        />
-      </div>
+      <SectionGuides edge="top" />
 
       {/* Foreground content — left scrolls normally, right is sticky */}
       <div
@@ -1390,7 +1347,7 @@ function UseCasesFlora() {
               overflow: "hidden",
               border: `1px solid ${SURFACE.line}`,
               background: SURFACE.tile,
-              boxShadow: "0 30px 70px rgba(0,0,0,0.5)",
+              boxShadow: "0 18px 50px rgba(23,35,56,0.16)",
             }}
           >
             {USE_CASES.map((u, i) => (
@@ -1613,10 +1570,6 @@ export default function WorkflowPage() {
         @keyframes wp-fade {
           from { opacity: 0; transform: scale(0.985); }
           to   { opacity: 1; transform: scale(1); }
-        }
-        @keyframes wp-bg-fade {
-          from { opacity: 0; }
-          to   { opacity: 1; }
         }
       `}</style>
 
