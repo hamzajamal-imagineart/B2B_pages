@@ -1,6 +1,7 @@
 "use client";
 
 import { CollaborationDemo } from "@/components/CollaborationDemo";
+import { withBasePath } from "@/lib/assets";
 
 /**
  * The four-tile admin bento.
@@ -20,21 +21,25 @@ export function AdminBento({ className = "" }: { className?: string }) {
         wide
         title="Complete Admin Control"
         body="One dashboard for your entire organization. Manage roles, monitor usage, and govern access across every team without losing visibility."
+        bg="/media/admin/tile-admin.jpg"
         visual={<PlaceholderPanel />}
       />
       <Tile
         title="Efficient Asset Management"
+        bg="/media/admin/tile-assets.jpg"
         body="Every generation organized, searchable, and on-brand."
         visual={<PlaceholderPanel />}
       />
       <Tile
         title="Unlimited Members, No Added Cost"
+        bg="/media/admin/tile-members.jpg"
         body="Bring your whole team. Seats don't cost extra."
         visual={<PlaceholderPanel />}
       />
       <Tile
         wide
         title="Collaborate End to End"
+        bg="/media/admin/tile-collab.jpg"
         body="Comments, approvals, and shared review built in, so feedback happens where the work lives, not scattered across emails and threads."
         visual={<CollabPanel />}
       />
@@ -54,7 +59,7 @@ export function AdminBento({ className = "" }: { className?: string }) {
           flex-direction: column;
           background: var(--tile);
           border-radius: 24px;
-          padding: 32px 32px 0;
+          padding: 32px;
           overflow: hidden;
         }
         .ptile-wide { grid-column: span 2; }
@@ -79,6 +84,9 @@ export function AdminBento({ className = "" }: { className?: string }) {
           align-items: flex-end;
           padding-top: 28px;
         }
+        /* The narrow tiles carry less copy, so their panel takes the slack as
+           height rather than leaving a gap above it. */
+        .ptile:not(.ptile-wide) .admin-placeholder { aspect-ratio: 16 / 13; }
         /* Bare wrapper: the dashboard inside is already a white bordered
            card, so a second white surface behind it just doubled the frame. */
         .ptile-surface { width: 100%; }
@@ -96,14 +104,33 @@ function Tile({
   body,
   visual,
   wide,
+  bg,
 }: {
   title: string;
   body: string;
   visual: React.ReactNode;
   wide?: boolean;
+  /** Photograph behind the tile. The flat --tile fill stays underneath as the
+   *  fallback, so nothing flashes before the image paints. A soft wash is
+   *  layered over it to hold the dark heading; backgroundImage carries both,
+   *  never the `background` shorthand, which would wipe the fill. */
+  bg?: string;
 }) {
   return (
-    <div className={`ptile ${wide ? "ptile-wide" : ""}`}>
+    <div
+      className={`ptile ${wide ? "ptile-wide" : ""}`}
+      style={
+        bg
+          ? {
+              backgroundImage:
+                "linear-gradient(to bottom, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.42) 46%, rgba(255,255,255,0.12) 100%), " +
+                `url(${withBasePath(bg)})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }
+          : undefined
+      }
+    >
       <h3 className="ptile-title">{title}</h3>
       <p className="ptile-body">{body}</p>
       <div className="ptile-media">

@@ -38,7 +38,7 @@ export default function Home() {
         <Control />
         <Security />
         <TestimonialsSection />
-        <ClosingCta />
+        <ClosingCta backdrop="/media/cta-hills.jpg" />
       </main>
 
       <SiteFooter />

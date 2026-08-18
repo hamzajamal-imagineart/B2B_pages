@@ -55,7 +55,7 @@ export default function Control() {
         <StackCard tone="2" title="Workflows" body="Build powerful, node-based AI pipelines.">
           <CardVideo src="/media/variable-demo.mp4" />
         </StackCard>
-        <StackCard tone="3" title="Models" body="Every leading model, one interface.">
+        <StackCard tone="3" title="Models" body="Every leading model, one interface." bg="/media/card-models.jpg" scrim>
           <ModelsMock />
         </StackCard>
         <StackCard tone="4" title="Integrations" body="Fits into the tools your team already runs.">
@@ -230,6 +230,7 @@ function StackCard({
   title,
   body,
   bg,
+  scrim,
   children,
 }: {
   tone: "1" | "2" | "3" | "4" | "5";
@@ -237,6 +238,10 @@ function StackCard({
   body: string;
   /** Optional image backdrop; the flat tone stays underneath as the fill. */
   bg?: string;
+  /** Darken a bright photograph so the white copy over it still reads. Layered
+   *  as a gradient in background-image rather than a pseudo-element: the card
+   *  is not a positioned ancestor, so an absolute overlay would escape it. */
+  scrim?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -244,7 +249,15 @@ function StackCard({
       className={`stack-card stack-tone-${tone}`}
       style={
         bg
-          ? { backgroundImage: `url(${withBasePath(bg)})` }
+          ? {
+              backgroundImage: [
+                scrim &&
+                  "linear-gradient(to bottom, rgba(12,16,14,0.62) 0%, rgba(12,16,14,0.34) 42%, rgba(12,16,14,0.70) 100%)",
+                `url(${withBasePath(bg)})`,
+              ]
+                .filter(Boolean)
+                .join(", "),
+            }
           : undefined
       }
     >
