@@ -1,11 +1,22 @@
 "use client";
 
-import { SectionGuides } from "@/components/primitives/SectionGuides";
-
-import { CONTAINER_PAD, SECTION_Y_LG, TYPE } from "./scale";
 import { useState } from "react";
+import { CONTAINER_PAD, SECTION_Y_LG } from "./scale";
 
-const FONT = "var(--font-sans), sans-serif";
+/**
+ * FAQ, on the kit's layout.
+ *
+ * The clone ran a centred heading over a single 880px column. The kit's
+ * FAQSection puts the heading in a fixed left rail with the accordion beside
+ * it, which is the shape the rest of the site uses and the reason this section
+ * previously read as belonging to a different page.
+ *
+ * Two things carried over from the kit template deliberately:
+ *   · rows are open by default, so the answers sit in the initial SSR HTML
+ *     where crawlers can see them
+ *   · FAQPage structured data is derived from ITEMS, so it cannot drift from
+ *     the visible copy
+ */
 
 const ITEMS = [
   {
@@ -38,167 +49,139 @@ const ITEMS = [
   },
 ];
 
-const PlusIcon = ({ open }: { open: boolean }) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden style={{ flexShrink: 0 }}>
-    <path
-      d="M12 5v14"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      style={{
-        transition: "transform 280ms cubic-bezier(0.4,0,0.2,1), opacity 280ms ease",
-        transformOrigin: "12px 12px",
-        transform: open ? "rotate(90deg)" : "rotate(0deg)",
-        opacity: open ? 0 : 1,
-      }}
-    />
-    <path
-      d="M5 12h14"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-    />
-  </svg>
-);
+/** FAQPage structured data, sourced from ITEMS so it never drifts from the Q&A. */
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: ITEMS.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
 
-export default function FAQ() {
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
+/** Circular toggle: the vertical bar collapses to a minus when open. */
+function PlusMinus({ open }: { open: boolean }) {
+  return (
+    <span
+      style={{
+        flexShrink: 0,
+        width: 32,
+        height: 32,
+        borderRadius: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0,0,0,0.05)",
+        color: "var(--ink)",
+      }}
+    >
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        <line
+          x1="7"
+          y1="1"
+          x2="7"
+          y2="13"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          style={{
+            transition: "transform 240ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 200ms ease",
+            transformOrigin: "center",
+            transform: open ? "scaleY(0)" : "scaleY(1)",
+            opacity: open ? 0 : 1,
+          }}
+        />
+      </svg>
+    </span>
+  );
+}
+
+function FaqRow({ q, a, defaultOpen = false }: { q: string; a: string; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
+    <div style={{ borderBottom: "1px solid var(--line)" }}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="w-full flex items-start justify-between gap-8 py-6 text-left cursor-pointer"
+        style={{ background: "transparent", border: "none" }}
+      >
+        <span
+          style={{
+            fontSize: "clamp(16px, 1.4vw, 19px)",
+            fontWeight: 500,
+            lineHeight: 1.35,
+            color: "var(--ink-heading)",
+          }}
+        >
+          {q}
+        </span>
+        <PlusMinus open={open} />
+      </button>
+
+      {/* grid-template-rows 0fr → 1fr animates the height with no JS measuring. */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateRows: open ? "1fr" : "0fr",
+          transition: "grid-template-rows 280ms cubic-bezier(0.2, 0.7, 0.2, 1)",
+        }}
+      >
+        <div style={{ overflow: "hidden" }}>
+          <p
+            style={{
+              fontSize: 16,
+              lineHeight: 1.75,
+              color: "var(--ink-2)",
+              maxWidth: "72ch",
+              paddingBottom: 24,
+              margin: 0,
+            }}
+          >
+            {a}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function FAQ() {
+  return (
     <section
+      id="faq"
       style={{
         position: "relative",
-        backgroundColor: "#ffffff",
+        backgroundColor: "var(--page-bg)",
         padding: `${SECTION_Y_LG} ${CONTAINER_PAD}`,
       }}
     >
-      <SectionGuides edge="top" />
-      {/* Heading — centered */}
-      <div
-        style={{
-          textAlign: "center",
-          maxWidth: 760,
-          marginInline: "auto",
-          marginBottom: 72,
-        }}
-      >
-        <div
-          style={{
-            fontFamily: FONT,
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: "0.16em",
-            textTransform: "uppercase",
-            color: "rgba(10,10,11,0.45)",
-            marginBottom: 16,
-          }}
-        >
-          FAQ
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+
+      <div className="flex flex-col lg:flex-row gap-10 lg:gap-20">
+        {/* Left rail: heading and subtext, on the shared type classes */}
+        <div className="lg:w-[360px] shrink-0">
+          <p className="eyebrow">FAQ</p>
+          <h2 className="h2" style={{ marginTop: 12 }}>
+            Got any questions <span className="h-muted">left?</span>
+          </h2>
+          <p className="lede" style={{ marginTop: 20, maxWidth: "36ch" }}>
+            The things teams ask most before moving their creative production onto Workflows.
+          </p>
         </div>
-        <h2
-          style={{
-            fontFamily: FONT,
-            fontSize: TYPE.h2Faq,
-            fontWeight: 400,
-            color: "#0a0a0b",
-            letterSpacing: "-0.035em",
-            lineHeight: 1.05,
-            margin: "0 0 16px",
-          }}
-        >
-          Frequently asked questions
-        </h2>
-        <p
-          style={{
-            fontFamily: FONT,
-            fontSize: 16,
-            color: "rgba(10,10,11,0.55)",
-            letterSpacing: "-0.005em",
-            lineHeight: 1.5,
-            margin: 0,
-          }}
-        >
-          Get your questions answered.
-        </p>
-      </div>
 
-      {/* Accordion — left/right padded so list sits centered with comfortable measure */}
-      <div style={{ maxWidth: 880, marginInline: "auto" }}>
-        {ITEMS.map((item, i) => {
-          const isOpen = openIdx === i;
-          return (
-            <div key={item.q}>
-              <button
-                onClick={() => setOpenIdx(isOpen ? null : i)}
-                aria-expanded={isOpen}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 24,
-                  padding: "26px 4px",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  textAlign: "left",
-                  color: "#0a0a0b",
-                  transition: "color 200ms ease",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: FONT,
-                    fontSize: "clamp(16px, 1.4vw, 19px)",
-                    fontWeight: 500,
-                    color: "#0a0a0b",
-                    letterSpacing: "-0.015em",
-                    lineHeight: 1.35,
-                  }}
-                >
-                  {item.q}
-                </span>
-                <span
-                  style={{
-                    color: "rgba(10,10,11,0.55)",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  <PlusIcon open={isOpen} />
-                </span>
-              </button>
-
-              {/* Answer — animated max-height + opacity */}
-              <div
-                style={{
-                  maxHeight: isOpen ? 360 : 0,
-                  opacity: isOpen ? 1 : 0,
-                  overflow: "hidden",
-                  transition:
-                    "max-height 480ms cubic-bezier(0.22,1,0.36,1), opacity 320ms ease",
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: FONT,
-                    fontSize: 15,
-                    color: "rgba(10,10,11,0.62)",
-                    lineHeight: 1.65,
-                    letterSpacing: "-0.005em",
-                    margin: 0,
-                    padding: "0 4px 28px",
-                    maxWidth: 720,
-                  }}
-                >
-                  {item.a}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+        {/* Right: divided accordion, open by default so answers ship in the HTML */}
+        <div className="flex-1 min-w-0" style={{ borderTop: "1px solid var(--line)" }}>
+          {ITEMS.map((item) => (
+            <FaqRow key={item.q} q={item.q} a={item.a} defaultOpen />
+          ))}
+        </div>
       </div>
     </section>
   );

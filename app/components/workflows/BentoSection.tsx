@@ -202,20 +202,16 @@ function ScaledDemo() {
 
 // ── Card shell — text on top, demo on bottom ────────────────────────────────
 function Card({
-  num,
   title,
   desc,
   children,
   span = 1,
-  height,
   big = false,
 }: {
-  num: string;
   title: string;
   desc: string;
   children: React.ReactNode;
   span?: number;
-  height: number;
   big?: boolean;
 }) {
   return (
@@ -224,34 +220,25 @@ function Card({
         gridColumn: `span ${span}`,
         display: "flex",
         flexDirection: "column",
-        background: CARD_BG,
-        border: CARD_BORDER,
-        borderRadius: 22,
-        padding: 28,
+        /* Tile fill, not white on white with a border: on the other pages a
+           tile is its own band and the white surfaces are the things inside
+           it. Guidelines §3. */
+        background: "var(--tile)",
+        borderRadius: 24,
+        padding: 32,
         boxSizing: "border-box",
-        height,
+        overflow: "hidden",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 22, maxWidth: big ? 520 : "none" }}>
-        <div
-          style={{
-            ...TEXT_STYLE,
-            fontSize: 10,
-            color: "rgba(10,10,11,0.4)",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-          }}
-        >
-          {num}
-        </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <h3
           style={{
             ...TEXT_STYLE,
-            fontSize: big ? "clamp(22px, 2vw, 28px)" : "clamp(17px, 1.5vw, 21px)",
+            fontSize: big ? TYPE.h3Wide : TYPE.h3,
             fontWeight: 500,
-            color: "#0a0a0b",
-            letterSpacing: "-0.02em",
-            lineHeight: 1.2,
+            color: "var(--ink-heading)",
+            letterSpacing: "-0.015em",
+            lineHeight: 1.15,
             margin: 0,
           }}
         >
@@ -260,9 +247,11 @@ function Card({
         <p
           style={{
             ...TEXT_STYLE,
-            fontSize: 13.5,
-            color: "rgba(10,10,11,0.62)",
-            lineHeight: 1.6,
+            fontSize: TYPE.body,
+            color: "var(--ink-3)",
+            lineHeight: 1.55,
+            /* Wide tiles get a wider measure than narrow ones. */
+            maxWidth: big ? "52ch" : "34ch",
             margin: 0,
           }}
         >
@@ -270,8 +259,9 @@ function Card({
         </p>
       </div>
 
-      {/* Visual frame fills the rest */}
-      <div style={{ flex: 1, minHeight: 0 }}>{children}</div>
+      {/* Media absorbs the leftover height and pins to the bottom, so a tile
+          grows rather than clipping its own visual. Guidelines §6. */}
+      <div style={{ marginTop: "auto", flex: 1, minHeight: 0, paddingTop: 28 }}>{children}</div>
     </div>
   );
 }
@@ -281,81 +271,74 @@ export default function BentoSection() {
   return (
     <section style={{ position: "relative", padding: `${SECTION_Y} ${CONTAINER_PAD}`, backgroundColor: "#ffffff", display: "flow-root" }}>
       <SectionGuides edge="top" />
-      <div style={{ marginBottom: 100 }} />
-
-      {/* Heading */}
+      {/* Heading, on the shared type classes rather than a local copy of them */}
       <div style={{ marginBottom: 48 }}>
-        <div
-          style={{
-            ...TEXT_STYLE,
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: "0.16em",
-            textTransform: "uppercase",
-            color: "rgba(10,10,11,0.45)",
-            marginBottom: 16,
-          }}
-        >
-          Capabilities
-        </div>
-        <h2 style={{ ...TEXT_STYLE, fontSize: TYPE.h2, fontWeight: 400, color: "#0a0a0b", letterSpacing: "-0.03em", lineHeight: 1, margin: 0 }}>
-          Built for teams that{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400, color: "rgba(10,10,11,0.5)" }}>scale.</em>
+        <p className="eyebrow">Capabilities</p>
+        <h2 className="h2" style={{ marginTop: 12 }}>
+          Built for teams that <span className="h-muted">scale</span>
         </h2>
-        <p style={{ ...TEXT_STYLE, fontSize: TYPE.body, color: "rgba(10,10,11,0.55)", marginTop: 12 }}>
+        <p className="lede" style={{ marginTop: 14 }}>
           Real-time collaboration, brand consistency, and deep integrations, all in one place.
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}>
+      <div className="wf-bento">
         {/* Top row — wide collaboration spans 2 cols, agents takes 1 col */}
         <Card
-          num="01"
           title="Real-time collaboration."
           desc="See every change live. Comment, edit, and iterate alongside your whole team on the same canvas. No exports, no version sprawl."
           span={2}
-          height={500}
           big
         >
           <CollaborationDemo tone="dark" />
         </Card>
 
         <Card
-          num="02"
           title="Agents with shared context."
           desc="Creative agents that carry context across image, video, audio, and text, so work moves from concept to delivery without fragmentation."
-          height={500}
         >
           <OrbitalAgents />
         </Card>
 
         {/* Bottom row — three equal cards */}
         <Card
-          num="03"
           title="On-brand visuals."
           desc="Brand kits, moodboards, and style memory. Lock your identity once, generate infinite on-brand outputs."
-          height={420}
         >
           <BrandKitDemo />
         </Card>
 
         <Card
-          num="04"
           title="Scaled production."
           desc="Plug in a CSV or feed and batch-generate every locale, format, and SKU automatically."
-          height={420}
         >
           <ScaledDemo />
         </Card>
 
         <Card
-          num="05"
           title="Integrations."
           desc="Connect Figma, Slack, Notion, and 100+ tools your team already uses. No accounts required."
-          height={420}
         >
           <IntegrationsGrid />
         </Card>
+
+        <style>{`
+          /* 5 tiles over 3 columns: [2,1] then [1,1,1]. Tiles exactly, with a
+             flagship in the first row and peers in the second, so the mixed
+             spans are earned rather than decorative. Guidelines §6. */
+          .wf-bento {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+          }
+          @media (min-width: 768px) {
+            .wf-bento { grid-auto-rows: minmax(360px, auto); }
+          }
+          @media (max-width: 900px) {
+            .wf-bento { grid-template-columns: 1fr; }
+            .wf-bento > * { grid-column: span 1 !important; }
+          }
+        `}</style>
       </div>
     </section>
   );

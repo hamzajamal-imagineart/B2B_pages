@@ -258,31 +258,13 @@ export default function ModelsSection() {
       }}
     >
       <SectionGuides edge="top" />
-      {/* Heading — left-aligned */}
-      <div style={{ marginBottom: 56, maxWidth: 760 }}>
-        <h2
-          style={{
-            fontFamily: FONT,
-            fontSize: TYPE.h2,
-            fontWeight: 400,
-            color: SURFACE.ink,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.05,
-            margin: 0,
-          }}
-        >
-          Physically intelligent best models.
+      {/* Heading, on the shared type classes: mono eyebrow, two-tone h2, lede */}
+      <div style={{ marginBottom: 56 }}>
+        <p className="eyebrow">Models</p>
+        <h2 className="h2" style={{ marginTop: 12 }}>
+          Physically intelligent <span className="h-muted">best models</span>
         </h2>
-        <p
-          style={{
-            fontFamily: FONT,
-            fontSize: 15,
-            color: SURFACE.ink4,
-            lineHeight: 1.6,
-            margin: "20px 0 0",
-            maxWidth: 480,
-          }}
-        >
+        <p className="lede" style={{ marginTop: 16 }}>
           Orchestrating category-defining models across every stage of creative work.
         </p>
       </div>

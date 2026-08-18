@@ -1510,49 +1510,14 @@ function TemplatesPreview() {
         }}
       >
         <div>
-          <div
-            style={{
-              fontFamily: FONT,
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              color: "rgba(10,10,11,0.45)",
-              marginBottom: 16,
-            }}
-          >
-            Templates
-          </div>
-          <h2
-            style={{
-              fontFamily: FONT,
-              fontSize: TYPE.h2,
-              fontWeight: 400,
-              color: "#0a0a0b",
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-              margin: 0,
-            }}
-          >
-            Pre-built workflows, ready to use.
+          <p className="eyebrow">Templates</p>
+          <h2 className="h2" style={{ marginTop: 12 }}>
+            Pre-built workflows, <span className="h-muted">ready to use</span>
           </h2>
         </div>
-        <Link
-          href="/templates"
-          style={{
-            fontFamily: FONT,
-            fontSize: 13,
-            fontWeight: 500,
-            color: "rgba(10,10,11,0.55)",
-            textDecoration: "none",
-            letterSpacing: "-0.01em",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-        >
-          See all the templates →
-        </Link>
+        <ButtonLink href="/templates" variant="ghost" size="md">
+          See all the templates
+        </ButtonLink>
       </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 40 }}>
@@ -1568,7 +1533,7 @@ function TemplatesPreview() {
                 fontWeight: 500,
                 letterSpacing: "-0.01em",
                 padding: "9px 16px",
-                borderRadius: 22,
+                borderRadius: 100,
                 cursor: "pointer",
                 background: isActive ? "#0a0a0b" : "transparent",
                 color: isActive ? "#ffffff" : "rgba(10,10,11,0.65)",
@@ -1582,7 +1547,9 @@ function TemplatesPreview() {
         })}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+      {/* Uniform card grid: the templates are peers with one shared 4:3
+          aspect, which is exactly the case Guidelines §6 reserves it for. */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 24 }}>
         {visible.map((t, i) => {
           const isHov = hovered === i;
           return (
@@ -1595,16 +1562,15 @@ function TemplatesPreview() {
             >
               <div
                 style={{
-                  borderRadius: 22,
+                  borderRadius: 24,
                   overflow: "hidden",
                   aspectRatio: "4/3",
-                  background: "#f3f3f5",
-                  border: "1px solid rgba(10,10,11,0.06)",
+                  background: "var(--panel-2)",
                   position: "relative",
-                  transition: "transform 400ms cubic-bezier(0.22,1,0.36,1), border-color 300ms, box-shadow 300ms",
+                  transition: "transform 400ms cubic-bezier(0.22,1,0.36,1), border-color 300ms",
                   transform: isHov ? "translateY(-3px)" : "translateY(0)",
-                  borderColor: isHov ? "rgba(10,10,11,0.14)" : "rgba(10,10,11,0.06)",
-                  boxShadow: isHov ? "0 12px 28px rgba(10,10,11,0.08)" : "0 1px 2px rgba(10,10,11,0.03)",
+                  /* A hairline does the work; §3 prefers no shadow. */
+                  border: `1px solid ${isHov ? "var(--line-strong)" : "var(--line)"}`,
                 }}
               >
                 <MediaPlaceholder tone="light" label={t.title} />
@@ -1626,7 +1592,7 @@ function TemplatesPreview() {
                 <h3
                   style={{
                     fontFamily: FONT,
-                    fontSize: 16,
+                    fontSize: TYPE.h3,
                     fontWeight: 500,
                     color: "#0a0a0b",
                     letterSpacing: "-0.02em",
