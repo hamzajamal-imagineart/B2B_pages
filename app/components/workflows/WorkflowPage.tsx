@@ -1,6 +1,6 @@
 "use client";
 
-import { CONTAINER_PAD, SECTION_Y, SECTION_Y_LG, TYPE } from "./scale";
+import { CONTAINER_PAD, SECTION_Y, SECTION_Y_LG, TYPE, SURFACE } from "./scale";
 
 import { MediaPlaceholder } from "./MediaPlaceholder";
 import { withBasePath } from "@/lib/assets";
@@ -1248,8 +1248,8 @@ function UseCasesFlora() {
     <section
       style={{
         position: "relative",
-        background: "#0A0A0B",
-        color: "#fff",
+        background: SURFACE.page,
+        color: SURFACE.ink,
         padding: `${SECTION_Y} 0`,
       }}
     >
@@ -1290,7 +1290,10 @@ function UseCasesFlora() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to bottom, rgba(10,10,11,0.7) 0%, rgba(10,10,11,0.55) 50%, rgba(10,10,11,0.85) 100%)",
+              // Inverted with the surface: the section is light now, so the
+              // scrim lifts the blurred category video toward the page wash
+              // instead of sinking it toward black.
+              "linear-gradient(to bottom, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.94) 100%)",
           }}
         />
       </div>
@@ -1327,7 +1330,7 @@ function UseCasesFlora() {
             style={{
               fontFamily: FONT,
               fontSize: 15,
-              color: "rgba(255,255,255,0.62)",
+              color: SURFACE.ink2,
               lineHeight: 1.5,
               letterSpacing: "-0.005em",
               margin: "0 0 28px",
@@ -1342,13 +1345,13 @@ function UseCasesFlora() {
               style={{
                 padding: "9px 16px",
                 borderRadius: 12,
-                background: "rgba(255,255,255,0.10)",
-                color: "#fff",
+                background: SURFACE.chip,
+                color: SURFACE.ink,
                 fontFamily: FONT,
                 fontSize: 14,
                 fontWeight: 400,
                 textDecoration: "none",
-                border: "1px solid rgba(255,255,255,0.11)",
+                border: `1px solid ${SURFACE.line}`,
                 backdropFilter: "blur(10px)",
               }}
             >
@@ -1360,7 +1363,7 @@ function UseCasesFlora() {
                 padding: "9px 16px",
                 borderRadius: 12,
                 background: "transparent",
-                color: "rgba(255,255,255,0.7)",
+                color: SURFACE.ink2,
                 fontFamily: FONT,
                 fontSize: 14,
                 fontWeight: 600,
@@ -1401,7 +1404,7 @@ function UseCasesFlora() {
                       fontWeight: 400,
                       letterSpacing: "-0.03em",
                       lineHeight: 1.05,
-                      color: isActive ? "rgb(238,238,238)" : "rgb(96,96,96)",
+                      color: isActive ? SURFACE.ink : SURFACE.ink4,
                       transform: isActive ? "scale(1)" : "scale(0.74)",
                       transformOrigin: "left center",
                       willChange: "transform",
@@ -1427,8 +1430,8 @@ function UseCasesFlora() {
               aspectRatio: "16 / 9",
               borderRadius: 24,
               overflow: "hidden",
-              border: "1px solid rgba(255,255,255,0.08)",
-              background: "#15151a",
+              border: `1px solid ${SURFACE.line}`,
+              background: SURFACE.tile,
               boxShadow: "0 30px 70px rgba(0,0,0,0.5)",
             }}
           >
@@ -1463,7 +1466,7 @@ function UseCasesFlora() {
                 fontFamily: FONT,
                 fontSize: TYPE.h3,
                 fontWeight: 600,
-                color: "rgb(238,238,238)",
+                color: SURFACE.ink,
                 letterSpacing: "-0.03em",
                 margin: "0 0 8px",
                 animation: "wp-fade 360ms cubic-bezier(0.22,1,0.36,1) both",
@@ -1477,7 +1480,7 @@ function UseCasesFlora() {
                 fontFamily: FONT,
                 fontSize: 14,
                 fontWeight: 500,
-                color: "rgb(180,180,180)",
+                color: SURFACE.ink3,
                 lineHeight: 1.55,
                 margin: "0 0 18px",
                 maxWidth: 540,
@@ -1494,9 +1497,9 @@ function UseCasesFlora() {
                 gap: 6,
                 padding: "9px 14px",
                 borderRadius: 12,
-                background: "rgba(255,255,255,0.06)",
-                color: "rgba(255,255,255,0.85)",
-                border: "1px solid rgba(255,255,255,0.11)",
+                background: SURFACE.chip,
+                color: SURFACE.ink2,
+                border: `1px solid ${SURFACE.line}`,
                 fontFamily: FONT,
                 fontSize: 13,
                 fontWeight: 500,

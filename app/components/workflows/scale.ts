@@ -48,3 +48,33 @@ export const HEADING = {
   letterSpacing: "-0.03em",
   lineHeight: 1.08,
 } as const;
+
+/**
+ * Light-surface values, from Guidelines §3's colour table.
+ *
+ * Only the hero stays dark on this page; every section below it is light. The
+ * clone was built the other way round, so these are the values its inline
+ * styles were converted to.
+ */
+export const SURFACE = {
+  /** Default section background. */
+  page: "#ffffff",
+  /** Bento tile / feature card fill. */
+  tile: "#f1f2f3",
+  /** Headings and primary text. */
+  ink: "#171717",
+  /** Section intro paragraphs. */
+  ink2: "rgb(87,87,87)",
+  /** Card and tile body text. */
+  ink3: "rgb(100,100,100)",
+  /** Tertiary: inactive tabs, meta. */
+  ink4: "rgb(122,122,122)",
+  /** Hairline border. */
+  line: "rgba(0,0,0,0.08)",
+  /** Slightly stronger hairline, for hover states. */
+  lineStrong: "rgba(0,0,0,0.14)",
+  /** Chip / pill fill on a light surface. */
+  chip: "rgba(0,0,0,0.04)",
+  /** Cool-neutral elevation, never black. */
+  shadow: "0 18px 50px rgba(23,35,56,0.16)",
+} as const;

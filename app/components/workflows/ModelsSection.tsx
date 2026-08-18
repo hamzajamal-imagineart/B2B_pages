@@ -1,6 +1,6 @@
 "use client";
 
-import { CONTAINER_PAD, SECTION_Y, TYPE } from "./scale";
+import { CONTAINER_PAD, SECTION_Y, TYPE, SURFACE } from "./scale";
 
 import { MediaPlaceholder } from "./MediaPlaceholder";
 
@@ -104,19 +104,19 @@ function FeatureCard({
         borderRadius: 22,
         overflow: "hidden",
         height,
-        background: "#15151a",
-        border: "1px solid rgba(255,255,255,0.06)",
+        background: SURFACE.tile,
+        border: `1px solid ${SURFACE.line}`,
       }}
     >
       {/* Awaiting model-generated hero output. */}
-      <MediaPlaceholder label={name} />
+      <MediaPlaceholder tone="light" label={name} />
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 45%, transparent 100%)",
+            "linear-gradient(to top, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.5) 45%, transparent 100%)",
         }}
       />
       <div
@@ -137,11 +137,10 @@ function FeatureCard({
               fontFamily: FONT,
               fontSize: big ? "clamp(30px, 3.8vw, 46px)" : "clamp(22px, 1.8vw, 28px)",
               fontWeight: 500,
-              color: "#fff",
+              color: SURFACE.ink,
               letterSpacing: "-0.025em",
               lineHeight: 1.1,
-              textShadow: "0 1px 16px rgba(0,0,0,0.5)",
-            }}
+              }}
           >
             {name}
           </div>
@@ -151,12 +150,11 @@ function FeatureCard({
                 fontFamily: FONT,
                 fontSize: 14.5,
                 fontWeight: 400,
-                color: "rgba(255,255,255,0.78)",
+                color: SURFACE.ink2,
                 letterSpacing: "-0.005em",
                 lineHeight: 1.45,
                 marginTop: 8,
                 maxWidth: 540,
-                textShadow: "0 1px 12px rgba(0,0,0,0.45)",
               }}
             >
               {desc}
@@ -169,8 +167,8 @@ function FeatureCard({
             fontFamily: FONT,
             fontSize: 13,
             fontWeight: 500,
-            color: "#0a0a0b",
-            background: "#fff",
+            color: "#ffffff",
+            background: SURFACE.ink,
             borderRadius: 22,
             padding: "9px 20px",
             textDecoration: "none",
@@ -181,7 +179,7 @@ function FeatureCard({
           onMouseEnter={(e) => {
             const el = e.currentTarget;
             el.style.transform = "scale(1.04)";
-            el.style.boxShadow = "0 8px 22px rgba(255,255,255,0.16)";
+            el.style.boxShadow = SURFACE.shadow;
           }}
           onMouseLeave={(e) => {
             const el = e.currentTarget;
@@ -208,35 +206,35 @@ function ModelPill({ name, type }: { name: string; type: ModelType }) {
         aspectRatio: "16 / 9",
         borderRadius: 22,
         overflow: "hidden",
-        background: "#15151a",
-        border: "1px solid rgba(255,255,255,0.06)",
+        background: SURFACE.tile,
+        border: `1px solid ${SURFACE.line}`,
         textDecoration: "none",
         transition: "transform 220ms cubic-bezier(0.22,1,0.36,1), border-color 220ms ease",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget;
         el.style.transform = "translateY(-2px)";
-        el.style.borderColor = "rgba(255,255,255,0.16)";
+        el.style.borderColor = SURFACE.lineStrong;
         const img = el.querySelector<HTMLImageElement>("img");
         if (img) img.style.transform = "scale(1.06)";
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget;
         el.style.transform = "translateY(0)";
-        el.style.borderColor = "rgba(255,255,255,0.06)";
+        el.style.borderColor = SURFACE.line;
         const img = el.querySelector<HTMLImageElement>("img");
         if (img) img.style.transform = "scale(1)";
       }}
     >
       {/* Awaiting model-specific output thumbnail. */}
-      <MediaPlaceholder label={name} />
+      <MediaPlaceholder tone="light" label={name} />
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.12) 55%, transparent 100%)",
+            "linear-gradient(to top, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.55) 55%, transparent 100%)",
         }}
       />
       <div
@@ -251,7 +249,7 @@ function ModelPill({ name, type }: { name: string; type: ModelType }) {
           minWidth: 0,
         }}
       >
-        <span style={{ color: "rgba(255,255,255,0.78)", display: "inline-flex", flexShrink: 0 }}>
+        <span style={{ color: SURFACE.ink2, display: "inline-flex", flexShrink: 0 }}>
           {TYPE_ICON[type]}
         </span>
         <span
@@ -259,9 +257,8 @@ function ModelPill({ name, type }: { name: string; type: ModelType }) {
             fontFamily: FONT,
             fontSize: 14,
             fontWeight: 500,
-            color: "#fff",
+            color: SURFACE.ink,
             letterSpacing: "-0.01em",
-            textShadow: "0 1px 8px rgba(0,0,0,0.5)",
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
@@ -278,7 +275,7 @@ export default function ModelsSection() {
   return (
     <section
       style={{
-        backgroundColor: "#0A0A0B",
+        backgroundColor: SURFACE.page,
         padding: `${SECTION_Y} ${CONTAINER_PAD}`,
       }}
     >
@@ -289,7 +286,7 @@ export default function ModelsSection() {
             fontFamily: FONT,
             fontSize: TYPE.h2,
             fontWeight: 400,
-            color: "#fff",
+            color: SURFACE.ink,
             letterSpacing: "-0.03em",
             lineHeight: 1.05,
             margin: 0,
@@ -301,7 +298,7 @@ export default function ModelsSection() {
           style={{
             fontFamily: FONT,
             fontSize: 15,
-            color: "rgba(255,255,255,0.5)",
+            color: SURFACE.ink4,
             lineHeight: 1.6,
             margin: "20px 0 0",
             maxWidth: 480,

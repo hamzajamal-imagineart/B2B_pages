@@ -10,16 +10,15 @@ import FAQ from "../components/workflows/FAQ";
 export const metadata = {
   title: "Workflows · ImagineArt",
   description:
-    "Three modes for the way creative actually happens — agentic agents, node-based workflows, and simple one-shot prompts.",
+    "Three modes for the way creative actually happens: agentic agents, node-based workflows, and simple one-shot prompts.",
 };
 
 export default function WorkflowsRoute() {
   return (
-    <div style={{ background: "#0A0A0B", color: "#fff", minHeight: "100vh" }}>
-      {/* The page paints its own near-black behind a dark hero, so the nav
-          opens in its onDark colours. The tint still runs: the sections below
-          the hero are light, and the shared closing band and footer read their
-          surfaces from these tokens. */}
+    <div style={{ background: "var(--page-bg)", minHeight: "100vh" }}>
+      {/* Only the hero is dark. Everything below it is a light section, so
+          the page takes the neutral tint like every other route and the nav
+          still opens in its onDark colours over the hero. */}
       <PageTint palette="neutral" />
       <SiteNav variant={navVariantFor("dark")} />
       <WorkflowPage />
