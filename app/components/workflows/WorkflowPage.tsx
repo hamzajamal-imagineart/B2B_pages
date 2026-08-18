@@ -1,11 +1,17 @@
 "use client";
+
+import { CONTAINER_PAD, SECTION_Y, SECTION_Y_LG, TYPE, SURFACE } from "./scale";
+
+import { MediaPlaceholder } from "./MediaPlaceholder";
+import { ButtonLink } from "@/components/Button";
+import { SectionGuides } from "@/components/primitives/SectionGuides";
+import { withBasePath } from "@/lib/assets";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import HeroPromptBox from "./HeroPromptBox";
 import BentoSection from "./BentoSection";
 
 const FONT = "var(--font-sans), sans-serif";
-const CONTAINER_PAD = "calc((100vw - min(86vw, 1360px)) / 2)";
 
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -478,7 +484,7 @@ function CanvasHero() {
           alignItems: "center",
           justifyContent: "flex-end",
           gap: "clamp(40px, 5vh, 64px)",
-          padding: `clamp(96px, 12vh, 160px) ${CONTAINER_PAD} clamp(56px, 7vh, 96px)`,
+          padding: `${SECTION_Y_LG} ${CONTAINER_PAD} ${SECTION_Y}`,
           textAlign: "center",
           boxSizing: "border-box",
           pointerEvents: "none",
@@ -502,7 +508,7 @@ function CanvasHero() {
           <h1
             style={{
               fontFamily: FONT,
-              fontSize: "clamp(40px, 6.4vw, 92px)",
+              fontSize: TYPE.h1,
               fontWeight: 400,
               color: "#ffffff",
               letterSpacing: "-0.035em",
@@ -519,7 +525,7 @@ function CanvasHero() {
           <p
             style={{
               fontFamily: FONT,
-              fontSize: "clamp(15px, 1.2vw, 17px)",
+              fontSize: TYPE.lede,
               color: "rgba(255,255,255,0.7)",
               letterSpacing: "-0.01em",
               lineHeight: 1.6,
@@ -528,7 +534,7 @@ function CanvasHero() {
               textShadow: "0 1px 18px rgba(0,0,0,0.4)",
             }}
           >
-            AI generation, brand assets, and real-time collaboration — wired into one canvas, built for teams that ship.
+            AI generation, brand assets, and real-time collaboration, wired into one canvas, built for teams that ship.
           </p>
         </div>
 
@@ -702,9 +708,9 @@ function AgenticCard3() {
           position: "relative",
           overflow: "hidden",
         }}>
-          <div style={{ position: "absolute", top: 16, left: 16, padding: "4px 10px", background: "#fff", borderRadius: 12, fontFamily: FONT, fontSize: 10, fontWeight: 700, color: "#0a0a0b", letterSpacing: "0.06em" }}>BRAND</div>
+          <div style={{ position: "absolute", top: 16, left: 16, padding: "4px 10px", background: "#fff", borderRadius: 12, fontFamily: FONT, fontSize: 10, fontWeight: 600, color: "#0a0a0b", letterSpacing: "0.06em" }}>BRAND</div>
           <div style={{ position: "absolute", bottom: 18, left: 18, right: 18 }}>
-            <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: "#fff", lineHeight: 1.1, marginBottom: 6 }}>Holiday 2026</div>
+            <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 500, color: "#fff", lineHeight: 1.1, marginBottom: 6 }}>Holiday 2026</div>
             <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>Limited drop · Shop now</div>
           </div>
         </div>
@@ -844,7 +850,7 @@ function WorkflowCard2() {
           </div>
           <div style={{ position: "absolute", bottom: 20, left: 20, right: 20 }}>
             <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>Brand approved</div>
-            <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 600, color: "#fff", lineHeight: 1.15 }}>Style · Brand Kit</div>
+            <div style={{ fontFamily: FONT, fontSize: TYPE.h3, fontWeight: 500, color: "#fff", lineHeight: 1.15 }}>Style · Brand Kit</div>
           </div>
         </div>
       </div>
@@ -872,7 +878,6 @@ function VideoCard({ src }: { src: string }) {
       loop
       playsInline
       preload="auto"
-      crossOrigin="anonymous"
       style={{
         position: "absolute",
         inset: 0,
@@ -893,38 +898,23 @@ function SlideArrow({ dir, onClick, disabled }: { dir: "left" | "right"; onClick
       onClick={onClick}
       disabled={disabled}
       aria-label={dir === "left" ? "Previous" : "Next"}
+      /* Same pager as the Enterprise platform rail and the industry rail:
+         38px circle, hairline border, white fill, no shadow. */
       style={{
-        width: 56,
-        height: 56,
-        borderRadius: 14,
-        border: disabled ? "1px solid rgba(10,10,11,0.08)" : "1px solid rgba(10,10,11,0.12)",
-        background: "#ffffff",
-        color: disabled ? "rgba(10,10,11,0.28)" : "#0a0a0b",
+        width: 38,
+        height: 38,
+        borderRadius: 999,
+        border: "1px solid var(--line)",
+        background: "#fff",
+        color: disabled ? "var(--ink-3)" : "var(--ink)",
         cursor: disabled ? "default" : "pointer",
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: disabled ? "none" : "0 8px 22px rgba(10,10,11,0.08)",
-        transition: "transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease",
+        display: "grid",
+        placeItems: "center",
         flexShrink: 0,
       }}
-      onMouseEnter={(e) => {
-        if (disabled) return;
-        const el = e.currentTarget as HTMLElement;
-        el.style.transform = "translateY(-2px)";
-        el.style.boxShadow = "0 14px 32px rgba(10,10,11,0.14)";
-        el.style.borderColor = "rgba(10,10,11,0.28)";
-      }}
-      onMouseLeave={(e) => {
-        if (disabled) return;
-        const el = e.currentTarget as HTMLElement;
-        el.style.transform = "translateY(0)";
-        el.style.boxShadow = "0 8px 22px rgba(10,10,11,0.08)";
-        el.style.borderColor = "rgba(10,10,11,0.12)";
-      }}
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden style={{ transform: dir === "left" ? "scaleX(-1)" : "none" }}>
-        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d={dir === "left" ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </button>
   );
@@ -941,7 +931,9 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
   const GAP = 20;
   // Slideshow gets its own wider container so the active card is larger than
   // the centered heading column above it.
-  const SLIDESHOW_PAD = "calc((100vw - min(94vw, 1600px)) / 2)";
+  // The rail sits on the page container like every other section, so the
+  // active card is exactly container width instead of overhanging it.
+  const SLIDESHOW_PAD = CONTAINER_PAD;
 
   const trackTransform = `translateX(calc(${PEEK}px - ${activeTab} * (100% - ${2 * PEEK}px) - ${activeTab * GAP}px))`;
 
@@ -994,7 +986,7 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
         position: "relative",
         background: "#ffffff",
         color: "#0a0a0b",
-        padding: `120px 0`,
+        padding: `${SECTION_Y} 0`,
         overflow: "hidden",
         scrollMarginTop: 100,
       }}
@@ -1028,7 +1020,7 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
           <h2
             style={{
               fontFamily: FONT,
-              fontSize: "clamp(36px, 5vw, 72px)",
+              fontSize: TYPE.h2,
               fontWeight: 500,
               color: "#0a0a0b",
               letterSpacing: "-0.035em",
@@ -1128,17 +1120,12 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
                 style={{
                   flex: `0 0 calc(100% - ${2 * PEEK}px)`,
                   aspectRatio: "16 / 9",
-                  borderRadius: 22,
+                  borderRadius: 24,
                   background: "#ffffff",
-                  border: "1px solid rgba(10,10,11,0.06)",
                   overflow: "hidden",
                   position: "relative",
-                  boxShadow: isActive
-                    ? "0 30px 70px rgba(10,10,11,0.14)"
-                    : "0 14px 40px rgba(10,10,11,0.08)",
-                  opacity: isActive ? 1 : 0.5,
-                  transform: isActive ? "scale(1)" : "scale(0.96)",
-                  transition: "opacity 380ms ease, transform 520ms cubic-bezier(0.22,1,0.36,1), box-shadow 380ms ease",
+                  border: "1px solid var(--line)",
+                  transition: "transform 520ms cubic-bezier(0.22,1,0.36,1)",
                   cursor: isActive ? "default" : "pointer",
                 }}
               >
@@ -1171,7 +1158,7 @@ const USE_CASES: UseCase[] = [
   { id: "fashion",      label: "Fashion",        visualTitle: "Editorial Lookbooks",          desc: "Editorial fashion stories. On-model, every time.",         video: "/editor-demo.mp4"   },
   { id: "advertising",  label: "Advertising",    visualTitle: "Performance Ad Pack",          desc: "Hooks, statics, motion. Built for paid social.",           video: "/simple-demo.mp4"   },
   { id: "photography",  label: "Photography",    visualTitle: "Studio Product Shots",         desc: "Photoreal SKU shots. No studio.",                          video: "/iterate-demo.mp4"  },
-  { id: "concepting",   label: "Concepting",     visualTitle: "Concept Art & Worldbuilding",  desc: "Characters, environments, props — on-style.",             video: "/media/variable-demo.mp4" },
+  { id: "concepting",   label: "Concepting",     visualTitle: "Concept Art & Worldbuilding",  desc: "Characters, environments, props, on-style.",             video: "/media/variable-demo.mp4" },
   { id: "branding",     label: "Branding",       visualTitle: "Brand Kit Application",        desc: "Lock your brand once. Generate forever.",                  video: "/models-bg.mp4"     },
   { id: "product",      label: "Product",        visualTitle: "Packshots & Renders",          desc: "Studio-grade visuals for every PDP.",                      video: "/workflow-hero.mp4" },
   { id: "motion",       label: "Motion",         visualTitle: "Animated Brand Moments",       desc: "Statics into motion. Loops, transitions, hero moments.",   video: "/editor-demo.mp4"   },
@@ -1245,129 +1232,57 @@ function UseCasesFlora() {
     <section
       style={{
         position: "relative",
-        background: "#0A0A0B",
-        color: "#fff",
-        padding: `120px 0 160px`,
+        background: SURFACE.page,
+        color: SURFACE.ink,
+        padding: `${SECTION_Y} 0`,
       }}
     >
-      {/* Background — only the active category's video is mounted, blurred and
-          dimmed. Keyed by id so React swaps the element on change (no decoder
-          pile-up). Blur kept light (32px) to halve paint cost vs. the original. */}
+      <SectionGuides edge="top" />
+
+      {/* Centred header, full width. It used to sit at the top of the left
+          column, which pushed the category list far below the preview card
+          beside it and left the two visually unrelated. */}
       <div
-        aria-hidden
         style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-          overflow: "hidden",
+          position: "relative",
+          zIndex: 1,
+          padding: `0 ${CONTAINER_PAD}`,
+          textAlign: "center",
+          marginBottom: 64,
         }}
       >
-        <video
-          key={current.id}
-          src={current.video}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            transform: "scale(1.15)",
-            filter: "blur(32px) brightness(0.45) saturate(1.1)",
-            animation: "wp-bg-fade 600ms ease both",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to bottom, rgba(10,10,11,0.7) 0%, rgba(10,10,11,0.55) 50%, rgba(10,10,11,0.85) 100%)",
-          }}
-        />
+        <h2 className="h2" style={{ margin: "0 auto" }}>
+          Scale every idea <span className="h-muted">into a workflow</span>
+        </h2>
+        <p className="lede" style={{ margin: "16px auto 0", textAlign: "center" }}>
+          From product shots to VFX, from lookbooks to motion ads, a workflow for every kind of creative work.
+        </p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 28 }}>
+          <ButtonLink href="#" variant="brand" size="md">
+            Open the app
+          </ButtonLink>
+          <ButtonLink href="/templates" variant="muted" size="md">
+            Browse workflows
+          </ButtonLink>
+        </div>
       </div>
 
-      {/* Foreground content — left scrolls normally, right is sticky */}
+      {/* List and preview now start on the same line, so the active category
+          and the visual it drives read as one pair. */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
           padding: `0 ${CONTAINER_PAD}`,
           display: "grid",
-          gridTemplateColumns: "minmax(0, 0.78fr) minmax(0, 1.22fr)",
-          gap: 64,
-          alignItems: "stretch",
+          gridTemplateColumns: "minmax(0, 0.62fr) minmax(0, 1.38fr)",
+          gap: 56,
+          alignItems: "start",
         }}
       >
-        {/* Left — header + vertical category list, normal flow.
-            paddingBottom extends the row height so the sticky right column
-            stays pinned through every category, not just the first few. */}
-        <div style={{ paddingBottom: "30vh" }}>
-          <h2
-            style={{
-              fontFamily: FONT,
-              fontSize: "clamp(36px, 3.6vw, 56px)",
-              fontWeight: 500,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-              margin: "0 0 16px",
-            }}
-          >
-            Scale every idea into a workflow.
-          </h2>
-          <p
-            style={{
-              fontFamily: FONT,
-              fontSize: 15,
-              color: "rgba(255,255,255,0.62)",
-              lineHeight: 1.5,
-              letterSpacing: "-0.005em",
-              margin: "0 0 28px",
-              maxWidth: 480,
-            }}
-          >
-            From product shots to VFX, from lookbooks to motion ads, a workflow for every kind of creative work.
-          </p>
-          <div style={{ display: "flex", gap: 10, marginBottom: 80 }}>
-            <a
-              href="#"
-              style={{
-                padding: "9px 16px",
-                borderRadius: 12,
-                background: "rgba(255,255,255,0.10)",
-                color: "#fff",
-                fontFamily: FONT,
-                fontSize: 14,
-                fontWeight: 400,
-                textDecoration: "none",
-                border: "1px solid rgba(255,255,255,0.11)",
-                backdropFilter: "blur(10px)",
-              }}
-            >
-              Open the app
-            </a>
-            <Link
-              href="/templates"
-              style={{
-                padding: "9px 16px",
-                borderRadius: 12,
-                background: "transparent",
-                color: "rgba(255,255,255,0.7)",
-                fontFamily: FONT,
-                fontSize: 14,
-                fontWeight: 600,
-                textDecoration: "none",
-              }}
-            >
-              Browse workflows
-            </Link>
-          </div>
-
+        {/* paddingBottom extends the row so the sticky preview stays pinned
+            through every category rather than only the first few. */}
+        <div style={{ paddingBottom: "8vh" }}>
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 0 }}>
             {USE_CASES.map((u, i) => {
               const isActive = i === activeIndex;
@@ -1377,12 +1292,14 @@ function UseCasesFlora() {
                   ref={(el) => {
                     itemRefs.current[i] = el;
                   }}
-                  style={{ minHeight: "8vh", display: "flex", alignItems: "center" }}
+                  style={{ minHeight: 62, display: "flex", alignItems: "center" }}
                 >
                   <button
                     onClick={() => jumpTo(i)}
                     style={{
-                      display: "block",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 14,
                       width: "100%",
                       textAlign: "left",
                       background: "transparent",
@@ -1390,22 +1307,42 @@ function UseCasesFlora() {
                       padding: 0,
                       cursor: "pointer",
                       fontFamily: FONT,
-                      // Single base font-size for every item — animating font-size
-                      // forces a layout reflow on every active-index change, which
-                      // is what was shifting the page mid-scroll. Active state is
-                      // now expressed via transform: scale (compositor-only).
-                      fontSize: "clamp(34px, 3.2vw, 50px)",
+                      // One base font-size for every item: animating font-size
+                      // reflows on each active-index change, which shifted the
+                      // page mid-scroll. Active state is a compositor-only
+                      // transform instead. Sized well below the section h2 so a
+                      // list entry no longer competes with the heading.
+                      fontSize: "clamp(19px, 1.7vw, 26px)",
                       fontWeight: 400,
-                      letterSpacing: "-0.03em",
-                      lineHeight: 1.05,
-                      color: isActive ? "rgb(238,238,238)" : "rgb(96,96,96)",
-                      transform: isActive ? "scale(1)" : "scale(0.74)",
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1.15,
+                      color: isActive ? SURFACE.ink : SURFACE.ink4,
+                      transform: isActive ? "scale(1)" : "scale(0.9)",
                       transformOrigin: "left center",
                       willChange: "transform",
                       transition: "color 360ms ease, transform 360ms cubic-bezier(0.22,1,0.36,1)",
                     }}
                   >
-                    {u.label}
+                    {/* Leading rule, the same hairline vocabulary as the
+                        section guides. scaleX from a fixed width keeps it on
+                        the compositor, so marking the active item never
+                        reflows the list mid-scroll. */}
+                    <span
+                      aria-hidden
+                      style={{
+                        flex: "0 0 auto",
+                        width: 28,
+                        height: 1,
+                        background: "currentColor",
+                        transformOrigin: "left center",
+                        /* The rule always occupies its 28px, so the labels
+                           keep one left edge whichever item is active. */
+                        transform: isActive ? "scaleX(1)" : "scaleX(0)",
+                        opacity: isActive ? 1 : 0,
+                        transition: "transform 360ms cubic-bezier(0.22,1,0.36,1), opacity 240ms ease",
+                      }}
+                    />
+                    <span>{u.label}</span>
                   </button>
                 </li>
               );
@@ -1424,9 +1361,9 @@ function UseCasesFlora() {
               aspectRatio: "16 / 9",
               borderRadius: 24,
               overflow: "hidden",
-              border: "1px solid rgba(255,255,255,0.08)",
-              background: "#15151a",
-              boxShadow: "0 30px 70px rgba(0,0,0,0.5)",
+              border: `1px solid ${SURFACE.line}`,
+              background: SURFACE.tile,
+              boxShadow: "0 18px 50px rgba(23,35,56,0.16)",
             }}
           >
             {USE_CASES.map((u, i) => (
@@ -1458,9 +1395,9 @@ function UseCasesFlora() {
               key={`title-${current.id}`}
               style={{
                 fontFamily: FONT,
-                fontSize: 22,
+                fontSize: TYPE.h3,
                 fontWeight: 600,
-                color: "rgb(238,238,238)",
+                color: SURFACE.ink,
                 letterSpacing: "-0.03em",
                 margin: "0 0 8px",
                 animation: "wp-fade 360ms cubic-bezier(0.22,1,0.36,1) both",
@@ -1474,7 +1411,7 @@ function UseCasesFlora() {
                 fontFamily: FONT,
                 fontSize: 14,
                 fontWeight: 500,
-                color: "rgb(180,180,180)",
+                color: SURFACE.ink3,
                 lineHeight: 1.55,
                 margin: "0 0 18px",
                 maxWidth: 540,
@@ -1483,26 +1420,9 @@ function UseCasesFlora() {
             >
               {current.desc}
             </p>
-            <Link
-              href="/templates"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "9px 14px",
-                borderRadius: 12,
-                background: "rgba(255,255,255,0.06)",
-                color: "rgba(255,255,255,0.85)",
-                border: "1px solid rgba(255,255,255,0.11)",
-                fontFamily: FONT,
-                fontSize: 13,
-                fontWeight: 500,
-                textDecoration: "none",
-                backdropFilter: "blur(10px)",
-              }}
-            >
+            <ButtonLink href="/templates" variant="muted" size="md">
               Explore this Flow →
-            </Link>
+            </ButtonLink>
           </div>
           </div>
         </div>
@@ -1516,13 +1436,16 @@ function UseCasesFlora() {
 // ────────────────────────────────────────────────────────────────────────────
 const TPL_CATEGORIES = ["All", "Fashion", "Advertising", "Product", "VFX", "Branding", "Character"];
 
+/* Each card runs a real capture from the Enterprise video set, picked to match
+   the template it illustrates. 768w and eight seconds: the cards render around
+   370px, so the source resolution was wasted bytes. */
 const TEMPLATES = [
-  { cat: "Fashion",     title: "Garment Try-Ons",         desc: "Outfit swaps and lifestyle visuals from a single product image.",    seed: "wf-tpl-fashion-tryon"   },
-  { cat: "Advertising", title: "Campaign Variants",       desc: "One brief into every format and market, on-brand by default.",       seed: "wf-tpl-ad-campaign"     },
-  { cat: "Product",     title: "Studio Product Shots",    desc: "Photorealistic SKU imagery in any setting — no studio required.",    seed: "wf-tpl-product-studio"  },
-  { cat: "VFX",         title: "Scene Compositing",       desc: "Chain image and video models into one narrative pipeline.",          seed: "wf-tpl-vfx-scene"       },
-  { cat: "Branding",    title: "Brand Kit Application",   desc: "Lock your identity once. Generate infinite on-brand assets.",        seed: "wf-tpl-brand-kit"       },
-  { cat: "Character",   title: "Consistent Characters",   desc: "Build characters that stay on-model across every medium.",           seed: "wf-tpl-character"       },
+  { cat: "Fashion",     title: "Garment Try-Ons",         desc: "Outfit swaps and lifestyle visuals from a single product image.",    seed: "wf-tpl-fashion-tryon",  video: "/media/templates/fashion-tryon.mp4"  },
+  { cat: "Advertising", title: "Campaign Variants",       desc: "One brief into every format and market, on-brand by default.",       seed: "wf-tpl-ad-campaign",    video: "/media/templates/ad-campaign.mp4"    },
+  { cat: "Product",     title: "Studio Product Shots",    desc: "Photorealistic SKU imagery in any setting. No studio required.",    seed: "wf-tpl-product-studio", video: "/media/templates/product-studio.mp4" },
+  { cat: "VFX",         title: "Scene Compositing",       desc: "Chain image and video models into one narrative pipeline.",          seed: "wf-tpl-vfx-scene",      video: "/media/templates/vfx-scene.mp4"      },
+  { cat: "Branding",    title: "Brand Kit Application",   desc: "Lock your identity once. Generate infinite on-brand assets.",        seed: "wf-tpl-brand-kit",      video: "/media/templates/brand-kit.mp4"      },
+  { cat: "Character",   title: "Consistent Characters",   desc: "Build characters that stay on-model across every medium.",           seed: "wf-tpl-character",      video: "/media/templates/character.mp4"      },
 ];
 
 function TemplatesPreview() {
@@ -1531,7 +1454,8 @@ function TemplatesPreview() {
   const visible = activeCat === "All" ? TEMPLATES : TEMPLATES.filter((t) => t.cat === activeCat);
 
   return (
-    <section style={{ background: "#ffffff", padding: `120px ${CONTAINER_PAD}`, color: "#0a0a0b" }}>
+    <section style={{ position: "relative", background: "#ffffff", padding: `${SECTION_Y} ${CONTAINER_PAD}`, color: "#0a0a0b" }}>
+      <SectionGuides edge="top" />
       <div
         style={{
           display: "flex",
@@ -1543,49 +1467,14 @@ function TemplatesPreview() {
         }}
       >
         <div>
-          <div
-            style={{
-              fontFamily: FONT,
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              color: "rgba(10,10,11,0.45)",
-              marginBottom: 16,
-            }}
-          >
-            Templates
-          </div>
-          <h2
-            style={{
-              fontFamily: FONT,
-              fontSize: "clamp(32px, 4vw, 56px)",
-              fontWeight: 400,
-              color: "#0a0a0b",
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-              margin: 0,
-            }}
-          >
-            Pre-built workflows, ready to use.
+          <p className="eyebrow">Templates</p>
+          <h2 className="h2" style={{ marginTop: 12 }}>
+            Pre-built workflows, <span className="h-muted">ready to use</span>
           </h2>
         </div>
-        <Link
-          href="/templates"
-          style={{
-            fontFamily: FONT,
-            fontSize: 13,
-            fontWeight: 500,
-            color: "rgba(10,10,11,0.55)",
-            textDecoration: "none",
-            letterSpacing: "-0.01em",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-        >
-          See all the templates →
-        </Link>
+        <ButtonLink href="/templates" variant="muted" size="md">
+          See all the templates
+        </ButtonLink>
       </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 40 }}>
@@ -1601,7 +1490,7 @@ function TemplatesPreview() {
                 fontWeight: 500,
                 letterSpacing: "-0.01em",
                 padding: "9px 16px",
-                borderRadius: 22,
+                borderRadius: 100,
                 cursor: "pointer",
                 background: isActive ? "#0a0a0b" : "transparent",
                 color: isActive ? "#ffffff" : "rgba(10,10,11,0.65)",
@@ -1615,7 +1504,9 @@ function TemplatesPreview() {
         })}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+      {/* Uniform card grid: the templates are peers with one shared 4:3
+          aspect, which is exactly the case Guidelines §6 reserves it for. */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 24 }}>
         {visible.map((t, i) => {
           const isHov = hovered === i;
           return (
@@ -1628,30 +1519,35 @@ function TemplatesPreview() {
             >
               <div
                 style={{
-                  borderRadius: 22,
+                  borderRadius: 24,
                   overflow: "hidden",
                   aspectRatio: "4/3",
-                  background: "#f3f3f5",
-                  border: "1px solid rgba(10,10,11,0.06)",
+                  background: "var(--panel-2)",
                   position: "relative",
-                  transition: "transform 400ms cubic-bezier(0.22,1,0.36,1), border-color 300ms, box-shadow 300ms",
+                  transition: "transform 400ms cubic-bezier(0.22,1,0.36,1), border-color 300ms",
                   transform: isHov ? "translateY(-3px)" : "translateY(0)",
-                  borderColor: isHov ? "rgba(10,10,11,0.14)" : "rgba(10,10,11,0.06)",
-                  boxShadow: isHov ? "0 12px 28px rgba(10,10,11,0.08)" : "0 1px 2px rgba(10,10,11,0.03)",
+                  /* A hairline does the work; §3 prefers no shadow. */
+                  border: `1px solid ${isHov ? "var(--line-strong)" : "var(--line)"}`,
                 }}
               >
-                <img
-                  src={`https://picsum.photos/seed/${t.seed}/640/480`}
-                  alt={t.title}
-                  loading="lazy"
+                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                <video
+                  src={withBasePath(t.video)}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload={i < 3 ? "auto" : "metadata"}
+                  aria-label={t.title}
                   style={{
+                    position: "absolute",
+                    inset: 0,
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
                     display: "block",
                     transform: isHov ? "scale(1.04)" : "scale(1)",
                     transition: "transform 600ms cubic-bezier(0.25,0.46,0.45,0.94)",
-                    filter: "brightness(0.92)",
                   }}
                 />
               </div>
@@ -1672,7 +1568,7 @@ function TemplatesPreview() {
                 <h3
                   style={{
                     fontFamily: FONT,
-                    fontSize: 16,
+                    fontSize: TYPE.h3,
                     fontWeight: 500,
                     color: "#0a0a0b",
                     letterSpacing: "-0.02em",
@@ -1713,10 +1609,6 @@ export default function WorkflowPage() {
           from { opacity: 0; transform: scale(0.985); }
           to   { opacity: 1; transform: scale(1); }
         }
-        @keyframes wp-bg-fade {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
       `}</style>
 
       {/* Agentic — single consolidated section covering agentic creativity,
@@ -1728,9 +1620,9 @@ export default function WorkflowPage() {
         description="Iterate fast on ideas. Scale production with repeatable workflows. Multiply output with creative agents."
         tabs={["Quick Iterations", "Full Creative Pipelines", "Autonomous Agent"]}
         cards={[
-          <VideoCard key="a1" src="https://www.kyoso.com/video/works-with-all-channels.webm" />,
-          <VideoCard key="a2" src="https://www.kyoso.com/video/access-multiple-content-types.webm" />,
-          <VideoCard key="a3" src="https://www.kyoso.com/video/cares-about-quality-and-guidelines.webm" />,
+          <VideoCard key="a1" src={withBasePath("/media/card-generate.mp4")} />,
+          <VideoCard key="a2" src={withBasePath("/media/variable-demo.mp4")} />,
+          <VideoCard key="a3" src={withBasePath("/media/apps/sketch-to-render.mp4")} />,
         ]}
       />
 

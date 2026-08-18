@@ -37,6 +37,10 @@ const PALETTES = {
   sand:    { bg: "#f4f2ed", ink: "#3a352b", muted: "#aca596", tile: "#ebe7dd", panel: "#eeebe4", noise: [0.56, 0.5, 0.4] },
   /** Solutions — mineral, between the sage and the slate. */
   mineral: { bg: "#eef4f4", ink: "#283a3a", muted: "#93abab", tile: "#dee9e9", panel: "#e6eeee", noise: [0.38, 0.52, 0.53] },
+  /** Workflows — the kit's own neutrals. That page paints its own surfaces
+   *  section by section rather than taking a wash, so this entry exists to
+   *  give the shared components it borrows a palette to read from. */
+  neutral: { bg: "#ffffff", ink: "#171717", muted: "#6e6e73", tile: "#f1f2f3", panel: "#f7f7f8", noise: [0.5, 0.5, 0.5] },
   /** Case studies — muted stone with a lilac cast. */
   stone:   { bg: "#f3f2f6", ink: "#332f3a", muted: "#a39dae", tile: "#e6e4ee", panel: "#ebe9f0", noise: [0.48, 0.44, 0.56] },
 } satisfies Record<string, Palette>;

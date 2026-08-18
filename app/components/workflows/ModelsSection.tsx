@@ -1,15 +1,19 @@
 "use client";
 
+import { CONTAINER_PAD, SECTION_Y, TYPE, SURFACE } from "./scale";
+
+import { MediaPlaceholder } from "./MediaPlaceholder";
+import { ButtonLink } from "@/components/Button";
+import { SectionGuides } from "@/components/primitives/SectionGuides";
+
 const FONT = "var(--font-sans), sans-serif";
-const CONTAINER_PAD = "calc((100vw - min(86vw, 1360px)) / 2)";
 
 type ModelType = "image" | "video" | "audio";
 
 // Hero — full-width feature card
 const HERO = {
   name: "Seedance 2.0",
-  desc: "Cinematic video, multi-shot scenes, and native sound — in seconds.",
-  // TODO Fal: replace with hero output from Seedance 2.0 (cinematic landscape, golden hour)
+  desc: "Cinematic video, multi-shot scenes, and native sound, in seconds.",
   seed: "seedance-tuscany-villa",
 };
 
@@ -101,30 +105,19 @@ function FeatureCard({
         borderRadius: 22,
         overflow: "hidden",
         height,
-        background: "#15151a",
-        border: "1px solid rgba(255,255,255,0.06)",
+        background: SURFACE.tile,
+        border: `1px solid ${SURFACE.line}`,
       }}
     >
-      {/* TODO Fal: replace with model-generated image */}
-      <img
-        src={`https://picsum.photos/seed/${seed}/1600/900`}
-        alt={name}
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-        }}
-      />
+      {/* Awaiting real model output. */}
+      <MediaPlaceholder tone="light" label={name} />
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 45%, transparent 100%)",
+            "linear-gradient(to top, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.5) 45%, transparent 100%)",
         }}
       />
       <div
@@ -145,11 +138,10 @@ function FeatureCard({
               fontFamily: FONT,
               fontSize: big ? "clamp(30px, 3.8vw, 46px)" : "clamp(22px, 1.8vw, 28px)",
               fontWeight: 500,
-              color: "#fff",
+              color: SURFACE.ink,
               letterSpacing: "-0.025em",
               lineHeight: 1.1,
-              textShadow: "0 1px 16px rgba(0,0,0,0.5)",
-            }}
+              }}
           >
             {name}
           </div>
@@ -159,46 +151,20 @@ function FeatureCard({
                 fontFamily: FONT,
                 fontSize: 14.5,
                 fontWeight: 400,
-                color: "rgba(255,255,255,0.78)",
+                color: SURFACE.ink2,
                 letterSpacing: "-0.005em",
                 lineHeight: 1.45,
                 marginTop: 8,
                 maxWidth: 540,
-                textShadow: "0 1px 12px rgba(0,0,0,0.45)",
               }}
             >
               {desc}
             </div>
           )}
         </div>
-        <a
-          href="#"
-          style={{
-            fontFamily: FONT,
-            fontSize: 13,
-            fontWeight: 500,
-            color: "#0a0a0b",
-            background: "#fff",
-            borderRadius: 22,
-            padding: "9px 20px",
-            textDecoration: "none",
-            letterSpacing: "-0.01em",
-            flexShrink: 0,
-            transition: "transform 180ms ease, box-shadow 180ms ease",
-          }}
-          onMouseEnter={(e) => {
-            const el = e.currentTarget;
-            el.style.transform = "scale(1.04)";
-            el.style.boxShadow = "0 8px 22px rgba(255,255,255,0.16)";
-          }}
-          onMouseLeave={(e) => {
-            const el = e.currentTarget;
-            el.style.transform = "scale(1)";
-            el.style.boxShadow = "none";
-          }}
-        >
+        <ButtonLink href="#" variant="brand" size="md">
           Learn more
-        </a>
+        </ButtonLink>
       </div>
     </div>
   );
@@ -206,8 +172,6 @@ function FeatureCard({
 
 // ── Visual pill — small thumbnail card with overlaid name + type icon ──
 function ModelPill({ name, type }: { name: string; type: ModelType }) {
-  // Stable seed per model so picsum returns the same image each render.
-  const seed = `model-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   return (
     <a
       href="#"
@@ -217,48 +181,35 @@ function ModelPill({ name, type }: { name: string; type: ModelType }) {
         aspectRatio: "16 / 9",
         borderRadius: 22,
         overflow: "hidden",
-        background: "#15151a",
-        border: "1px solid rgba(255,255,255,0.06)",
+        background: SURFACE.tile,
+        border: `1px solid ${SURFACE.line}`,
         textDecoration: "none",
         transition: "transform 220ms cubic-bezier(0.22,1,0.36,1), border-color 220ms ease",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget;
         el.style.transform = "translateY(-2px)";
-        el.style.borderColor = "rgba(255,255,255,0.16)";
+        el.style.borderColor = SURFACE.lineStrong;
         const img = el.querySelector<HTMLImageElement>("img");
         if (img) img.style.transform = "scale(1.06)";
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget;
         el.style.transform = "translateY(0)";
-        el.style.borderColor = "rgba(255,255,255,0.06)";
+        el.style.borderColor = SURFACE.line;
         const img = el.querySelector<HTMLImageElement>("img");
         if (img) img.style.transform = "scale(1)";
       }}
     >
-      {/* TODO Fal: replace with model-specific output thumbnail */}
-      <img
-        src={`https://picsum.photos/seed/${seed}/480/270`}
-        alt={name}
-        loading="lazy"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-          transition: "transform 600ms cubic-bezier(0.25,0.46,0.45,0.94)",
-        }}
-      />
+      {/* Awaiting real model output. */}
+      <MediaPlaceholder tone="light" label={name} />
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.12) 55%, transparent 100%)",
+            "linear-gradient(to top, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.55) 55%, transparent 100%)",
         }}
       />
       <div
@@ -273,7 +224,7 @@ function ModelPill({ name, type }: { name: string; type: ModelType }) {
           minWidth: 0,
         }}
       >
-        <span style={{ color: "rgba(255,255,255,0.78)", display: "inline-flex", flexShrink: 0 }}>
+        <span style={{ color: SURFACE.ink2, display: "inline-flex", flexShrink: 0 }}>
           {TYPE_ICON[type]}
         </span>
         <span
@@ -281,9 +232,8 @@ function ModelPill({ name, type }: { name: string; type: ModelType }) {
             fontFamily: FONT,
             fontSize: 14,
             fontWeight: 500,
-            color: "#fff",
+            color: SURFACE.ink,
             letterSpacing: "-0.01em",
-            textShadow: "0 1px 8px rgba(0,0,0,0.5)",
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
@@ -300,35 +250,19 @@ export default function ModelsSection() {
   return (
     <section
       style={{
-        backgroundColor: "#0A0A0B",
-        padding: `120px ${CONTAINER_PAD}`,
+        position: "relative",
+        backgroundColor: SURFACE.page,
+        padding: `${SECTION_Y} ${CONTAINER_PAD}`,
       }}
     >
-      {/* Heading — left-aligned */}
-      <div style={{ marginBottom: 56, maxWidth: 760 }}>
-        <h2
-          style={{
-            fontFamily: FONT,
-            fontSize: "clamp(32px, 4.2vw, 60px)",
-            fontWeight: 400,
-            color: "#fff",
-            letterSpacing: "-0.03em",
-            lineHeight: 1.05,
-            margin: 0,
-          }}
-        >
-          Physically intelligent best models.
+      <SectionGuides edge="top" />
+      {/* Heading, on the shared type classes: mono eyebrow, two-tone h2, lede */}
+      <div style={{ marginBottom: 56 }}>
+        <p className="eyebrow">Models</p>
+        <h2 className="h2" style={{ marginTop: 12 }}>
+          Physically intelligent <span className="h-muted">best models</span>
         </h2>
-        <p
-          style={{
-            fontFamily: FONT,
-            fontSize: 15,
-            color: "rgba(255,255,255,0.5)",
-            lineHeight: 1.6,
-            margin: "20px 0 0",
-            maxWidth: 480,
-          }}
-        >
+        <p className="lede" style={{ marginTop: 16 }}>
           Orchestrating category-defining models across every stage of creative work.
         </p>
       </div>
