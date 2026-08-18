@@ -3,6 +3,8 @@
 import { CONTAINER_PAD, SECTION_Y, TYPE, SURFACE } from "./scale";
 
 import { MediaPlaceholder } from "./MediaPlaceholder";
+import { ButtonLink } from "@/components/Button";
+import { SectionGuides } from "@/components/primitives/SectionGuides";
 
 const FONT = "var(--font-sans), sans-serif";
 
@@ -161,34 +163,9 @@ function FeatureCard({
             </div>
           )}
         </div>
-        <a
-          href="#"
-          style={{
-            fontFamily: FONT,
-            fontSize: 13,
-            fontWeight: 500,
-            color: "#ffffff",
-            background: SURFACE.ink,
-            borderRadius: 22,
-            padding: "9px 20px",
-            textDecoration: "none",
-            letterSpacing: "-0.01em",
-            flexShrink: 0,
-            transition: "transform 180ms ease, box-shadow 180ms ease",
-          }}
-          onMouseEnter={(e) => {
-            const el = e.currentTarget;
-            el.style.transform = "scale(1.04)";
-            el.style.boxShadow = SURFACE.shadow;
-          }}
-          onMouseLeave={(e) => {
-            const el = e.currentTarget;
-            el.style.transform = "scale(1)";
-            el.style.boxShadow = "none";
-          }}
-        >
+        <ButtonLink href="#" variant="brand" size="md">
           Learn more
-        </a>
+        </ButtonLink>
       </div>
     </div>
   );
@@ -275,10 +252,12 @@ export default function ModelsSection() {
   return (
     <section
       style={{
+        position: "relative",
         backgroundColor: SURFACE.page,
         padding: `${SECTION_Y} ${CONTAINER_PAD}`,
       }}
     >
+      <SectionGuides edge="top" />
       {/* Heading — left-aligned */}
       <div style={{ marginBottom: 56, maxWidth: 760 }}>
         <h2

@@ -1,5 +1,7 @@
 "use client";
 
+import { SectionGuides } from "@/components/primitives/SectionGuides";
+
 import { CONTAINER_PAD, SECTION_Y_LG, TYPE } from "./scale";
 import { useState } from "react";
 
@@ -65,10 +67,12 @@ export default function FAQ() {
   return (
     <section
       style={{
+        position: "relative",
         backgroundColor: "#ffffff",
         padding: `${SECTION_Y_LG} ${CONTAINER_PAD}`,
       }}
     >
+      <SectionGuides edge="top" />
       {/* Heading — centered */}
       <div
         style={{

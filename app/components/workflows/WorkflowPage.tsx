@@ -3,6 +3,8 @@
 import { CONTAINER_PAD, SECTION_Y, SECTION_Y_LG, TYPE, SURFACE } from "./scale";
 
 import { MediaPlaceholder } from "./MediaPlaceholder";
+import { ButtonLink } from "@/components/Button";
+import { SectionGuides } from "@/components/primitives/SectionGuides";
 import { withBasePath } from "@/lib/assets";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -532,7 +534,7 @@ function CanvasHero() {
               textShadow: "0 1px 18px rgba(0,0,0,0.4)",
             }}
           >
-            AI generation, brand assets, and real-time collaboration — wired into one canvas, built for teams that ship.
+            AI generation, brand assets, and real-time collaboration, wired into one canvas, built for teams that ship.
           </p>
         </div>
 
@@ -1002,6 +1004,7 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
         scrollMarginTop: 100,
       }}
     >
+      <SectionGuides edge="top" />
       {/* Centered heading + arrows on the right (grid keeps heading visually centered) */}
       <div
         style={{
@@ -1340,38 +1343,12 @@ function UseCasesFlora() {
             From product shots to VFX, from lookbooks to motion ads, a workflow for every kind of creative work.
           </p>
           <div style={{ display: "flex", gap: 10, marginBottom: 80 }}>
-            <a
-              href="#"
-              style={{
-                padding: "9px 16px",
-                borderRadius: 12,
-                background: SURFACE.chip,
-                color: SURFACE.ink,
-                fontFamily: FONT,
-                fontSize: 14,
-                fontWeight: 400,
-                textDecoration: "none",
-                border: `1px solid ${SURFACE.line}`,
-                backdropFilter: "blur(10px)",
-              }}
-            >
+            <ButtonLink href="#" variant="ghost" size="md">
               Open the app
-            </a>
-            <Link
-              href="/templates"
-              style={{
-                padding: "9px 16px",
-                borderRadius: 12,
-                background: "transparent",
-                color: SURFACE.ink2,
-                fontFamily: FONT,
-                fontSize: 14,
-                fontWeight: 600,
-                textDecoration: "none",
-              }}
-            >
+            </ButtonLink>
+            <ButtonLink href="/templates" variant="muted" size="md">
               Browse workflows
-            </Link>
+            </ButtonLink>
           </div>
 
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 0 }}>
@@ -1489,26 +1466,9 @@ function UseCasesFlora() {
             >
               {current.desc}
             </p>
-            <Link
-              href="/templates"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "9px 14px",
-                borderRadius: 12,
-                background: SURFACE.chip,
-                color: SURFACE.ink2,
-                border: `1px solid ${SURFACE.line}`,
-                fontFamily: FONT,
-                fontSize: 13,
-                fontWeight: 500,
-                textDecoration: "none",
-                backdropFilter: "blur(10px)",
-              }}
-            >
+            <ButtonLink href="/templates" variant="ghost" size="md">
               Explore this Flow →
-            </Link>
+            </ButtonLink>
           </div>
           </div>
         </div>
@@ -1537,7 +1497,8 @@ function TemplatesPreview() {
   const visible = activeCat === "All" ? TEMPLATES : TEMPLATES.filter((t) => t.cat === activeCat);
 
   return (
-    <section style={{ background: "#ffffff", padding: `${SECTION_Y} ${CONTAINER_PAD}`, color: "#0a0a0b" }}>
+    <section style={{ position: "relative", background: "#ffffff", padding: `${SECTION_Y} ${CONTAINER_PAD}`, color: "#0a0a0b" }}>
+      <SectionGuides edge="top" />
       <div
         style={{
           display: "flex",

@@ -1,5 +1,7 @@
 "use client";
 
+import { SectionGuides } from "@/components/primitives/SectionGuides";
+
 import { CONTAINER_PAD, SECTION_Y, TYPE } from "./scale";
 import { useRef, useState } from "react";
 import { IntegrationsGrid } from "@/components/IntegrationsGrid";
@@ -193,7 +195,7 @@ function ScaledDemo() {
       }}
     >
       {/* Awaiting the batched-variants mosaic; see HANDOFF open items. */}
-      <MediaPlaceholder label="Batched product variants: packaging, key shots, product pages" />
+      <MediaPlaceholder tone="light" label="Batched product variants: packaging, key shots, product pages" />
     </div>
   );
 }
@@ -277,7 +279,8 @@ function Card({
 // ── Section ─────────────────────────────────────────────────────────────────
 export default function BentoSection() {
   return (
-    <section style={{ padding: `${SECTION_Y} ${CONTAINER_PAD}`, backgroundColor: "#ffffff", display: "flow-root" }}>
+    <section style={{ position: "relative", padding: `${SECTION_Y} ${CONTAINER_PAD}`, backgroundColor: "#ffffff", display: "flow-root" }}>
+      <SectionGuides edge="top" />
       <div style={{ marginBottom: 100 }} />
 
       {/* Heading */}
@@ -300,7 +303,7 @@ export default function BentoSection() {
           <em style={{ fontStyle: "italic", fontWeight: 400, color: "rgba(10,10,11,0.5)" }}>scale.</em>
         </h2>
         <p style={{ ...TEXT_STYLE, fontSize: TYPE.body, color: "rgba(10,10,11,0.55)", marginTop: 12 }}>
-          Real-time collaboration, brand consistency, and deep integrations — all in one place.
+          Real-time collaboration, brand consistency, and deep integrations, all in one place.
         </p>
       </div>
 
