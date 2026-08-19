@@ -123,11 +123,7 @@ function Tile({
         bg
           ? {
               backgroundImage:
-                /* White at both ends, photographic through the middle. The
-                   heading sits in the top band and the visual in the bottom
-                   one, and those visuals are real UI: at 12% white the
-                   photograph was reading straight through the folder list. */
-                "linear-gradient(to bottom, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.34) 34%, rgba(255,255,255,0.62) 66%, rgba(255,255,255,0.93) 100%), " +
+                "linear-gradient(to bottom, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.42) 46%, rgba(255,255,255,0.12) 100%), " +
                 `url(${withBasePath(bg)})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
@@ -212,15 +208,22 @@ function FoldersPanel() {
       </ul>
 
       <style>{`
+        /* The panel is its own white surface, the way the collaboration
+           canvas is: no placeholder frame wrapped around it. It bleeds off
+           the bottom of the tile so the list reads as continuing. */
         .af {
           width: 100%;
           font-size: 13.5px;
           line-height: 1.2;
           color: var(--ink);
-          /* Bottom-anchored inside the tile's media area, like the other
-             visuals, and clipped so the list reads as continuing below. */
-          mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
-          -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+          background: var(--panel);
+          border: 1px solid var(--line);
+          border-radius: 16px 16px 0 0;
+          border-bottom: 0;
+          padding: 16px 10px 0;
+          margin-bottom: -32px;
+          mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+          -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
         }
         .af-head {
           display: flex;
