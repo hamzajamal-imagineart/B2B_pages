@@ -207,9 +207,11 @@ export function ContactForm({
            "ImagineArt Enterprise" across three lines. */
         .cf-intro .lede { max-width: 40ch; }
 
-        /* White on the tinted wash is the elevation cue, same as every card. */
+        /* Translucent white: the card lifts off the wash without sealing it
+           off, and the inputs inside stay solid so they read as the surfaces
+           you type into. */
         .cf-card {
-          background: var(--panel);
+          background: rgba(255, 255, 255, 0.6);
           border: 1px solid var(--line);
           border-radius: 24px;
           padding: clamp(24px, 3vw, 36px);
@@ -237,7 +239,7 @@ export function ContactForm({
           font: inherit;
           font-size: 15px;
           color: var(--ink);
-          background: var(--panel-2);
+          background: var(--panel);
           border: 1px solid var(--line);
           border-radius: 12px;
           outline: none;
@@ -247,7 +249,6 @@ export function ContactForm({
         .cf-input:hover { border-color: var(--line-strong); }
         .cf-input:focus-visible {
           border-color: var(--ink);
-          background: var(--panel);
         }
         .cf-textarea {
           height: auto;
