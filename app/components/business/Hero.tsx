@@ -18,7 +18,6 @@ export default function Hero() {
       grain="grain-sand"
       primary={{ label: "Contact Sales", href: CONTACT_HREF }}
       footText="ImagineArt gives your creative team the speed, structure, and control to ship campaign-ready assets. Humans and AI, built around how your operation actually runs."
-      footLink={{ label: "See how workflows work →", href: "#workflows" }}
     />
   );
 }

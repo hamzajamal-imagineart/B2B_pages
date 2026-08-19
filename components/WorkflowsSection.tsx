@@ -3,7 +3,12 @@ import { AdminBento } from "@/components/AdminBento";
 import { withBasePath } from "@/lib/assets";
 
 /**
- * Workflows + the four-panel Z-fold.
+ * "Workflows that work for you" plus the four-panel Z-fold.
+ *
+ * Shared: both the Business and Enterprise specs carry this section with the
+ * same heading, subtext and Z-fold, so it lives here rather than being forked.
+ * It was built for Business first and moved up when Enterprise turned out to
+ * need it too.
  *
  * The spec's UX note asks for an animated node-graph (brief → image model →
  * video model → output). Rather than illustrate that as a diagram, this runs
@@ -12,7 +17,7 @@ import { withBasePath } from "@/lib/assets";
  *
  * The four panels below are AdminBento, shared with the Enterprise page.
  */
-export default function Workflows() {
+export default function WorkflowsSection() {
   return (
     <section
       id="workflows"

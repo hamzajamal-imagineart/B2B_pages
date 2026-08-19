@@ -2,6 +2,8 @@ import { SiteNav } from "@/components/SiteNav";
 import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { ContactForm } from "@/components/ContactForm";
+import WorkflowsSection from "@/components/WorkflowsSection";
 import { NAV_VARIANT } from "@/lib/theme";
 import Hero from "./components/enterprise/Hero";
 import Partners from "./components/enterprise/Partners";
@@ -34,8 +36,12 @@ export default function Home() {
 
       <main>
         <Hero />
-        <Partners />
+        <Partners caption="Partnering with global industry leaders to power your creativity output" />
         <Control />
+        <ContactForm />
+        {/* Spec's signature moment, plus the Z-fold that used to sit at the
+            end of Control. Same component Business runs. */}
+        <WorkflowsSection />
         <Security />
         <TestimonialsSection />
         <ClosingCta backdrop="/media/cta-hills.jpg" />

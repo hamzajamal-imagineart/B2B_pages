@@ -50,7 +50,8 @@ export function BannerHero({
   grain?: string;
   primary: Cta;
   footText: string;
-  footLink: Cta;
+  /** Optional: omit for a hero whose foot is copy and CTA only. */
+  footLink?: Cta;
 }) {
   const [open, setOpen] = useState(false);
   const [duration, setDuration] = useState<string | null>(null);
@@ -163,9 +164,11 @@ export function BannerHero({
         <div className="hero-foot mt-6">
           <div className="hero-foot-copy">
             <p className="hero-foot-text">{footText}</p>
-            <a href={footLink.href} className="hero-link">
-              {footLink.label}
-            </a>
+            {footLink && (
+              <a href={footLink.href} className="hero-link">
+                {footLink.label}
+              </a>
+            )}
           </div>
 
           <div className="hero-foot-cta">

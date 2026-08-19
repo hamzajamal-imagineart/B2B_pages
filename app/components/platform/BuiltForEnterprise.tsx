@@ -20,7 +20,7 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
 type Item = { title: string; body: string };
 type Tab = { id: string; label: string; items: Item[] };
 
-const TABS: Tab[] = [
+export const PLATFORM_ENTERPRISE: Tab[] = [
   {
     id: "secure",
     label: "Scalable and Secure",
@@ -61,7 +61,17 @@ const TABS: Tab[] = [
   },
 ];
 
-export default function BuiltForEnterprise() {
+export default function BuiltForEnterprise({
+  tabs = PLATFORM_ENTERPRISE,
+  heading = "Built for Enterprise",
+  muted,
+}: {
+  tabs?: Tab[];
+  heading?: string;
+  /** Second clause, in the palette's light tint. */
+  muted?: string;
+} = {}) {
+  const TABS = tabs;
   const [active, setActive] = useState(0);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -81,7 +91,9 @@ export default function BuiltForEnterprise() {
       <SectionGuides edge="top" />
       <div className="container-page">
         <div className="bfe-panel">
-          <h2 className="h2 bfe-heading">Built for Enterprise</h2>
+          <h2 className="h2 bfe-heading">
+            {heading} {muted && <span className="h-muted">{muted}</span>}
+          </h2>
 
           <div className="bfe-grid mt-10">
             <div

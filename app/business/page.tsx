@@ -6,10 +6,11 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 import { navVariantFor } from "@/lib/theme";
 import { IndustriesSection } from "@/components/IndustriesSection";
+import { ContactForm } from "@/components/ContactForm";
 
 import Hero from "../components/business/Hero";
 import Pitch from "../components/business/Pitch";
-import Workflows from "../components/business/Workflows";
+import WorkflowsSection from "@/components/WorkflowsSection";
 import CaseStudies from "../components/business/CaseStudies";
 
 // Shared with the Enterprise and Platform pages rather than forked.
@@ -17,7 +18,7 @@ import Partners from "../components/enterprise/Partners";
 import ClosingCta, { CONTACT_HREF, START_HREF } from "../components/enterprise/ClosingCta";
 import Suite, { BUSINESS_TOOLS } from "../components/platform/Suite";
 import Models from "../components/platform/Models";
-import BuiltForEnterprise from "../components/platform/BuiltForEnterprise";
+import Security from "../components/enterprise/Security";
 import Apps from "../components/platform/Apps";
 
 export const metadata: Metadata = {
@@ -37,11 +38,15 @@ export default function BusinessPage() {
       <main>
         <Hero />
         <Partners caption="Partnering with global industry leaders to power your creative output" />
+        <ContactForm />
         <Pitch />
         <IndustriesSection />
         <Suite tools={BUSINESS_TOOLS} />
-        <Workflows />
-        <BuiltForEnterprise />
+        <WorkflowsSection />
+        {/* Spec §7. The Enterprise page already carries this section, heading
+            and lede included, so Business renders the same component rather
+            than a second layout for the same content. */}
+        <Security />
         <Models />
         <Apps />
         <CaseStudies />

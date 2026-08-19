@@ -5,7 +5,9 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
 import { useRef } from "react";
 import { withBasePath } from "@/lib/assets";
 import { IntegrationsGrid } from "@/components/IntegrationsGrid";
-import { AdminBento } from "@/components/AdminBento";
+
+/** Same origin the footer links against. */
+const IA = "https://www.imagine.art";
 
 export default function Control() {
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -46,19 +48,20 @@ export default function Control() {
       <div ref={trackRef} className="stack-track no-scrollbar mt-12">
         <StackCard
           tone="1"
+          href={`${IA}/ai-image-generator`}
           title="Generate"
           body="Model agnostic. For everyone in the company."
           bg="/media/card-generate.jpg"
         >
-          <CardVideo src="/media/card-generate.mp4" />
+          <GenerateMock />
         </StackCard>
-        <StackCard tone="2" title="Workflows" body="Build powerful, node-based AI pipelines.">
+        <StackCard tone="2" href={`${IA}/workflow`} title="Workflows" body="Build powerful, node-based AI pipelines.">
           <CardVideo src="/media/variable-demo.mp4" />
         </StackCard>
-        <StackCard tone="3" title="Models" body="Every leading model, one interface." bg="/media/card-models.jpg" scrim>
+        <StackCard tone="3" href={`${IA}/ai-video-generator`} title="Models" body="Every leading model, one interface." bg="/media/card-models.jpg" scrim>
           <ModelsMock />
         </StackCard>
-        <StackCard tone="4" title="Integrations" body="Fits into the tools your team already runs.">
+        <StackCard tone="4" href={`${IA}/imagine-computer`} title="Integrations" body="Fits into the tools your team already runs.">
           {/* Fills the card's remaining height rather than sitting in the
               16:9 embed frame: the grid has no fixed aspect of its own, and
               at 16:9 pinned to the bottom the logos bunched at the base of
@@ -67,7 +70,7 @@ export default function Control() {
             <IntegrationsGrid vignette={false} />
           </div>
         </StackCard>
-        <StackCard tone="5" title="Control" body="Central governance and admin oversight.">
+        <StackCard tone="5" href={`${IA}/teams-plan`} title="Control" body="Central governance and admin oversight.">
           <ControlMock />
         </StackCard>
       </div>
@@ -83,11 +86,6 @@ export default function Control() {
         </div>
       </div>
 
-      <div className="container-page">
-        {/* Shared with the Business page's Z-fold — see components/AdminBento. */}
-        <AdminBento className="mt-20 md:mt-28" />
-      </div>
-
       <style>{`
         .platform-subhead { color: var(--ink-3); font-weight: 400; }
 
@@ -101,6 +99,11 @@ export default function Control() {
           padding-right: max(32px, calc((100vw - 1240px) / 2 + 32px));
           scroll-behavior: smooth;
           min-width: 0;
+          /* Room for the hover scale. overflow-x: auto coerces overflow-y to
+             auto, so a card that grows past the track's box gets clipped
+             instead of overflowing it. Padding is the only fix that keeps the
+             horizontal scroll. */
+          padding-block: 12px;
         }
         @media (max-width: 768px) {
           .stack-track { padding-left: 20px; padding-right: 20px; }
@@ -109,7 +112,11 @@ export default function Control() {
           flex: 0 0 auto;
           width: clamp(260px, 27vw, 380px);
           height: clamp(420px, 46vw, 520px);
-          border-radius: 20px 20px 0 0;
+          /* Full radius. These were square-bottomed to bleed into the admin
+             bento that used to close this section; with the bento moved into
+             WorkflowsSection the rail ends here, and a flat bottom edge read
+             as the cards being cut off. */
+          border-radius: 20px;
           padding: 28px 26px 0;
           display: flex;
           flex-direction: column;
@@ -128,6 +135,19 @@ export default function Control() {
         .stack-tone-3 { background-color: #3d3b34; }
         .stack-tone-4 { background-color: #24302f; }
         .stack-tone-5 { background-color: #141414; }
+
+        /* Subtle lift on hover, compositor-only and CSS-driven: §2 rules out
+           JS hover handlers. Cancelled under reduced motion. */
+        .stack-card {
+          text-decoration: none;
+          transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .stack-card:hover { transform: scale(1.015); }
+        .stack-card:focus-visible { transform: scale(1.015); }
+        @media (prefers-reduced-motion: reduce) {
+          .stack-card { transition: none; }
+          .stack-card:hover, .stack-card:focus-visible { transform: none; }
+        }
 
         .stack-title { font-size: 19px; font-weight: 400; }
         .stack-body { margin-top: 8px; font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,0.6); max-width: 22ch; }
@@ -206,6 +226,43 @@ export default function Control() {
           position: relative;
           min-height: 0;
         }
+        /* Both built mocks sit on the same white sheet, anchored to the
+           card's bottom edge and bleeding off it. */
+        .mock-sheet {
+          position: absolute;
+          left: 0;
+          /* Flush with the card, not bled past it: the card clips its own
+             overflow, so a negative right just sliced the sheet's edge off.
+             Lifted off the bottom edge too, on the same 22px the video cards
+             use, so the sheet reads as a whole object rather than one running
+             out of card. */
+          right: 0;
+          bottom: 22px;
+          background: #fff;
+          border-radius: 14px;
+          padding: 12px;
+          color: var(--ink);
+        }
+        /* Dark variant, for the near-black card. The admin panel is chrome
+           rather than a captured product surface, so it takes the card's tone
+           instead of punching a white hole in it. The Generate bar stays light
+           because the real prompt bar is light UI. */
+        .mock-sheet-dark {
+          background: #17171a;
+          color: rgba(255, 255, 255, 0.92);
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+        }
+        .mock-sheet-dark .cm-head,
+        .mock-sheet-dark .cm-cap,
+        .mock-sheet-dark .cm-rows { color: rgba(255, 255, 255, 0.5); }
+        .mock-sheet-dark .cm-live {
+          background: rgba(255, 255, 255, 0.09);
+          color: rgba(255, 255, 255, 0.75);
+        }
+        .mock-sheet-dark .cm-bar span { background: rgba(255, 255, 255, 0.9); }
+        .mock-sheet-dark .cm-rows li { border-top-color: rgba(255, 255, 255, 0.09); }
+        .mock-sheet-dark .cm-v { color: rgba(255, 255, 255, 0.92); }
+
         .stack-pager {
           width: 38px; height: 38px;
           border-radius: 999px;
@@ -243,6 +300,7 @@ function StackCard({
   body,
   bg,
   scrim,
+  href,
   children,
 }: {
   tone: "1" | "2" | "3" | "4" | "5";
@@ -254,10 +312,16 @@ function StackCard({
    *  as a gradient in background-image rather than a pseudo-element: the card
    *  is not a positioned ancestor, so an absolute overlay would escape it. */
   scrim?: boolean;
+  /** Destination on imagine.art. */
+  href: string;
   children: React.ReactNode;
 }) {
   return (
-    <div
+    <a
+      href={href}
+      aria-label={title}
+      target="_blank"
+      rel="noopener noreferrer"
       className={`stack-card stack-tone-${tone}`}
       style={
         bg
@@ -279,7 +343,7 @@ function StackCard({
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 12h12M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </span>
       <div className="stack-mock">{children}</div>
-    </div>
+    </a>
   );
 }
 
@@ -304,15 +368,76 @@ function ModelsMock() {
 }
 
 
-/* ── Control: the same credit-usage stat from the admin panel below. ── */
+/* ── Generate: the product's prompt box, from the supplied capture.
+
+   The source floats the white box on a purple gradient. Rather than key that
+   out, the crop lands just inside the box's own edges, so no corner arcs
+   survive and the radius is re-applied here; the little tint left at the
+   edges is desaturated to 12%. Colour on these pages comes from imagery
+   only, and a violet wash is a decorative accent, not imagery. ── */
+function GenerateMock() {
+  return (
+    <div className="mock-sheet mock-sheet-flush">
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video
+        className="gm-video"
+        src={withBasePath("/media/cards/generate-prompt.mp4")}
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden
+      />
+      <style>{`
+        .mock-sheet-flush { padding: 0; overflow: hidden; line-height: 0; }
+        .gm-video { width: 100%; height: auto; display: block; }
+      `}</style>
+    </div>
+  );
+}
+
+/* ── Control: the admin panel in miniature. The spend figure matches the
+   bento's usage panel, so the two cannot disagree on the same page. ── */
 function ControlMock() {
   return (
-    <div style={{ position: "absolute", left: 0, right: -8, bottom: 0, background: "#fff", borderRadius: "14px 0 0 0", padding: 12, color: "var(--ink)" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 10.5, color: "var(--ink-3)" }}>
-        <span>Manage</span><span style={{ background: "var(--panel-2)", borderRadius: 999, padding: "3px 8px" }}>Live</span>
+    <div className="mock-sheet mock-sheet-dark">
+      <div className="cm-head">
+        <span>Manage</span>
+        <span className="cm-live">Live</span>
       </div>
-      <div style={{ marginTop: 9, fontSize: 20, letterSpacing: "-0.01em" }}>3,504,195</div>
-      <div style={{ fontSize: 11, color: "var(--ink-3)" }}>Credits spent this month</div>
+
+      <div className="cm-big">3,504,195</div>
+      <div className="cm-cap">Credits spent this month</div>
+
+      <div className="cm-bar" aria-hidden>
+        {[46, 28, 17, 9].map((w, i) => (
+          <span key={i} style={{ width: `${w}%`, opacity: 1 - i * 0.22 }} />
+        ))}
+      </div>
+
+      <ul className="cm-rows">
+        {[["Seats", "Unlimited"], ["Roles", "4 configured"]].map(([k, v]) => (
+          <li key={k}><span>{k}</span><span className="cm-v">{v}</span></li>
+        ))}
+      </ul>
+
+      <style>{`
+        .cm-head {
+          display: flex; align-items: center; justify-content: space-between;
+          font-size: 10.5px; color: var(--ink-3);
+        }
+        .cm-live { background: var(--panel-2); border-radius: 999px; padding: 3px 8px; }
+        .cm-big { margin-top: 9px; font-size: 20px; letter-spacing: -0.01em; }
+        .cm-cap { font-size: 11px; color: var(--ink-3); }
+        .cm-bar { display: flex; gap: 3px; margin-top: 10px; }
+        .cm-bar span { height: 5px; border-radius: 3px; background: var(--ink); }
+        .cm-rows { list-style: none; margin: 10px 0 0; padding: 0; font-size: 11px; color: var(--ink-3); }
+        .cm-rows li {
+          display: flex; justify-content: space-between;
+          padding: 6px 0; border-top: 1px solid var(--line);
+        }
+        .cm-v { color: var(--ink); }
+      `}</style>
     </div>
   );
 }
