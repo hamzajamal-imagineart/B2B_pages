@@ -317,6 +317,8 @@ function StackCard({
     <a
       href={href}
       aria-label={title}
+      target="_blank"
+      rel="noopener noreferrer"
       className={`stack-card stack-tone-${tone}`}
       style={
         bg
@@ -363,65 +365,29 @@ function ModelsMock() {
 }
 
 
-/* ── Generate: the product's own prompt bar, rebuilt. Trimmed to what fits a
-   card this narrow: the field, the mode chip, the model and ratio, and the
-   action. The real bar also carries a free/paid toggle, references and a
-   preset picker, which at this width would be unreadable furniture.
+/* ── Generate: the product's prompt box, from the supplied capture.
 
-   The live Create button is violet; here it is the brand near-black, since
-   colour on these pages comes from imagery only. ── */
+   The source floats the white box on a purple gradient. Rather than key that
+   out, the crop lands just inside the box's own edges, so no corner arcs
+   survive and the radius is re-applied here; the little tint left at the
+   edges is desaturated to 12%. Colour on these pages comes from imagery
+   only, and a violet wash is a decorative accent, not imagery. ── */
 function GenerateMock() {
   return (
-    <div className="mock-sheet">
-      <div className="gm-field">
-        <span className="gm-plus" aria-hidden>+</span>
-        <span className="gm-ph">Describe the image you imagine</span>
-      </div>
-
-      <div className="gm-bar">
-        <span className="gm-chip gm-chip-on">
-          <span className="gm-t" aria-hidden>T</span>
-          Create
-        </span>
-        <span className="gm-meta">Nano Banana 2 / 1:1</span>
-        <span className="gm-cta">Create</span>
-      </div>
-
+    <div className="mock-sheet mock-sheet-flush">
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video
+        className="gm-video"
+        src={withBasePath("/media/cards/generate-prompt.mp4")}
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden
+      />
       <style>{`
-        .gm-field {
-          display: flex; align-items: center; gap: 8px;
-          border: 1px solid var(--line); border-radius: 10px;
-          padding: 10px 10px;
-        }
-        .gm-plus {
-          width: 18px; height: 18px; border-radius: 999px;
-          border: 1px solid var(--line); color: var(--ink-2);
-          display: grid; place-items: center; font-size: 12px; line-height: 1;
-          flex: 0 0 auto;
-        }
-        .gm-ph {
-          font-size: 11px; color: var(--ink-3);
-          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .gm-bar { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
-        .gm-chip {
-          display: inline-flex; align-items: center; gap: 5px;
-          font-size: 10.5px; padding: 4px 9px; border-radius: 999px;
-          border: 1px solid var(--line); color: var(--ink-2);
-          flex: 0 0 auto;
-        }
-        .gm-chip-on { background: var(--panel-2); color: var(--ink); }
-        .gm-t { font-size: 9.5px; }
-        .gm-meta {
-          font-size: 10px; color: var(--ink-3);
-          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-          min-width: 0;
-        }
-        .gm-cta {
-          margin-left: auto; flex: 0 0 auto;
-          font-size: 10.5px; padding: 5px 12px; border-radius: 999px;
-          background: var(--ink); color: #fff;
-        }
+        .mock-sheet-flush { padding: 0; overflow: hidden; }
+        .gm-video { width: 100%; height: auto; display: block; }
       `}</style>
     </div>
   );
