@@ -41,6 +41,11 @@ function CardVideo({ src }: { src: string }) {
  */
 /* All ten carry a capture now, Telecom included, which was the last gap.
    `video` stays optional so an industry can be added before its footage is. */
+/* Every card points here. The Business spec wants a per-industry solution
+   page, and none exist, so a single real destination beats ten links to
+   nowhere. Swap this for a per-entry href once those routes land. */
+const IA_ENTERPRISE = "https://www.imagine.art/business/enterprise";
+
 const INDUSTRIES = [
   { name: "Fashion & Apparel", video: "/media/industries/fashion.mp4", body: "Design, PDP and e-com imagery, editorials (stills + video), fashion films, lookbooks, social, banners, and static + motion ads." },
   { name: "CPG", video: "/media/industries/cpg.mp4", body: "End-to-end campaigns, static + motion ads, product-window animations, in-store POS, DVCs / TVCs, mascot design, and trend-jacking video." },
@@ -104,19 +109,26 @@ export function IndustriesSection() {
 
       <div ref={trackRef} className="ind-track no-scrollbar mt-12">
         {INDUSTRIES.map((i, n) => (
-          <div
+          <a
             key={i.name}
+            href={IA_ENTERPRISE}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={i.name}
             className={`ind-slide grain ${PALETTES[n % PALETTES.length]} ${i.video ? "ind-has-video" : ""}`}
           >
             {i.video && <CardVideo src={i.video} />}
-            <h3 className="ind-slide-name">{i.name}</h3>
-            <p className="ind-slide-body">{i.body}</p>
+            {/* Top right, out of the copy's way: the name and body stack from
+                the bottom, and the arrow was competing with them for the same
+                corner. */}
             <span className="ind-slide-arrow glass" aria-hidden>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                 <path d="M6 12h12M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
-          </div>
+            <h3 className="ind-slide-name">{i.name}</h3>
+            <p className="ind-slide-body">{i.body}</p>
+          </a>
         ))}
       </div>
 
@@ -142,6 +154,10 @@ export function IndustriesSection() {
           padding-right: max(32px, calc((100vw - 1240px) / 2 + 32px));
           scroll-behavior: smooth;
           min-width: 0;
+          /* Headroom for the hover scale: overflow-x: auto coerces overflow-y
+             to auto, so a card growing past the track's box would be clipped
+             rather than overflow it. */
+          padding-block: 12px;
         }
         @media (max-width: 768px) {
           .ind-track { padding-left: 20px; padding-right: 20px; }
@@ -162,6 +178,19 @@ export function IndustriesSection() {
           flex-direction: column;
           justify-content: flex-end;
         }
+        /* Same subtle lift as the Enterprise platform rail. CSS only, since
+           §2 rules out JS hover handlers, and cancelled under reduced motion. */
+        .ind-slide {
+          text-decoration: none;
+          transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .ind-slide:hover,
+        .ind-slide:focus-visible { transform: scale(1.015); }
+        @media (prefers-reduced-motion: reduce) {
+          .ind-slide { transition: none; }
+          .ind-slide:hover, .ind-slide:focus-visible { transform: none; }
+        }
+
         /* A card with footage carries its own copy colours, overriding the
            palette's --grain-fg, since the scrim underneath is always dark. */
         .ind-slide.ind-has-video { color: #fff; }
@@ -207,7 +236,10 @@ export function IndustriesSection() {
         }
 
         .ind-slide-arrow {
-          margin-top: 18px;
+          position: absolute;
+          top: 22px;
+          right: 22px;
+          z-index: 1;
           width: 34px; height: 34px;
           border-radius: 999px;
           display: grid; place-items: center;
