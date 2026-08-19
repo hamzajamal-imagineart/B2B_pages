@@ -28,7 +28,7 @@ export function AdminBento({ className = "" }: { className?: string }) {
         title="Efficient Asset Management"
         bg="/media/admin/tile-assets.jpg"
         body="Every generation organized, searchable, and on-brand."
-        visual={<PlaceholderPanel />}
+        visual={<FoldersPanel />}
       />
       <Tile
         title="Unlimited Members, No Added Cost"
@@ -140,7 +140,39 @@ function Tile({
   );
 }
 
-/* Three of the four tiles are placeholders for now: a plain white panel
+/* The real team-folders panel from the product. It is a portrait capture in a
+   landscape slot, so it is contained rather than cropped: this is UI, and
+   cutting the folder names off would make it read as decoration. */
+function FoldersPanel() {
+  return (
+    <div className="admin-folders">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={withBasePath("/media/admin/asset-folders.jpg")} alt="" />
+      <style>{`
+        .admin-folders {
+          aspect-ratio: 16 / 13;
+          border-radius: 16px;
+          background: var(--panel);
+          border: 1px solid var(--line);
+          overflow: hidden;
+          display: grid;
+          place-items: end center;
+          padding: 14px 14px 0;
+        }
+        .admin-folders img {
+          width: auto;
+          max-width: 100%;
+          height: 100%;
+          object-fit: contain;
+          object-position: bottom center;
+          display: block;
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* Two of the four tiles are placeholders for now: a plain white panel
    holding the tile's media footprint, so real visuals drop in without any
    layout change. Only Collaborate End to End carries its real visual. */
 function PlaceholderPanel() {

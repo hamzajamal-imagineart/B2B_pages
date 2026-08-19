@@ -10,7 +10,7 @@ import { ContactForm } from "@/components/ContactForm";
 
 import Hero from "../components/business/Hero";
 import Pitch from "../components/business/Pitch";
-import Workflows from "../components/business/Workflows";
+import WorkflowsSection from "@/components/WorkflowsSection";
 import CaseStudies from "../components/business/CaseStudies";
 
 // Shared with the Enterprise and Platform pages rather than forked.
@@ -42,7 +42,7 @@ export default function BusinessPage() {
         <Pitch />
         <IndustriesSection />
         <Suite tools={BUSINESS_TOOLS} />
-        <Workflows />
+        <WorkflowsSection />
         {/* Spec §7. The Enterprise page already carries this section, heading
             and lede included, so Business renders the same component rather
             than a second layout for the same content. */}

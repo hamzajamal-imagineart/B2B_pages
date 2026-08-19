@@ -5,7 +5,9 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
 import { useRef } from "react";
 import { withBasePath } from "@/lib/assets";
 import { IntegrationsGrid } from "@/components/IntegrationsGrid";
-import { AdminBento } from "@/components/AdminBento";
+
+/** Same origin the footer links against. */
+const IA = "https://www.imagine.art";
 
 export default function Control() {
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -46,19 +48,20 @@ export default function Control() {
       <div ref={trackRef} className="stack-track no-scrollbar mt-12">
         <StackCard
           tone="1"
+          href={`${IA}/ai-image-generator`}
           title="Generate"
           body="Model agnostic. For everyone in the company."
           bg="/media/card-generate.jpg"
         >
           <CardVideo src="/media/card-generate.mp4" />
         </StackCard>
-        <StackCard tone="2" title="Workflows" body="Build powerful, node-based AI pipelines.">
+        <StackCard tone="2" href={`${IA}/workflow`} title="Workflows" body="Build powerful, node-based AI pipelines.">
           <CardVideo src="/media/variable-demo.mp4" />
         </StackCard>
-        <StackCard tone="3" title="Models" body="Every leading model, one interface." bg="/media/card-models.jpg" scrim>
+        <StackCard tone="3" href={`${IA}/ai-video-generator`} title="Models" body="Every leading model, one interface." bg="/media/card-models.jpg" scrim>
           <ModelsMock />
         </StackCard>
-        <StackCard tone="4" title="Integrations" body="Fits into the tools your team already runs.">
+        <StackCard tone="4" href={`${IA}/imagine-computer`} title="Integrations" body="Fits into the tools your team already runs.">
           {/* Fills the card's remaining height rather than sitting in the
               16:9 embed frame: the grid has no fixed aspect of its own, and
               at 16:9 pinned to the bottom the logos bunched at the base of
@@ -67,7 +70,7 @@ export default function Control() {
             <IntegrationsGrid vignette={false} />
           </div>
         </StackCard>
-        <StackCard tone="5" title="Control" body="Central governance and admin oversight.">
+        <StackCard tone="5" href={`${IA}/teams-plan`} title="Control" body="Central governance and admin oversight.">
           <ControlMock />
         </StackCard>
       </div>
@@ -81,11 +84,6 @@ export default function Control() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
         </div>
-      </div>
-
-      <div className="container-page">
-        {/* Shared with the Business page's Z-fold — see components/AdminBento. */}
-        <AdminBento className="mt-20 md:mt-28" />
       </div>
 
       <style>{`
@@ -109,7 +107,11 @@ export default function Control() {
           flex: 0 0 auto;
           width: clamp(260px, 27vw, 380px);
           height: clamp(420px, 46vw, 520px);
-          border-radius: 20px 20px 0 0;
+          /* Full radius. These were square-bottomed to bleed into the admin
+             bento that used to close this section; with the bento moved into
+             WorkflowsSection the rail ends here, and a flat bottom edge read
+             as the cards being cut off. */
+          border-radius: 20px;
           padding: 28px 26px 0;
           display: flex;
           flex-direction: column;
@@ -128,6 +130,19 @@ export default function Control() {
         .stack-tone-3 { background-color: #3d3b34; }
         .stack-tone-4 { background-color: #24302f; }
         .stack-tone-5 { background-color: #141414; }
+
+        /* Subtle lift on hover, compositor-only and CSS-driven: §2 rules out
+           JS hover handlers. Cancelled under reduced motion. */
+        .stack-card {
+          text-decoration: none;
+          transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .stack-card:hover { transform: scale(1.015); }
+        .stack-card:focus-visible { transform: scale(1.015); }
+        @media (prefers-reduced-motion: reduce) {
+          .stack-card { transition: none; }
+          .stack-card:hover, .stack-card:focus-visible { transform: none; }
+        }
 
         .stack-title { font-size: 19px; font-weight: 400; }
         .stack-body { margin-top: 8px; font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,0.6); max-width: 22ch; }
@@ -243,6 +258,7 @@ function StackCard({
   body,
   bg,
   scrim,
+  href,
   children,
 }: {
   tone: "1" | "2" | "3" | "4" | "5";
@@ -254,10 +270,14 @@ function StackCard({
    *  as a gradient in background-image rather than a pseudo-element: the card
    *  is not a positioned ancestor, so an absolute overlay would escape it. */
   scrim?: boolean;
+  /** Destination on imagine.art. */
+  href: string;
   children: React.ReactNode;
 }) {
   return (
-    <div
+    <a
+      href={href}
+      aria-label={title}
       className={`stack-card stack-tone-${tone}`}
       style={
         bg
@@ -279,7 +299,7 @@ function StackCard({
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 12h12M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </span>
       <div className="stack-mock">{children}</div>
-    </div>
+    </a>
   );
 }
 

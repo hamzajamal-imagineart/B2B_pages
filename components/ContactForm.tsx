@@ -26,8 +26,8 @@ import { Button } from "@/components/Button";
  *
  * NOT WIRED. There is no endpoint in the spec, so submit is intercepted and
  * nothing is sent. `action` and `onSubmit` are both passed through for
- * whoever connects it. The assistance options match the live form; company
- * size is still a placeholder.
+ * whoever connects it. The assistance and industry options match the live
+ * form; company size is still a placeholder.
  */
 
 type Field =
@@ -35,18 +35,20 @@ type Field =
   | { kind: "select"; name: string; label: string; required?: boolean; options: string[] }
   | { kind: "textarea"; name: string; label: string; required?: boolean };
 
-/** Mirrors the ten industries the Industries section carries, plus an escape hatch. */
+/** The live form's own list, supplied by the team. It is deliberately not the
+ *  same set as the Industries section, which sells sectors rather than
+ *  qualifying leads. */
 const INDUSTRIES = [
+  "Consumer Packaged Goods / FMCG",
   "Fashion & Apparel",
-  "CPG",
-  "Fast Food",
-  "Food & Beverage",
-  "Furniture / Home Décor",
-  "Electronics",
-  "Beauty & Cosmetics",
+  "Furniture / Home Decor / Interior Design",
+  "E-commerce / Marketplace",
+  "Creative / Marketing / Advertising Agency",
+  "Food / Beverage",
   "Automotive",
-  "Telecom",
-  "E-commerce / Marketplaces",
+  "Healthcare",
+  "Education / E-learning",
+  "Creator Economy / UGC Production",
   "Other",
 ];
 
