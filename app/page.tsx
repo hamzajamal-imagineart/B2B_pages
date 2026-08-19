@@ -35,7 +35,7 @@ export default function Home() {
 
       <main>
         <Hero />
-        <Partners />
+        <Partners caption="Partnering with global industry leaders to power your creativity output" />
         <Control />
         <ContactForm />
         <Security />

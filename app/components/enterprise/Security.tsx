@@ -14,8 +14,9 @@ export default function Security() {
           </h2>
           <p className="lede mt-5">
             Security isn&apos;t a feature you bolt on later, it&apos;s the
-            foundation. Everything you create stays locked down and entirely
-            yours.
+            foundation. Zero data retention, SOC 2 compliance, enforced MFA,
+            and full audit trails mean your creative work and your IP stay
+            locked down and entirely yours.
           </p>
         </div>
 
