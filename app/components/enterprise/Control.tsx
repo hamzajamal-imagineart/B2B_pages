@@ -53,7 +53,7 @@ export default function Control() {
           body="Model agnostic. For everyone in the company."
           bg="/media/card-generate.jpg"
         >
-          <CardVideo src="/media/card-generate.mp4" />
+          <GenerateMock />
         </StackCard>
         <StackCard tone="2" href={`${IA}/workflow`} title="Workflows" body="Build powerful, node-based AI pipelines.">
           <CardVideo src="/media/variable-demo.mp4" />
@@ -99,6 +99,11 @@ export default function Control() {
           padding-right: max(32px, calc((100vw - 1240px) / 2 + 32px));
           scroll-behavior: smooth;
           min-width: 0;
+          /* Room for the hover scale. overflow-x: auto coerces overflow-y to
+             auto, so a card that grows past the track's box gets clipped
+             instead of overflowing it. Padding is the only fix that keeps the
+             horizontal scroll. */
+          padding-block: 12px;
         }
         @media (max-width: 768px) {
           .stack-track { padding-left: 20px; padding-right: 20px; }
@@ -221,6 +226,19 @@ export default function Control() {
           position: relative;
           min-height: 0;
         }
+        /* Both built mocks sit on the same white sheet, anchored to the
+           card's bottom edge and bleeding off it. */
+        .mock-sheet {
+          position: absolute;
+          left: 0;
+          right: -8px;
+          bottom: 0;
+          background: #fff;
+          border-radius: 14px 0 0 0;
+          padding: 12px;
+          color: var(--ink);
+        }
+
         .stack-pager {
           width: 38px; height: 38px;
           border-radius: 999px;
@@ -324,15 +342,95 @@ function ModelsMock() {
 }
 
 
-/* ── Control: the same credit-usage stat from the admin panel below. ── */
+/* ── Generate: the prompt surface, built rather than captured. One field, a
+   model row, and a result strip, which is the whole claim of the card: any
+   model, one place, for everyone. ── */
+function GenerateMock() {
+  return (
+    <div className="mock-sheet">
+      <div className="gm-prompt">
+        <span className="gm-caret" aria-hidden />
+        A product shot on wet stone, morning light
+      </div>
+
+      <div className="gm-models">
+        {["ImagineArt 2.0", "Flux 2", "Seedance"].map((m, i) => (
+          <span key={m} className={`gm-chip ${i === 0 ? "gm-chip-on" : ""}`}>{m}</span>
+        ))}
+      </div>
+
+      <div className="gm-strip" aria-hidden>
+        {[0, 1, 2, 3].map((i) => (
+          <span key={i} className="gm-frame" style={{ opacity: 1 - i * 0.22 }} />
+        ))}
+      </div>
+
+      <style>{`
+        .gm-prompt {
+          display: flex; align-items: center; gap: 7px;
+          font-size: 11.5px; color: var(--ink-2);
+          border: 1px solid var(--line); border-radius: 9px;
+          padding: 9px 10px;
+        }
+        .gm-caret { width: 1.5px; height: 12px; background: var(--ink); flex: 0 0 auto; }
+        .gm-models { display: flex; gap: 5px; margin-top: 9px; }
+        .gm-chip {
+          font-size: 10.5px; padding: 4px 9px; border-radius: 999px;
+          border: 1px solid var(--line); color: var(--ink-3);
+        }
+        .gm-chip-on { background: var(--ink); border-color: var(--ink); color: #fff; }
+        .gm-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
+        .gm-frame {
+          aspect-ratio: 1 / 1; border-radius: 6px;
+          background: var(--panel-2); border: 1px solid var(--line);
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ── Control: the admin panel in miniature. The spend figure matches the
+   bento's usage panel, so the two cannot disagree on the same page. ── */
 function ControlMock() {
   return (
-    <div style={{ position: "absolute", left: 0, right: -8, bottom: 0, background: "#fff", borderRadius: "14px 0 0 0", padding: 12, color: "var(--ink)" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 10.5, color: "var(--ink-3)" }}>
-        <span>Manage</span><span style={{ background: "var(--panel-2)", borderRadius: 999, padding: "3px 8px" }}>Live</span>
+    <div className="mock-sheet">
+      <div className="cm-head">
+        <span>Manage</span>
+        <span className="cm-live">Live</span>
       </div>
-      <div style={{ marginTop: 9, fontSize: 20, letterSpacing: "-0.01em" }}>3,504,195</div>
-      <div style={{ fontSize: 11, color: "var(--ink-3)" }}>Credits spent this month</div>
+
+      <div className="cm-big">3,504,195</div>
+      <div className="cm-cap">Credits spent this month</div>
+
+      <div className="cm-bar" aria-hidden>
+        {[46, 28, 17, 9].map((w, i) => (
+          <span key={i} style={{ width: `${w}%`, opacity: 1 - i * 0.22 }} />
+        ))}
+      </div>
+
+      <ul className="cm-rows">
+        {[["Seats", "Unlimited"], ["Roles", "4 configured"]].map(([k, v]) => (
+          <li key={k}><span>{k}</span><span className="cm-v">{v}</span></li>
+        ))}
+      </ul>
+
+      <style>{`
+        .cm-head {
+          display: flex; align-items: center; justify-content: space-between;
+          font-size: 10.5px; color: var(--ink-3);
+        }
+        .cm-live { background: var(--panel-2); border-radius: 999px; padding: 3px 8px; }
+        .cm-big { margin-top: 9px; font-size: 20px; letter-spacing: -0.01em; }
+        .cm-cap { font-size: 11px; color: var(--ink-3); }
+        .cm-bar { display: flex; gap: 3px; margin-top: 10px; }
+        .cm-bar span { height: 5px; border-radius: 3px; background: var(--ink); }
+        .cm-rows { list-style: none; margin: 10px 0 0; padding: 0; font-size: 11px; color: var(--ink-3); }
+        .cm-rows li {
+          display: flex; justify-content: space-between;
+          padding: 6px 0; border-top: 1px solid var(--line);
+        }
+        .cm-v { color: var(--ink); }
+      `}</style>
     </div>
   );
 }

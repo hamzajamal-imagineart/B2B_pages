@@ -22,7 +22,7 @@ export function AdminBento({ className = "" }: { className?: string }) {
         title="Complete Admin Control"
         body="One dashboard for your entire organization. Manage roles, monitor usage, and govern access across every team without losing visibility."
         bg="/media/admin/tile-admin.jpg"
-        visual={<PlaceholderPanel />}
+        visual={<UsagePanel />}
       />
       <Tile
         title="Efficient Asset Management"
@@ -34,7 +34,7 @@ export function AdminBento({ className = "" }: { className?: string }) {
         title="Unlimited Members, No Added Cost"
         bg="/media/admin/tile-members.jpg"
         body="Bring your whole team. Seats don't cost extra."
-        visual={<PlaceholderPanel />}
+        visual={<MembersPanel />}
       />
       <Tile
         wide
@@ -84,12 +84,23 @@ export function AdminBento({ className = "" }: { className?: string }) {
           align-items: flex-end;
           padding-top: 28px;
         }
-        /* The narrow tiles carry less copy, so their panel takes the slack as
-           height rather than leaving a gap above it. */
-        .ptile:not(.ptile-wide) .admin-placeholder { aspect-ratio: 16 / 13; }
         /* Bare wrapper: the dashboard inside is already a white bordered
            card, so a second white surface behind it just doubled the frame. */
         .ptile-surface { width: 100%; }
+        /* The shared panel surface. Every built visual in this bento is a
+           white card that bleeds off the bottom of its tile, so the content
+           reads as continuing rather than stopping at a border. */
+        .ab-panel {
+          width: 100%;
+          color: var(--ink);
+          background: var(--panel);
+          border: 1px solid var(--line);
+          border-bottom: 0;
+          border-radius: 16px 16px 0 0;
+          margin-bottom: -32px;
+          -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+        }
         @media (max-width: 900px) {
           .pbento { grid-template-columns: 1fr; }
           .ptile, .ptile-wide { grid-column: span 1; }
@@ -161,7 +172,7 @@ function FolderIcon({ shared = true }: { shared?: boolean }) {
 function FoldersPanel() {
   const team = ["All team creations", "Captions", "capta", "computer-skill", "Chris Evans"];
   return (
-    <div className="af">
+    <div className="ab-panel af">
       <div className="af-head">
         <span className="af-head-l">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -208,23 +219,7 @@ function FoldersPanel() {
       </ul>
 
       <style>{`
-        /* The panel is its own white surface, the way the collaboration
-           canvas is: no placeholder frame wrapped around it. It bleeds off
-           the bottom of the tile so the list reads as continuing. */
-        .af {
-          width: 100%;
-          font-size: 13.5px;
-          line-height: 1.2;
-          color: var(--ink);
-          background: var(--panel);
-          border: 1px solid var(--line);
-          border-radius: 16px 16px 0 0;
-          border-bottom: 0;
-          padding: 16px 10px 0;
-          margin-bottom: -32px;
-          mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
-          -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
-        }
+        .af { font-size: 13.5px; line-height: 1.2; padding: 16px 10px 0; }
         .af-head {
           display: flex;
           align-items: center;
@@ -268,19 +263,163 @@ function FoldersPanel() {
   );
 }
 
-/* Two of the four tiles are placeholders for now: a plain white panel
-   holding the tile's media footprint, so real visuals drop in without any
-   layout change. Only Collaborate End to End carries its real visual. */
-function PlaceholderPanel() {
+
+/* Usage dashboard, read off the "FULL CONTROL" capture in the spec: the spend
+   figure, the split by modality, and the three counts beside it. The ring is a
+   conic-gradient rather than an SVG chart, so it costs nothing and takes the
+   route's ink. Same 3,504,195 the Control rail's mock shows, so the two do not
+   contradict each other on the same page. */
+const SPLIT = [
+  { label: "Video", pct: 46 },
+  { label: "Image", pct: 28 },
+  { label: "Text / AI", pct: 17 },
+  { label: "Audio", pct: 9 },
+];
+
+function UsagePanel() {
+  let acc = 0;
+  const stops = SPLIT.map((s, i) => {
+    const from = acc;
+    acc += s.pct;
+    const shade = [0.82, 0.6, 0.4, 0.22][i];
+    return `rgba(20,20,20,${shade}) ${from}% ${acc}%`;
+  }).join(", ");
+
   return (
-    <div className="admin-placeholder">
+    <div className="ab-panel up">
+      <div className="up-top">
+        <div className="up-ring" style={{ background: `conic-gradient(${stops})` }} aria-hidden>
+          <span className="up-ring-hole" />
+        </div>
+        <div>
+          <div className="up-big">3,504,195</div>
+          <div className="up-cap">Credits spent this month</div>
+          <ul className="up-legend">
+            {SPLIT.map((s, i) => (
+              <li key={s.label}>
+                <span className="up-dot" style={{ opacity: [0.82, 0.6, 0.4, 0.22][i] }} />
+                {s.label}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="up-grid">
+        {[
+          ["295,843", "Total jobs run"],
+          ["455", "Unique users"],
+          ["104", "Models used"],
+          ["8,204", "Avg credits / user"],
+        ].map(([v, l]) => (
+          <div key={l} className="up-cell">
+            <div className="up-v">{v}</div>
+            <div className="up-l">{l}</div>
+          </div>
+        ))}
+      </div>
+
       <style>{`
-        .admin-placeholder {
-          aspect-ratio: 16 / 10;
-          border-radius: 16px;
-          background: var(--panel);
-          border: 1px solid var(--line);
+        .up { padding: 18px 18px 0; }
+        .up-top { display: flex; align-items: center; gap: 18px; margin-bottom: 16px; }
+        .up-ring {
+          width: 74px; height: 74px; border-radius: 999px;
+          display: grid; place-items: center; flex: 0 0 auto;
         }
+        .up-ring-hole {
+          width: 48px; height: 48px; border-radius: 999px; background: var(--panel);
+        }
+        .up-big { font-size: 26px; letter-spacing: -0.02em; line-height: 1.1; }
+        .up-cap { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+        .up-legend {
+          list-style: none; margin: 10px 0 0; padding: 0;
+          display: flex; flex-wrap: wrap; gap: 4px 14px;
+          font-size: 11.5px; color: var(--ink-2);
+        }
+        .up-legend li { display: inline-flex; align-items: center; gap: 6px; }
+        .up-dot { width: 7px; height: 7px; border-radius: 2px; background: var(--ink); }
+        .up-grid {
+          display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+          border-top: 1px solid var(--line);
+        }
+        .up-cell { padding: 13px 4px; border-bottom: 1px solid var(--line); }
+        .up-cell:nth-child(odd) { border-right: 1px solid var(--line); padding-right: 14px; }
+        .up-cell:nth-child(even) { padding-left: 14px; }
+        .up-v { font-size: 17px; letter-spacing: -0.01em; }
+        .up-l { font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+      `}</style>
+    </div>
+  );
+}
+
+/* Member list, read off the "ACCESS MANAGEMENT" capture: who is in the org,
+   their role and status, and what they have spent. The point of the tile is
+   that adding people costs nothing, so the seat line is the one figure given
+   any weight. */
+const MEMBERS = [
+  { name: "biba@imagine.art", role: "Owner", spend: "No limit" },
+  { name: "kadir@imagine.art", role: "Admin", spend: "500 / 2.5k" },
+  { name: "sana@imagine.art", role: "Lead", spend: "1.2k / 2.5k" },
+  { name: "omar@imagine.art", role: "Member", spend: "340 / 2.5k" },
+  { name: "lena@imagine.art", role: "Member", spend: "120 / 2.5k" },
+];
+
+function MembersPanel() {
+  return (
+    <div className="ab-panel mp">
+      <div className="mp-head">
+        <span>Members</span>
+        <span className="mp-count">5</span>
+      </div>
+
+      <ul className="mp-list">
+        {MEMBERS.map((m) => (
+          <li key={m.name} className="mp-row">
+            <span className="mp-av" aria-hidden>{m.name[0].toUpperCase()}</span>
+            <span className="mp-mail">{m.name}</span>
+            <span className="mp-role">{m.role}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mp-foot">
+        <span>Seats</span>
+        <span className="mp-seats">Unlimited</span>
+      </div>
+
+      <style>{`
+        .mp { padding: 16px 16px 0; }
+        .mp-head {
+          display: flex; align-items: center; gap: 8px;
+          font-size: 12px; color: var(--ink-3); margin-bottom: 10px;
+        }
+        .mp-count {
+          font-size: 11px; padding: 1px 7px; border-radius: 999px;
+          background: rgba(0,0,0,0.05); color: var(--ink-2);
+        }
+        .mp-list { list-style: none; margin: 0; padding: 0; }
+        .mp-row {
+          display: grid;
+          grid-template-columns: 22px minmax(0, 1fr) auto;
+          align-items: center; gap: 9px;
+          padding: 8px 0;
+          border-top: 1px solid var(--line);
+          font-size: 12.5px;
+        }
+        .mp-av {
+          width: 22px; height: 22px; border-radius: 999px;
+          background: rgba(0,0,0,0.06); color: var(--ink-2);
+          display: grid; place-items: center; font-size: 10.5px;
+        }
+        .mp-mail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .mp-role { font-size: 11px; color: var(--ink-3); }
+        .mp-foot {
+          display: flex; align-items: center; justify-content: space-between;
+          border-top: 1px solid var(--line);
+          padding: 11px 0 14px;
+          font-size: 12px; color: var(--ink-3);
+        }
+        .mp-seats { color: var(--ink); font-size: 13px; }
       `}</style>
     </div>
   );
