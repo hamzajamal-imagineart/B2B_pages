@@ -231,13 +231,34 @@ export default function Control() {
         .mock-sheet {
           position: absolute;
           left: 0;
-          right: -8px;
+          /* Flush with the card, not bled past it: the card clips its own
+             overflow, so a negative right just sliced the sheet's edge off. */
+          right: 0;
           bottom: 0;
           background: #fff;
-          border-radius: 14px 0 0 0;
+          border-radius: 14px 14px 0 0;
           padding: 12px;
           color: var(--ink);
         }
+        /* Dark variant, for the near-black card. The admin panel is chrome
+           rather than a captured product surface, so it takes the card's tone
+           instead of punching a white hole in it. The Generate bar stays light
+           because the real prompt bar is light UI. */
+        .mock-sheet-dark {
+          background: #17171a;
+          color: rgba(255, 255, 255, 0.92);
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+        }
+        .mock-sheet-dark .cm-head,
+        .mock-sheet-dark .cm-cap,
+        .mock-sheet-dark .cm-rows { color: rgba(255, 255, 255, 0.5); }
+        .mock-sheet-dark .cm-live {
+          background: rgba(255, 255, 255, 0.09);
+          color: rgba(255, 255, 255, 0.75);
+        }
+        .mock-sheet-dark .cm-bar span { background: rgba(255, 255, 255, 0.9); }
+        .mock-sheet-dark .cm-rows li { border-top-color: rgba(255, 255, 255, 0.09); }
+        .mock-sheet-dark .cm-v { color: rgba(255, 255, 255, 0.92); }
 
         .stack-pager {
           width: 38px; height: 38px;
@@ -410,7 +431,7 @@ function GenerateMock() {
    bento's usage panel, so the two cannot disagree on the same page. ── */
 function ControlMock() {
   return (
-    <div className="mock-sheet">
+    <div className="mock-sheet mock-sheet-dark">
       <div className="cm-head">
         <span>Manage</span>
         <span className="cm-live">Live</span>
