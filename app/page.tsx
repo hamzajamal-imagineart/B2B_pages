@@ -2,6 +2,7 @@ import { SiteNav } from "@/components/SiteNav";
 import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { ContactForm } from "@/components/ContactForm";
 import { NAV_VARIANT } from "@/lib/theme";
 import Hero from "./components/enterprise/Hero";
 import Partners from "./components/enterprise/Partners";
@@ -36,6 +37,7 @@ export default function Home() {
         <Hero />
         <Partners />
         <Control />
+        <ContactForm />
         <Security />
         <TestimonialsSection />
         <ClosingCta backdrop="/media/cta-hills.jpg" />
