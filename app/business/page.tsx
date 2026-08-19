@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 import { navVariantFor } from "@/lib/theme";
 import { IndustriesSection } from "@/components/IndustriesSection";
+import { ContactForm } from "@/components/ContactForm";
 
 import Hero from "../components/business/Hero";
 import Pitch from "../components/business/Pitch";
@@ -37,6 +38,7 @@ export default function BusinessPage() {
       <main>
         <Hero />
         <Partners caption="Partnering with global industry leaders to power your creative output" />
+        <ContactForm />
         <Pitch />
         <IndustriesSection />
         <Suite tools={BUSINESS_TOOLS} />
