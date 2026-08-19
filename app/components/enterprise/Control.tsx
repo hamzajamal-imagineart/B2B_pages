@@ -342,47 +342,64 @@ function ModelsMock() {
 }
 
 
-/* ── Generate: the prompt surface, built rather than captured. One field, a
-   model row, and a result strip, which is the whole claim of the card: any
-   model, one place, for everyone. ── */
+/* ── Generate: the product's own prompt bar, rebuilt. Trimmed to what fits a
+   card this narrow: the field, the mode chip, the model and ratio, and the
+   action. The real bar also carries a free/paid toggle, references and a
+   preset picker, which at this width would be unreadable furniture.
+
+   The live Create button is violet; here it is the brand near-black, since
+   colour on these pages comes from imagery only. ── */
 function GenerateMock() {
   return (
     <div className="mock-sheet">
-      <div className="gm-prompt">
-        <span className="gm-caret" aria-hidden />
-        A product shot on wet stone, morning light
+      <div className="gm-field">
+        <span className="gm-plus" aria-hidden>+</span>
+        <span className="gm-ph">Describe the image you imagine</span>
       </div>
 
-      <div className="gm-models">
-        {["ImagineArt 2.0", "Flux 2", "Seedance"].map((m, i) => (
-          <span key={m} className={`gm-chip ${i === 0 ? "gm-chip-on" : ""}`}>{m}</span>
-        ))}
-      </div>
-
-      <div className="gm-strip" aria-hidden>
-        {[0, 1, 2, 3].map((i) => (
-          <span key={i} className="gm-frame" style={{ opacity: 1 - i * 0.22 }} />
-        ))}
+      <div className="gm-bar">
+        <span className="gm-chip gm-chip-on">
+          <span className="gm-t" aria-hidden>T</span>
+          Create
+        </span>
+        <span className="gm-meta">Nano Banana 2 / 1:1</span>
+        <span className="gm-cta">Create</span>
       </div>
 
       <style>{`
-        .gm-prompt {
-          display: flex; align-items: center; gap: 7px;
-          font-size: 11.5px; color: var(--ink-2);
-          border: 1px solid var(--line); border-radius: 9px;
-          padding: 9px 10px;
+        .gm-field {
+          display: flex; align-items: center; gap: 8px;
+          border: 1px solid var(--line); border-radius: 10px;
+          padding: 10px 10px;
         }
-        .gm-caret { width: 1.5px; height: 12px; background: var(--ink); flex: 0 0 auto; }
-        .gm-models { display: flex; gap: 5px; margin-top: 9px; }
+        .gm-plus {
+          width: 18px; height: 18px; border-radius: 999px;
+          border: 1px solid var(--line); color: var(--ink-2);
+          display: grid; place-items: center; font-size: 12px; line-height: 1;
+          flex: 0 0 auto;
+        }
+        .gm-ph {
+          font-size: 11px; color: var(--ink-3);
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .gm-bar { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
         .gm-chip {
+          display: inline-flex; align-items: center; gap: 5px;
           font-size: 10.5px; padding: 4px 9px; border-radius: 999px;
-          border: 1px solid var(--line); color: var(--ink-3);
+          border: 1px solid var(--line); color: var(--ink-2);
+          flex: 0 0 auto;
         }
-        .gm-chip-on { background: var(--ink); border-color: var(--ink); color: #fff; }
-        .gm-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
-        .gm-frame {
-          aspect-ratio: 1 / 1; border-radius: 6px;
-          background: var(--panel-2); border: 1px solid var(--line);
+        .gm-chip-on { background: var(--panel-2); color: var(--ink); }
+        .gm-t { font-size: 9.5px; }
+        .gm-meta {
+          font-size: 10px; color: var(--ink-3);
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          min-width: 0;
+        }
+        .gm-cta {
+          margin-left: auto; flex: 0 0 auto;
+          font-size: 10.5px; padding: 5px 12px; border-radius: 999px;
+          background: var(--ink); color: #fff;
         }
       `}</style>
     </div>
