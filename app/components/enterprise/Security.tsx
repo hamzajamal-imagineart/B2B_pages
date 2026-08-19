@@ -20,23 +20,31 @@ export default function Security() {
         </div>
 
         <div className="bento mt-14">
-          <Tile grain="grain-mineral" n="01" title="SSO" body="Single sign-on across your identity provider, so access follows the org chart you already have.">
+          <Tile grain="grain-mineral" n="01" title="SSO and MFA" body="Single sign-on across your identity provider, with multi-factor enforced on every account, so access follows the org chart you already have.">
             <Graphic><IconPeople /></Graphic>
           </Tile>
 
-          <Tile grain="grain-charcoal" bg="/media/card-soc2.jpg" n="02" title="SOC 2" body="Aligned to the highest security and audit standards, independently verified.">
+          <Tile grain="grain-charcoal" bg="/media/card-soc2.jpg" n="02" title="SOC 2 Type II" body="Independently audited controls you can verify, aligned to the highest security and audit standards.">
             <Graphic><IconCheckCircle /></Graphic>
           </Tile>
 
-          <Tile grain="grain-sand" n="03" title="Indemnification" body="Contract-backed legal coverage for the content your team produces.">
+          <Tile grain="grain-sand" n="03" title="Your IP stays yours" body="Full commercial rights to everything you generate, with contract-backed legal coverage for the content your team produces.">
             <Graphic><IconScales /></Graphic>
           </Tile>
 
-          <Tile grain="grain-olive" n="04" title="Provisioning" body="Central control over users, roles, and access, mirroring your org structure.">
+          <Tile grain="grain-olive" n="04" title="Centralized admin control" body="One dashboard for the whole organization: role-based access, and usage visibility across every team.">
             <Graphic><IconLayers /></Graphic>
           </Tile>
 
-          <Tile grain="grain-teal" bg="/media/card-generate-wide.jpg" n="05" title="No data training" body="We never train our models on your data. It's processed, delivered, and not kept." wide>
+          <Tile grain="grain-steel" n="05" title="Encrypted end to end" body="Protected at rest and in transit, at every stage of the pipeline.">
+            <Graphic><IconLock /></Graphic>
+          </Tile>
+
+          <Tile grain="grain-mineral" n="06" title="Full audit trail" body="Every action logged and traceable, for complete accountability.">
+            <Graphic><IconTrail /></Graphic>
+          </Tile>
+
+          <Tile grain="grain-teal" bg="/media/card-generate-wide.jpg" n="07" title="Zero data retention" body="Your prompts and outputs are never stored or used to train models. Processed, delivered, and not kept." wide>
             <div className="flow">
               <div className="flow-node">
                 <span className="flow-chip glass"><IconPerson /></span>
@@ -189,6 +197,24 @@ function Graphic({ children }: { children: React.ReactNode }) {
 }
 
 /* ── icons (monochrome, single stroke/fill weight throughout) ── */
+function IconLock() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="4" y="10.5" width="16" height="9.5" rx="2.2" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconTrail() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M5 6.5h14M5 12h14M5 17.5h9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="19" cy="17.5" r="2.2" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
 function IconPeople() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
