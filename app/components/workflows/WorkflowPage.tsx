@@ -1053,7 +1053,7 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
       <div style={{ padding: `0 ${CONTAINER_PAD}` }}>
         {/* Tabs — rounded rectangle (radius < half height) so corners read as corners, not a pill */}
         <div
-          style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 48, flexWrap: "wrap" }}
+          style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 20, flexWrap: "wrap" }}
           role="tablist"
           aria-label={`${title} features`}
         >
@@ -1282,7 +1282,11 @@ function UseCasesFlora() {
       >
         {/* paddingBottom extends the row so the sticky preview stays pinned
             through every category rather than only the first few. */}
-        <div style={{ paddingBottom: "8vh" }}>
+        {/* The tail is what gives the sticky card its travel: it stays pinned
+            for (column height - card height), so the tail has to be at least
+            the card's own height or the last few categories scroll it up under
+            the nav. Card is ~350px, list ~720px. */}
+        <div style={{ paddingBottom: "clamp(360px, 40vh, 480px)" }}>
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 0 }}>
             {USE_CASES.map((u, i) => {
               const isActive = i === activeIndex;
@@ -1292,7 +1296,7 @@ function UseCasesFlora() {
                   ref={(el) => {
                     itemRefs.current[i] = el;
                   }}
-                  style={{ minHeight: 62, display: "flex", alignItems: "center" }}
+                  style={{ minHeight: 72, display: "flex", alignItems: "center" }}
                 >
                   <button
                     onClick={() => jumpTo(i)}
@@ -1354,7 +1358,7 @@ function UseCasesFlora() {
             Outer div is a stretching grid item; the inner div is sticky so it
             stays pinned through the full height of the left column. */}
         <div>
-          <div style={{ position: "sticky", top: 100 }}>
+          <div style={{ position: "sticky", top: 112 }}>
           <div
             style={{
               position: "relative",
