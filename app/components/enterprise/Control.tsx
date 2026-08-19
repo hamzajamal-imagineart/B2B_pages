@@ -232,11 +232,14 @@ export default function Control() {
           position: absolute;
           left: 0;
           /* Flush with the card, not bled past it: the card clips its own
-             overflow, so a negative right just sliced the sheet's edge off. */
+             overflow, so a negative right just sliced the sheet's edge off.
+             Lifted off the bottom edge too, on the same 22px the video cards
+             use, so the sheet reads as a whole object rather than one running
+             out of card. */
           right: 0;
-          bottom: 0;
+          bottom: 22px;
           background: #fff;
-          border-radius: 14px 14px 0 0;
+          border-radius: 14px;
           padding: 12px;
           color: var(--ink);
         }
@@ -386,7 +389,7 @@ function GenerateMock() {
         aria-hidden
       />
       <style>{`
-        .mock-sheet-flush { padding: 0; overflow: hidden; }
+        .mock-sheet-flush { padding: 0; overflow: hidden; line-height: 0; }
         .gm-video { width: 100%; height: auto; display: block; }
       `}</style>
     </div>
