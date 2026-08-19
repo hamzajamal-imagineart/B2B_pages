@@ -18,7 +18,7 @@ import Partners from "../components/enterprise/Partners";
 import ClosingCta, { CONTACT_HREF, START_HREF } from "../components/enterprise/ClosingCta";
 import Suite, { BUSINESS_TOOLS } from "../components/platform/Suite";
 import Models from "../components/platform/Models";
-import BuiltForEnterprise, { BUSINESS_ENTERPRISE } from "../components/platform/BuiltForEnterprise";
+import Security from "../components/enterprise/Security";
 import Apps from "../components/platform/Apps";
 
 export const metadata: Metadata = {
@@ -43,13 +43,10 @@ export default function BusinessPage() {
         <IndustriesSection />
         <Suite tools={BUSINESS_TOOLS} />
         <Workflows />
-        {/* Spec §7: three sub-blocks and its own heading. The Platform set's
-            other two tabs are not in this document. */}
-        <BuiltForEnterprise
-          tabs={BUSINESS_ENTERPRISE}
-          heading="Safe, secure, and"
-          muted="built for the enterprise"
-        />
+        {/* Spec §7. The Enterprise page already carries this section, heading
+            and lede included, so Business renders the same component rather
+            than a second layout for the same content. */}
+        <Security />
         <Models />
         <Apps />
         <CaseStudies />

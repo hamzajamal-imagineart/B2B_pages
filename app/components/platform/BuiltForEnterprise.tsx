@@ -61,46 +61,6 @@ export const PLATFORM_ENTERPRISE: Tab[] = [
   },
 ];
 
-/**
- * Business-page set, verbatim from B2B LPs (7) §7.
- *
- * That spec lists exactly three sub-blocks under "Safe, secure, and built for
- * the enterprise". The Platform set's other two tabs, "Transformative and
- * Impactful" and "Workflows for Every Team and Industry" with its Platform /
- * API pair, appear nowhere in it, so Business does not show them. Titles and
- * bodies below are the spec's own wording.
- */
-export const BUSINESS_ENTERPRISE: Tab[] = [
-  {
-    id: "data",
-    label: "Your data stays yours",
-    items: [
-      { title: "Zero data retention", body: "Your prompts and outputs are never stored or used to train models." },
-      { title: "Your IP stays yours", body: "Full commercial rights to everything you generate." },
-      { title: "Full audit trail", body: "Every action logged and traceable for complete accountability." },
-    ],
-  },
-  {
-    id: "secure",
-    label: "Secure by design",
-    items: [
-      { title: "SOC 2 Type II", body: "Independently audited controls you can verify." },
-      { title: "MFA enforced", body: "Multi-factor authentication across every account." },
-      { title: "Encrypted at rest and in transit", body: "Your data protected at every stage." },
-      { title: "Single Sign-On (SSO)", body: "Connect to your identity provider in minutes." },
-    ],
-  },
-  {
-    id: "admin",
-    label: "Centralized admin control",
-    items: [
-      { title: "Centralized admin dashboard", body: "Manage your entire organization from one place." },
-      { title: "Role-based access controls", body: "Grant the right permissions to the right people." },
-      { title: "Usage visibility", body: "See who's creating what, and track spend across teams." },
-    ],
-  },
-];
-
 export default function BuiltForEnterprise({
   tabs = PLATFORM_ENTERPRISE,
   heading = "Built for Enterprise",
