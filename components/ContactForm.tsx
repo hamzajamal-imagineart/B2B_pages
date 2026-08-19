@@ -26,7 +26,8 @@ import { Button } from "@/components/Button";
  *
  * NOT WIRED. There is no endpoint in the spec, so submit is intercepted and
  * nothing is sent. `action` and `onSubmit` are both passed through for
- * whoever connects it.
+ * whoever connects it. The assistance options match the live form; company
+ * size is still a placeholder.
  */
 
 type Field =
@@ -67,12 +68,13 @@ const FIELDS: Field[] = [
     name: "assistance",
     label: "What do you need assistance with?",
     required: true,
+    /* The live form's own options, supplied by the team. */
     options: [
-      "Enterprise plan and pricing",
-      "Security or compliance review",
-      "Custom workflows and onboarding",
-      "Existing account or billing",
-      "Something else",
+      "Support / Billing",
+      "Design Assistance",
+      "Platform Features",
+      "Team Plans / Enterprise",
+      "Other",
     ],
   },
   { kind: "textarea", name: "query", label: "Help us understand your query", required: true },

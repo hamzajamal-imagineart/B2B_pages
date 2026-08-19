@@ -18,7 +18,7 @@ import Partners from "../components/enterprise/Partners";
 import ClosingCta, { CONTACT_HREF, START_HREF } from "../components/enterprise/ClosingCta";
 import Suite, { BUSINESS_TOOLS } from "../components/platform/Suite";
 import Models from "../components/platform/Models";
-import BuiltForEnterprise from "../components/platform/BuiltForEnterprise";
+import BuiltForEnterprise, { BUSINESS_ENTERPRISE } from "../components/platform/BuiltForEnterprise";
 import Apps from "../components/platform/Apps";
 
 export const metadata: Metadata = {
@@ -43,7 +43,13 @@ export default function BusinessPage() {
         <IndustriesSection />
         <Suite tools={BUSINESS_TOOLS} />
         <Workflows />
-        <BuiltForEnterprise />
+        {/* Spec §7: three sub-blocks and its own heading. The Platform set's
+            other two tabs are not in this document. */}
+        <BuiltForEnterprise
+          tabs={BUSINESS_ENTERPRISE}
+          heading="Safe, secure, and"
+          muted="built for the enterprise"
+        />
         <Models />
         <Apps />
         <CaseStudies />

@@ -20,7 +20,7 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
 type Item = { title: string; body: string };
 type Tab = { id: string; label: string; items: Item[] };
 
-const TABS: Tab[] = [
+export const PLATFORM_ENTERPRISE: Tab[] = [
   {
     id: "secure",
     label: "Scalable and Secure",
@@ -61,7 +61,57 @@ const TABS: Tab[] = [
   },
 ];
 
-export default function BuiltForEnterprise() {
+/**
+ * Business-page set, verbatim from B2B LPs (7) §7.
+ *
+ * That spec lists exactly three sub-blocks under "Safe, secure, and built for
+ * the enterprise". The Platform set's other two tabs, "Transformative and
+ * Impactful" and "Workflows for Every Team and Industry" with its Platform /
+ * API pair, appear nowhere in it, so Business does not show them. Titles and
+ * bodies below are the spec's own wording.
+ */
+export const BUSINESS_ENTERPRISE: Tab[] = [
+  {
+    id: "data",
+    label: "Your data stays yours",
+    items: [
+      { title: "Zero data retention", body: "Your prompts and outputs are never stored or used to train models." },
+      { title: "Your IP stays yours", body: "Full commercial rights to everything you generate." },
+      { title: "Full audit trail", body: "Every action logged and traceable for complete accountability." },
+    ],
+  },
+  {
+    id: "secure",
+    label: "Secure by design",
+    items: [
+      { title: "SOC 2 Type II", body: "Independently audited controls you can verify." },
+      { title: "MFA enforced", body: "Multi-factor authentication across every account." },
+      { title: "Encrypted at rest and in transit", body: "Your data protected at every stage." },
+      { title: "Single Sign-On (SSO)", body: "Connect to your identity provider in minutes." },
+    ],
+  },
+  {
+    id: "admin",
+    label: "Centralized admin control",
+    items: [
+      { title: "Centralized admin dashboard", body: "Manage your entire organization from one place." },
+      { title: "Role-based access controls", body: "Grant the right permissions to the right people." },
+      { title: "Usage visibility", body: "See who's creating what, and track spend across teams." },
+    ],
+  },
+];
+
+export default function BuiltForEnterprise({
+  tabs = PLATFORM_ENTERPRISE,
+  heading = "Built for Enterprise",
+  muted,
+}: {
+  tabs?: Tab[];
+  heading?: string;
+  /** Second clause, in the palette's light tint. */
+  muted?: string;
+} = {}) {
+  const TABS = tabs;
   const [active, setActive] = useState(0);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -81,7 +131,9 @@ export default function BuiltForEnterprise() {
       <SectionGuides edge="top" />
       <div className="container-page">
         <div className="bfe-panel">
-          <h2 className="h2 bfe-heading">Built for Enterprise</h2>
+          <h2 className="h2 bfe-heading">
+            {heading} {muted && <span className="h-muted">{muted}</span>}
+          </h2>
 
           <div className="bfe-grid mt-10">
             <div
