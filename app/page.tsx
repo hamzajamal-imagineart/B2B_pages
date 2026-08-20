@@ -10,7 +10,6 @@ import { NAV_VARIANT } from "@/lib/theme";
 import Hero from "./components/enterprise/Hero";
 import Partners from "./components/enterprise/Partners";
 import Security from "./components/enterprise/Security";
-import Control from "./components/enterprise/Control";
 import ClosingCta, { CONTACT_HREF, START_HREF } from "./components/enterprise/ClosingCta";
 
 // Sections that arrived with the Business page when the two merged.
@@ -61,7 +60,6 @@ export default function Home() {
         <Hero />
         <Partners caption="Partnering with global industry leaders to power your creative output" />
         <Pitch />
-        <Control />
         <ContactForm />
         <IndustriesSection />
         <Suite tools={BUSINESS_TOOLS} />

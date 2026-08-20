@@ -10,47 +10,74 @@ import { SuiteRail } from "./SuiteRail";
  * moved away from, and there are no real captures for six of these tools —
  * an honest icon + label + blurb row beats an invented screenshot.
  */
-export type Tool = { title: string; body: string; icon: React.ReactNode };
+/** Same origin the footer links against. */
+const IA = "https://www.imagine.art";
+
+export type Tool = {
+  title: string;
+  body: string;
+  icon: React.ReactNode;
+  /** Looping capture or still shown at the foot of the card. Omit and the
+   *  card runs on its tone alone. */
+  media?: { src: string; kind: "video" | "image" };
+  /** Destination on imagine.art. Falls back to the enterprise page for tools
+   *  that have no product page of their own yet. */
+  href?: string;
+};
 
 /** The Business page runs a longer list — see BUSINESS_TOOLS below. */
 export const PLATFORM_TOOLS: Tool[] = [
   {
     title: "Workflows",
+    media: { src: "/media/variable-demo.mp4", kind: "video" },
+    href: `${IA}/workflow`,
     body: "Build repeatable creative pipelines that turn one brief into a finished output, every time.",
     icon: <IconNodes />,
   },
   {
     title: "Brand Guidelines",
+    media: { src: "/media/brandkit/brand-kits.webp", kind: "image" },
     body: "Lock in your colors, fonts, and visual identity so every generation stays on-brand.",
     icon: <IconSwatch />,
   },
   {
     title: "Video Extend",
+    media: { src: "/media/apps/video-reframe.mp4", kind: "video" },
+    href: `${IA}/video`,
     body: "Take any clip and seamlessly extend it, no reshoots, no awkward cuts.",
     icon: <IconExtend />,
   },
   {
     title: "Inpaint",
+    media: { src: "/media/apps/sketch-to-render.mp4", kind: "video" },
+    href: `${IA}/image`,
     body: "Edit precisely. Remove, replace, or refine any part of an image with a brush.",
     icon: <IconBrush />,
   },
   {
     title: "AI Influencer / UGC",
+    media: { src: "/media/templates/character.mp4", kind: "video" },
+    href: `${IA}/apps/heygen-avatar`,
     body: "Generate consistent, authentic-feeling creators and user-generated content at scale.",
     icon: <IconPersonSpark />,
   },
   {
     title: "Music",
+    href: `${IA}/audio/music/elevenlabs-music`,
     body: "Score your content with original, royalty-free tracks generated to fit the moment.",
     icon: <IconNote />,
   },
   {
     title: "Ad Studio",
+    media: { src: "/media/templates/ad-campaign.mp4", kind: "video" },
+    href: `${IA}/ai-image-generator`,
     body: "Produce performance-ready ad creative in every format and ratio, fast.",
     icon: <IconRatios />,
   },
   {
     title: "Fashion Studio",
+    media: { src: "/media/templates/fashion-tryon.mp4", kind: "video" },
+    href: `${IA}/image`,
     body: "Bring apparel and product to life with on-model imagery and editorial-grade visuals.",
     icon: <IconHanger />,
   },
@@ -63,11 +90,15 @@ export const PLATFORM_TOOLS: Tool[] = [
 export const BUSINESS_TOOLS: Tool[] = [
   {
     title: "Workflows",
+    media: { src: "/media/variable-demo.mp4", kind: "video" },
+    href: `${IA}/workflow`,
     body: "Node-based, multi-step flows that turn a brief into finished assets. The repeatable backbone behind every campaign your team ships.",
     icon: <IconNodes />,
   },
   {
     title: "Image / Video Canvas",
+    media: { src: "/media/cards/generate-prompt.mp4", kind: "video" },
+    href: `${IA}/image`,
     body: "Full editing surfaces for both. Create and refine in the same place, no exports, no handoffs, no drift.",
     icon: <IconCanvas />,
   },
