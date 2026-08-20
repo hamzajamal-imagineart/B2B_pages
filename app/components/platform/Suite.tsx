@@ -1,4 +1,5 @@
 import { SectionGuides } from "@/components/primitives/SectionGuides";
+import { SuiteRail } from "./SuiteRail";
 
 /**
  * The eight-tool suite.
@@ -120,28 +121,9 @@ export default function Suite({ tools = PLATFORM_TOOLS }: { tools?: Tool[] } = {
             stitching together five different products.
           </p>
         </div>
-
-        <div className="attr-grid suite-grid mt-14">
-          {tools.map((t) => (
-            <div key={t.title} className="attr-item">
-              <span className="attr-icon">{t.icon}</span>
-              <h3 className="attr-title">{t.title}</h3>
-              <p className="attr-body">{t.body}</p>
-            </div>
-          ))}
-        </div>
       </div>
 
-      <style>{`
-        /* Four across on desktop; .attr-grid's own breakpoints (2-up, then
-           1-up) take over from 880px down. A list whose length isn't a
-           multiple of four leaves a short final row, which is fine — the
-           hairline grid reads as a table, not as a set of cards. */
-        @media (min-width: 881px) {
-          .suite-grid { grid-template-columns: repeat(4, 1fr); }
-        }
-        .suite-grid .attr-body { max-width: 30ch; }
-      `}</style>
+      <SuiteRail tools={tools} />
     </section>
   );
 }
