@@ -20,8 +20,8 @@ export type Tool = {
   /** Looping capture or still shown at the foot of the card. Omit and the
    *  card runs on its tone alone. */
   media?: { src: string; kind: "video" | "image" };
-  /** Destination on imagine.art. Falls back to the enterprise page for tools
-   *  that have no product page of their own yet. */
+  /** Destination on imagine.art. Every tool names one; the type stays
+   *  optional so a tool can be added before its page exists. */
   href?: string;
 };
 
@@ -37,6 +37,7 @@ export const PLATFORM_TOOLS: Tool[] = [
   {
     title: "Brand Guidelines",
     media: { src: "/media/brandkit/brand-kits.webp", kind: "image" },
+    href: `${IA}/enterprise/brand-kits`,
     body: "Lock in your colors, fonts, and visual identity so every generation stays on-brand.",
     icon: <IconSwatch />,
   },
@@ -50,7 +51,7 @@ export const PLATFORM_TOOLS: Tool[] = [
   {
     title: "Inpaint",
     media: { src: "/media/apps/inpaint.mp4", kind: "video" },
-    href: `${IA}/image`,
+    href: `${IA}/edit/inpaint`,
     body: "Edit precisely. Remove, replace, or refine any part of an image with a brush.",
     icon: <IconBrush />,
   },
