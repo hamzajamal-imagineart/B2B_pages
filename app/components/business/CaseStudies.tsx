@@ -1,5 +1,4 @@
 import { SectionGuides } from "@/components/primitives/SectionGuides";
-import { ButtonLink } from "@/components/Button";
 import {
   CaseStudyStyles,
   FEATURED,
@@ -16,8 +15,8 @@ import {
  * their own heading as cards.
  *
  * No filter chips here — this page is a shop window. Three cards is the whole
- * point: finding a specific study is what /case-studies is for, and the CTA
- * below the grid goes there for the rest.
+ * point: finding a specific study is what /case-studies is for, and the link
+ * beside the heading goes there for the rest.
  */
 /** Cards shown outside the index. The grid is three across, so three fills it
  *  exactly and a fourth would open a second row holding one card. */
@@ -41,9 +40,14 @@ export default function CaseStudies() {
         </div>
 
         <div className="mt-24 md:mt-32">
-          <h2 className="h2 cs-studies-heading">
-            Case <span className="h-muted">studies</span>
-          </h2>
+          <div className="cs-studies-head">
+            <h2 className="h2 cs-studies-heading">
+              Case <span className="h-muted">studies</span>
+            </h2>
+            <a href="/case-studies" className="cs-more-link">
+              View More →
+            </a>
+          </div>
 
           <div className="cs-grid mt-10">
             {STORIES.slice(0, PREVIEW_COUNT).map((s) => (
@@ -51,11 +55,6 @@ export default function CaseStudies() {
             ))}
           </div>
 
-          <div className="cs-more mt-12">
-            <ButtonLink href="/case-studies" variant="muted" size="lg">
-              View More
-            </ButtonLink>
-          </div>
         </div>
       </div>
 
@@ -68,9 +67,26 @@ export default function CaseStudies() {
         .cs-featured-head .eyebrow { display: flex; justify-content: center; }
         .cs-featured-heading { max-width: 30ch; margin-inline: auto; }
         .cs-featured-head .lede { max-width: 66ch; margin-inline: auto; }
-        /* Centred under the grid: the row is full, so a left-aligned link
-           read as a fourth item that had lost its card. */
-        .cs-more { display: flex; justify-content: center; }
+        /* Heading left, link right, on one baseline row. */
+        .cs-studies-head {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 24px;
+          flex-wrap: wrap;
+        }
+        /* Same treatment as the hero's foot link: a hairline under the text,
+           not a filled control. Restated here rather than borrowing
+           BannerHero's .hero-link, which only exists while that component is
+           on the page. */
+        .cs-more-link {
+          flex: 0 0 auto;
+          font-size: 13.5px;
+          font-weight: 500;
+          color: var(--ink);
+          border-bottom: 1px solid var(--line-strong);
+          padding-bottom: 2px;
+        }
       `}</style>
     </section>
   );
