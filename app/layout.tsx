@@ -10,7 +10,7 @@ const googleSans = Google_Sans_Flex({
 });
 
 export const metadata: Metadata = {
-  title: "ImagineArt Enterprise, Create at the Speed of Your Ambition",
+  title: "ImagineArt Enterprise, On Brand at Enterprise Scale",
   description:
     "The enterprise AI creative platform that turns ideas into production-ready images and video, securely, at scale, and without limits on who gets to create.",
   // Next emits app/favicon.ico at the export root, which the host proxy 404s.

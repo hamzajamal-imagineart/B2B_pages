@@ -1,94 +1,66 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Script from "next/script";
 import { SectionGuides } from "@/components/primitives/SectionGuides";
-import { Button } from "@/components/Button";
 
 /**
- * "Get started with ImagineArt Enterprise" — the contact form from the B2B
- * specs, as a shared section.
+ * "Get started with ImagineArt Enterprise" — the live HubSpot form.
  *
- * Built to be reused: every string that differs per page is a prop, and the
- * field set is data below rather than markup, so adding a question is one
- * entry. Business mounts it first; Enterprise and Solutions can take it with
- * a different `title` and nothing else.
+ * The fields are not in this file and should not be recreated here: HubSpot
+ * owns them, and the production enterprise page renders this same form. What
+ * this component owns is the section around it — heading, layout, and the card
+ * the form lands in.
  *
- * Three things deliberately diverge from the supplied mock, which predates
- * this design system:
- *   · the purple submit becomes the shared brand Button. Colour comes from
- *     imagery only (Guidelines §2), and a violet fill is the one saturated
- *     element on an otherwise monochrome page.
- *   · the red required asterisks become a muted mark plus a single legend.
- *     Red is the same rule, and an asterisk repeated eight times in an accent
- *     colour reads as eight errors.
- *   · inputs take the recessed panel fill with a hairline, matching the chips
- *     and cards elsewhere, instead of the mock's heavier boxes.
+ * ── Why the embed script rather than next-hubspot ──────────────────────────
+ * The brief offered both. This takes the plain embed via next/script, because
+ * next-hubspot plus js-cookie adds two runtime dependencies to a project whose
+ * entire dependency list is next, react and react-dom, and buys only the hook
+ * wrapper around the same global that is called below.
  *
- * NOT WIRED. There is no endpoint in the spec, so submit is intercepted and
- * nothing is sent. `action` and `onSubmit` are both passed through for
- * whoever connects it. The assistance and industry options match the live
- * form; company size is still a placeholder.
+ * ── Deliberately NOT copied from the original implementation ───────────────
+ * No UTM values are injected. The original appended hidden inputs in
+ * onFormReady, which duplicated HubSpot's own hidden fields and left the real
+ * ones empty; HubSpot submits from its own state rather than by serialising the
+ * DOM, so those values likely never arrived. Passing them properly means
+ * setFieldValue in onFormReady, verified against a real submission. Until
+ * someone does that, this component claims nothing about attribution.
+ *
+ * No analytics payload either, so the two mapping bugs in the original (the
+ * assistance dropdown never read, and three payload fields pointing at
+ * HubSpot fields this form does not define) have nothing to reproduce.
+ *
+ * ⚠ Submissions land in the SAME HubSpot form as the production enterprise
+ * page. Only the `pagename` hidden field separates them. Clone the form in
+ * HubSpot and swap FORM_ID if they need to be separate.
  */
 
-type Field =
-  | { kind: "text"; name: string; label: string; type?: string; required?: boolean; autoComplete?: string }
-  | { kind: "select"; name: string; label: string; required?: boolean; options: string[] }
-  | { kind: "textarea"; name: string; label: string; required?: boolean };
+const PORTAL_ID = "244312374";
+const FORM_ID = "5beeefe7-2f54-4b92-b0ef-23ddca21eebe";
+const REGION = "na2";
+const TARGET_ID = "hubspot-join-us-form-wrapper";
 
-/** The live form's own list, supplied by the team. It is deliberately not the
- *  same set as the Industries section, which sells sectors rather than
- *  qualifying leads. */
-const INDUSTRIES = [
-  "Consumer Packaged Goods / FMCG",
-  "Fashion & Apparel",
-  "Furniture / Home Decor / Interior Design",
-  "E-commerce / Marketplace",
-  "Creative / Marketing / Advertising Agency",
-  "Food / Beverage",
-  "Automotive",
-  "Healthcare",
-  "Education / E-learning",
-  "Creator Economy / UGC Production",
-  "Other",
-];
-
-const FIELDS: Field[] = [
-  { kind: "text", name: "email", label: "Email", type: "email", required: true, autoComplete: "email" },
-  { kind: "text", name: "firstName", label: "First name", required: true, autoComplete: "given-name" },
-  { kind: "text", name: "lastName", label: "Last name", required: true, autoComplete: "family-name" },
-  { kind: "text", name: "country", label: "Country / Region", required: true, autoComplete: "country-name" },
-  {
-    kind: "select",
-    name: "companySize",
-    label: "Company size",
-    required: true,
-    options: ["1–10", "11–50", "51–200", "201–1,000", "1,001–5,000", "5,000+"],
-  },
-  { kind: "select", name: "industry", label: "Industry", required: true, options: INDUSTRIES },
-  {
-    kind: "select",
-    name: "assistance",
-    label: "What do you need assistance with?",
-    required: true,
-    /* The live form's own options, supplied by the team. */
-    options: [
-      "Support / Billing",
-      "Design Assistance",
-      "Platform Features",
-      "Team Plans / Enterprise",
-      "Other",
-    ],
-  },
-  { kind: "textarea", name: "query", label: "Help us understand your query", required: true },
-];
+declare global {
+  interface Window {
+    hbspt?: {
+      forms: {
+        create: (opts: {
+          portalId: string;
+          formId: string;
+          region: string;
+          target: string;
+          onFormReady?: () => void;
+        }) => void;
+      };
+    };
+  }
+}
 
 export function ContactForm({
   id = "contact",
   title = "Get started with",
   muted = "ImagineArt Enterprise",
   lede = "Tell us how your team works and we will come back with a rollout plan, security review, and pricing for your size.",
-  action,
-  onSubmit,
 }: {
   id?: string;
   title?: string;
@@ -96,15 +68,95 @@ export function ContactForm({
   muted?: string;
   /** Pass null for a heading-only column. */
   lede?: string | null;
-  action?: string;
-  onSubmit?: React.FormEventHandler<HTMLFormElement>;
 } = {}) {
-  const uid = useId();
-  const [attempted, setAttempted] = useState(false);
+  const [ready, setReady] = useState(false);
+  // The embed appends into the target; creating twice would stack two forms,
+  // which React's development double-effect would otherwise do.
+  const created = useRef(false);
+
+  const create = () => {
+    if (created.current || !window.hbspt) return;
+    created.current = true;
+    window.hbspt.forms.create({
+      portalId: PORTAL_ID,
+      formId: FORM_ID,
+      region: REGION,
+      target: `#${TARGET_ID}`,
+      onFormReady: () => setReady(true),
+    });
+  };
+
+  // Covers the case where the script was already loaded by an earlier mount,
+  // in which case Script's onLoad never fires again.
+  useEffect(() => {
+    if (window.hbspt) create();
+  }, []);
+
+  /**
+   * Keep the iframe as tall as the form inside it.
+   *
+   * HubSpot renders into an iframe and is supposed to size it itself, but it
+   * ships at a 150px default and the resize did not fire here, leaving a
+   * 776px form in a 150px frame. The iframe carries no src, so it is
+   * same-origin and its content is measurable: this observes that content and
+   * grows the frame to match. It only ever grows towards the content height,
+   * so if HubSpot's own resize does run, the two agree rather than fight.
+   */
+  useEffect(() => {
+    const host = document.getElementById(TARGET_ID);
+    if (!host) return;
+
+    let ro: ResizeObserver | undefined;
+    let timer: number | undefined;
+
+    /**
+     * Polled rather than observed. The iframe is in the DOM before its document
+     * has any content, so a MutationObserver on the host fires once, too early,
+     * and then has nothing further to react to. Polling covers both the frame
+     * arriving and its content filling in, and stops as soon as it can hand
+     * over to a ResizeObserver.
+     */
+    const attach = () => {
+      const frame = host.querySelector<HTMLIFrameElement>("iframe");
+      const doc = frame?.contentDocument;
+      const root = doc?.documentElement;
+      if (!frame || !root || root.scrollHeight < 40) return false;
+
+      const apply = () => {
+        const h = root.scrollHeight;
+        if (h > 0 && Math.abs(frame.offsetHeight - h) > 1) {
+          frame.style.height = `${h}px`;
+        }
+      };
+      apply();
+      ro = new ResizeObserver(apply);
+      ro.observe(root);
+      return true;
+    };
+
+    if (!attach()) {
+      // ~10s of 200ms checks, then give up and leave HubSpot's own height.
+      let tries = 0;
+      timer = window.setInterval(() => {
+        if (attach() || ++tries > 50) window.clearInterval(timer);
+      }, 200);
+    }
+
+    return () => {
+      if (timer) window.clearInterval(timer);
+      ro?.disconnect();
+    };
+  }, []);
 
   return (
     <section id={id} className="relative border-t border-black/[0.08] py-24 md:py-32 lg:border-t-0">
       <SectionGuides edge="top" />
+
+      <Script
+        src={`https://js-na2.hsforms.net/forms/embed/v2.js`}
+        strategy="afterInteractive"
+        onLoad={create}
+      />
 
       <div className="container-page relative z-10">
         <div className="cf-grid">
@@ -115,87 +167,16 @@ export function ContactForm({
             {lede && <p className="lede mt-5">{lede}</p>}
           </div>
 
-          <form
-            className="cf-card"
-            action={action}
-            noValidate={false}
-            onSubmit={(e) => {
-              setAttempted(true);
-              if (onSubmit) {
-                onSubmit(e);
-                return;
-              }
-              // No endpoint yet: never let this navigate away silently.
-              if (!action) e.preventDefault();
-            }}
-          >
-            <p className="cf-legend">
-              Fields marked <span aria-hidden>*</span> are required.
-            </p>
-
-            {FIELDS.map((f) => {
-              const fid = `${uid}-${f.name}`;
-              return (
-                <div key={f.name} className="cf-field">
-                  <label htmlFor={fid} className="cf-label">
-                    {f.label}
-                    {f.required && (
-                      <span className="cf-req" aria-hidden>
-                        *
-                      </span>
-                    )}
-                  </label>
-
-                  {f.kind === "text" && (
-                    <input
-                      id={fid}
-                      name={f.name}
-                      type={f.type ?? "text"}
-                      required={f.required}
-                      autoComplete={f.autoComplete}
-                      className="cf-input"
-                    />
-                  )}
-
-                  {f.kind === "select" && (
-                    <div className="cf-select-wrap">
-                      <select id={fid} name={f.name} required={f.required} defaultValue="" className="cf-input cf-select">
-                        <option value="" disabled>
-                          Please select
-                        </option>
-                        {f.options.map((o) => (
-                          <option key={o} value={o}>
-                            {o}
-                          </option>
-                        ))}
-                      </select>
-                      <svg className="cf-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                  )}
-
-                  {f.kind === "textarea" && (
-                    <textarea id={fid} name={f.name} required={f.required} rows={4} className="cf-input cf-textarea" />
-                  )}
-                </div>
-              );
-            })}
-
-            <div className="cf-actions">
-              <Button type="submit" variant="brand" size="lg">
-                Submit
-              </Button>
-            </div>
-
-            {/* Announced only once the user has tried, so it is not read as an
-                error state on first render. */}
-            <p className="cf-note" aria-live="polite">
-              {attempted && !action
-                ? "This form is not connected yet. Please contact sales directly in the meantime."
-                : "We reply within one business day."}
-            </p>
-          </form>
+          <div className="cf-card">
+            {/* HubSpot renders into this div. Left empty on purpose. */}
+            <div id={TARGET_ID} />
+            {!ready && (
+              <div className="cf-loading" role="status" aria-live="polite">
+                <span className="cf-spinner" aria-hidden />
+                Loading the form…
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -207,89 +188,50 @@ export function ContactForm({
           gap: clamp(32px, 5vw, 80px);
           align-items: start;
         }
-        /* The column governs the heading measure; a ch cap here broke
-           "ImagineArt Enterprise" across three lines. */
         .cf-intro .lede { max-width: 40ch; }
 
         /* Translucent white: the card lifts off the wash without sealing it
-           off, and the inputs inside stay solid so they read as the surfaces
-           you type into. */
+           off. min-height reserves the form's own height so the section does
+           not jump when HubSpot finishes rendering. */
         .cf-card {
+          position: relative;
           background: rgba(255, 255, 255, 0.6);
           border: 1px solid var(--line);
           border-radius: 24px;
-          padding: clamp(24px, 3vw, 36px);
-        }
-        .cf-legend {
-          font-size: 12.5px;
-          color: var(--ink-3);
-          margin-bottom: 22px;
-        }
-        .cf-field { margin-bottom: 18px; }
-        .cf-label {
-          display: block;
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--ink-2);
-          margin-bottom: 7px;
-        }
-        /* Muted, not red: the mark says "required", it does not say "wrong". */
-        .cf-req { color: var(--ink-3); margin-left: 2px; }
-
-        .cf-input {
-          width: 100%;
-          height: 46px;
-          padding: 0 14px;
-          font: inherit;
-          font-size: 15px;
-          color: var(--ink);
-          background: var(--panel);
-          border: 1px solid var(--line);
-          border-radius: 12px;
-          outline: none;
-          transition: border-color 180ms ease, background 180ms ease;
-        }
-        .cf-input::placeholder { color: var(--ink-3); }
-        .cf-input:hover { border-color: var(--line-strong); }
-        .cf-input:focus-visible {
-          border-color: var(--ink);
-        }
-        .cf-textarea {
-          height: auto;
-          min-height: 116px;
-          padding: 12px 14px;
-          line-height: 1.6;
-          resize: vertical;
+          padding: clamp(20px, 2.4vw, 30px);
+          min-height: 750px;
+          max-width: 584px;
         }
 
-        /* Native select, restyled: the chevron is ours so it matches the rails. */
-        .cf-select-wrap { position: relative; }
-        .cf-select {
-          appearance: none;
-          -webkit-appearance: none;
-          padding-right: 40px;
-          cursor: pointer;
-        }
-        .cf-select:invalid { color: var(--ink-3); }
-        .cf-chevron {
+        .cf-loading {
           position: absolute;
-          right: 14px;
-          top: 50%;
-          transform: translateY(-50%);
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          font-size: 13.5px;
           color: var(--ink-3);
-          pointer-events: none;
         }
-
-        .cf-actions { margin-top: 26px; }
-        .cf-note {
-          margin-top: 14px;
-          font-size: 12.5px;
-          color: var(--ink-3);
+        .cf-spinner {
+          width: 15px;
+          height: 15px;
+          border-radius: 999px;
+          border: 1.5px solid var(--line-strong);
+          border-top-color: var(--ink);
+          animation: cf-spin 700ms linear infinite;
+        }
+        @keyframes cf-spin { to { transform: rotate(360deg); } }
+        /* The spinner is a loading state, not decoration, so it stays under
+           reduced motion — but it stops spinning. */
+        @media (prefers-reduced-motion: reduce) {
+          .cf-spinner { animation: none; }
         }
 
         @media (max-width: 900px) {
           .cf-grid { grid-template-columns: 1fr; }
           .cf-intro .lede { max-width: 52ch; }
+          .cf-card { max-width: none; min-height: 820px; }
         }
       `}</style>
     </section>

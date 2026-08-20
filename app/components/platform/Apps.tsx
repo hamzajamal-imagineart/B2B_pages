@@ -5,17 +5,19 @@ import { withBasePath } from "@/lib/assets";
  * Apps.
  *
  * The content spec lists five app names and nothing else, so these cards carry
- * the name alone rather than a fabricated one-liner each. The grain palettes
- * do the differentiating instead of invented copy.
+ * the name alone rather than a fabricated one-liner each. The footage does the
+ * differentiating instead of invented copy.
  */
-/* `light` selects the denser lens fill — the default .glass disappears into a
-   pale palette, same reason Security's tile graphics carry .glass-on-light. */
-const APPS = [
-  { name: "Outfit Tryon", grain: "grain-mineral", video: "/media/apps/outfit-tryon.mp4" },
-  { name: "Variate", grain: "grain-sand", light: true },
-  { name: "Video Reframe", grain: "grain-olive", video: "/media/apps/video-reframe.mp4" },
-  { name: "Topaz Video Upscale", grain: "grain-steel", video: "/media/apps/upscale.mp4" },
-  { name: "Sketch to Render", grain: "grain-teal", video: "/media/apps/sketch-to-render.mp4" },
+/* All five carry footage now. `light` stays on the type because an app added
+   before its capture still needs the denser lens fill: the default .glass
+   disappears into a pale palette, same reason Security's tile graphics carry
+   .glass-on-light. */
+const APPS: { name: string; video?: string; light?: boolean }[] = [
+  { name: "Outfit Tryon", video: "/media/apps/outfit-tryon.mp4" },
+  { name: "Variate", video: "/media/apps/variate.mp4" },
+  { name: "Video Reframe", video: "/media/apps/reframe-presets.mp4" },
+  { name: "Topaz Video Upscale", video: "/media/apps/upscale.mp4" },
+  { name: "Sketch to Render", video: "/media/apps/sketch-render.mp4" },
 ];
 
 export default function Apps() {
@@ -41,7 +43,7 @@ export default function Apps() {
           {APPS.map((a) => (
             <div
               key={a.name}
-              className={`app-card grain ${a.grain} ${a.video ? "app-has-video" : ""}`}
+              className={`app-card ${a.video ? "app-has-video" : ""}`}
             >
               {a.video && (
                 <>
@@ -73,16 +75,21 @@ export default function Apps() {
       </div>
 
       <style>{`
+        /* Two rows over six columns: three cards spanning two each, then two
+           spanning three. Both rows fill exactly, and the cards are half again
+           as wide as the old single row of five. */
         .apps-row {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(6, 1fr);
           gap: 14px;
         }
+        .apps-row > :nth-child(-n+3) { grid-column: span 2; }
+        .apps-row > :nth-child(n+4) { grid-column: span 3; }
         /* Name and lens share the baseline row rather than stacking, so the
            card's copy reads as a label with an affordance beside it. */
         /* Footage sits behind the card's own copy but above the palette fill,
            which stays underneath so nothing flashes before the video paints.
-           .grain's noise tile is z-index 0, hence -1 / -2 here. */
+           the card's own fill, hence -1 / -2 here. */
         .app-video {
           position: absolute;
           inset: 0;
@@ -102,41 +109,49 @@ export default function Apps() {
         /* A card with footage carries its own copy colour, since the scrim
            underneath is dark whatever the palette is. */
         .app-has-video { color: #fff; }
-        /* .grain's noise tile is z-index 0, so it sits *above* the video and
-           veils it. A card running footage doesn't need the tooth — the
-           footage is the surface — so the tile is dropped entirely there. */
-        .app-has-video::after { content: none; }
 
         .app-card {
           position: relative;
           isolation: isolate;
           overflow: hidden;
+          /* Flat dark fill, no grain. Every card runs footage now, so the tile
+             was noise over video for the split second before it painted, and
+             the palettes it carried were never really seen. */
+          background-color: #1c1d1a;
           border-radius: 20px;
-          padding: 22px;
-          aspect-ratio: 4 / 5;
+          padding: 26px;
+          /* One height for every card rather than one ratio: the two rows
+             differ in width, so a shared aspect would make the wide pair
+             enormous. */
+          height: clamp(300px, 30vw, 420px);
           display: flex;
           align-items: flex-end;
           justify-content: space-between;
           gap: 12px;
         }
         .app-name {
-          font-size: clamp(15px, 1.3vw, 17px);
+          font-size: clamp(16px, 1.5vw, 20px);
           line-height: 1.25;
           letter-spacing: -0.01em;
           font-weight: 500;
           color: currentColor;
-          max-width: 11ch;
+          max-width: 14ch;
         }
         .app-arrow {
-          width: 32px; height: 32px;
+          width: 36px; height: 36px;
           border-radius: 999px;
           display: grid; place-items: center;
           color: currentColor;
           flex: 0 0 auto;
         }
         @media (max-width: 1000px) {
-          .apps-row { grid-template-columns: repeat(3, 1fr); }
-          .app-card { aspect-ratio: 5 / 4; }
+          .apps-row { grid-template-columns: repeat(2, 1fr); }
+          .apps-row > :nth-child(-n+3),
+          .apps-row > :nth-child(n+4) { grid-column: span 1; }
+          .app-card { height: clamp(240px, 40vw, 320px); }
+        }
+        @media (max-width: 620px) {
+          .apps-row { grid-template-columns: 1fr; }
         }
         @media (max-width: 600px) {
           .apps-row { grid-template-columns: repeat(2, 1fr); }

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { SiteNav } from "@/components/SiteNav";
 import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ContactForm } from "@/components/ContactForm";
 import { NAV_VARIANT } from "@/lib/theme";
 
 import Hero from "../components/platform/Hero";
@@ -38,6 +39,8 @@ export default function PlatformPage() {
         <Models />
         <BuiltForEnterprise />
         <Apps />
+        {/* Same placement as the root: second last, ahead of the closing band. */}
+        <ContactForm />
         <ClosingCta />
       </main>
 

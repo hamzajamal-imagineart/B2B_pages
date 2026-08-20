@@ -15,9 +15,8 @@ const CTA_HREF = "https://www.imagine.art/business/enterprise/contact-us";
 type NavLink = { label: string; href: string; activeRoute?: string; exact?: boolean };
 
 const NAV_LINKS: NavLink[] = [
-  { label: "Business", href: "/business", activeRoute: "/business" },
   { label: "Enterprise", href: "/", activeRoute: "/", exact: true },
-  { label: "Industry/Solutions", href: "/solutions", activeRoute: "/solutions" },
+  { label: "Solutions", href: "/solutions", activeRoute: "/solutions" },
   { label: "Platform", href: "/platform", activeRoute: "/platform" },
   { label: "Case Studies", href: "/case-studies", activeRoute: "/case-studies" },
   // Not in the supplied ordering, which lists only the five pages with content

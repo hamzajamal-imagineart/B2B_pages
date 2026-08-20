@@ -31,7 +31,16 @@ const ICON_POOL = [
 
 function sr(seed: number) { const x = Math.sin(seed + 1) * 10000; return x - Math.floor(x); }
 
-export function IntegrationsGrid({ vignette = true }: { vignette?: boolean } = {}) {
+export function IntegrationsGrid({
+  vignette = true,
+  tone = "dark",
+}: {
+  vignette?: boolean;
+  /** Chip fill. Dark suits the near-black stack card; light keeps the wall
+   *  from reading as a field of black dots on a pale tile. */
+  tone?: "dark" | "light";
+} = {}) {
+  const light = tone === "light";
   const cardRef = useRef<HTMLDivElement>(null);
 
   function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -98,8 +107,10 @@ export function IntegrationsGrid({ vignette = true }: { vignette?: boolean } = {
                     width: SIZE,
                     height: SIZE,
                     borderRadius: "50%",
-                    background: "#1f1f24",
-                    border: "1px solid rgba(255,255,255,0.07)",
+                    background: light ? "#ffffff" : "#1f1f24",
+                    border: light
+                      ? "1px solid rgba(0,0,0,0.07)"
+                      : "1px solid rgba(255,255,255,0.07)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",

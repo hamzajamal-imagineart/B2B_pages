@@ -1,4 +1,5 @@
 import { SectionGuides } from "@/components/primitives/SectionGuides";
+import { SuiteRail } from "./SuiteRail";
 
 /**
  * The eight-tool suite.
@@ -9,47 +10,76 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
  * moved away from, and there are no real captures for six of these tools —
  * an honest icon + label + blurb row beats an invented screenshot.
  */
-export type Tool = { title: string; body: string; icon: React.ReactNode };
+/** Same origin the footer links against. */
+const IA = "https://www.imagine.art";
+
+export type Tool = {
+  title: string;
+  body: string;
+  icon: React.ReactNode;
+  /** Looping capture or still shown at the foot of the card. Omit and the
+   *  card runs on its tone alone. */
+  media?: { src: string; kind: "video" | "image" };
+  /** Destination on imagine.art. Every tool names one; the type stays
+   *  optional so a tool can be added before its page exists. */
+  href?: string;
+};
 
 /** The Business page runs a longer list — see BUSINESS_TOOLS below. */
 export const PLATFORM_TOOLS: Tool[] = [
   {
     title: "Workflows",
+    media: { src: "/media/variable-demo.mp4", kind: "video" },
+    href: `${IA}/workflow`,
     body: "Build repeatable creative pipelines that turn one brief into a finished output, every time.",
     icon: <IconNodes />,
   },
   {
     title: "Brand Guidelines",
+    media: { src: "/media/brandkit/brand-kits.webp", kind: "image" },
+    href: `${IA}/enterprise/brand-kits`,
     body: "Lock in your colors, fonts, and visual identity so every generation stays on-brand.",
     icon: <IconSwatch />,
   },
   {
     title: "Video Extend",
+    media: { src: "/media/apps/video-extend.mp4", kind: "video" },
+    href: `${IA}/video`,
     body: "Take any clip and seamlessly extend it, no reshoots, no awkward cuts.",
     icon: <IconExtend />,
   },
   {
     title: "Inpaint",
+    media: { src: "/media/apps/inpaint.mp4", kind: "video" },
+    href: `${IA}/edit/inpaint`,
     body: "Edit precisely. Remove, replace, or refine any part of an image with a brush.",
     icon: <IconBrush />,
   },
   {
     title: "AI Influencer / UGC",
+    media: { src: "/media/apps/ugc.mp4", kind: "video" },
+    href: `${IA}/apps/heygen-avatar`,
     body: "Generate consistent, authentic-feeling creators and user-generated content at scale.",
     icon: <IconPersonSpark />,
   },
   {
     title: "Music",
+    media: { src: "/media/apps/music.mp4", kind: "video" },
+    href: `${IA}/audio/music/elevenlabs-music`,
     body: "Score your content with original, royalty-free tracks generated to fit the moment.",
     icon: <IconNote />,
   },
   {
     title: "Ad Studio",
+    media: { src: "/media/apps/ad-studio.mp4", kind: "video" },
+    href: `${IA}/ad-studio`,
     body: "Produce performance-ready ad creative in every format and ratio, fast.",
     icon: <IconRatios />,
   },
   {
     title: "Fashion Studio",
+    media: { src: "/media/apps/fashion-studio.mp4", kind: "video" },
+    href: `${IA}/fashion-studio`,
     body: "Bring apparel and product to life with on-model imagery and editorial-grade visuals.",
     icon: <IconHanger />,
   },
@@ -62,11 +92,15 @@ export const PLATFORM_TOOLS: Tool[] = [
 export const BUSINESS_TOOLS: Tool[] = [
   {
     title: "Workflows",
+    media: { src: "/media/variable-demo.mp4", kind: "video" },
+    href: `${IA}/workflow`,
     body: "Node-based, multi-step flows that turn a brief into finished assets. The repeatable backbone behind every campaign your team ships.",
     icon: <IconNodes />,
   },
   {
     title: "Image / Video Canvas",
+    media: { src: "/media/cards/generate-prompt.mp4", kind: "video" },
+    href: `${IA}/image`,
     body: "Full editing surfaces for both. Create and refine in the same place, no exports, no handoffs, no drift.",
     icon: <IconCanvas />,
   },
@@ -120,28 +154,9 @@ export default function Suite({ tools = PLATFORM_TOOLS }: { tools?: Tool[] } = {
             stitching together five different products.
           </p>
         </div>
-
-        <div className="attr-grid suite-grid mt-14">
-          {tools.map((t) => (
-            <div key={t.title} className="attr-item">
-              <span className="attr-icon">{t.icon}</span>
-              <h3 className="attr-title">{t.title}</h3>
-              <p className="attr-body">{t.body}</p>
-            </div>
-          ))}
-        </div>
       </div>
 
-      <style>{`
-        /* Four across on desktop; .attr-grid's own breakpoints (2-up, then
-           1-up) take over from 880px down. A list whose length isn't a
-           multiple of four leaves a short final row, which is fine — the
-           hairline grid reads as a table, not as a set of cards. */
-        @media (min-width: 881px) {
-          .suite-grid { grid-template-columns: repeat(4, 1fr); }
-        }
-        .suite-grid .attr-body { max-width: 30ch; }
-      `}</style>
+      <SuiteRail tools={tools} />
     </section>
   );
 }

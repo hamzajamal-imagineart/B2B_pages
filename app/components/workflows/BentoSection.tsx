@@ -53,134 +53,110 @@ function OrbitalAgents() {
   );
 }
 
-// ── On-brand visuals: brand kit tile grid ───────────────────────────────────
+// ── On-brand visuals: the real brand-kit board ─────────────────────────────
+/* The supplied board, in place of the hand-built swatch grid that stood here.
+   It is a transparent PNG, so it needs no frame: the cards in the artwork are
+   the visual, sitting straight on the tile.
+
+   The orange is a customer's brand colour, which is the sanctioned exception
+   to monochrome, the same way the partner logos keep theirs. */
 function BrandKitDemo() {
-  const [hov, setHov] = useState(false);
   return (
-    <div
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        background: DEMO_BG,
-        border: DEMO_BORDER,
-        borderRadius: 16,
-        padding: 16,
-        boxSizing: "border-box",
-      }}
-    >
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 8, height: "100%" }}>
-        {/* 1 — Abstract shapes */}
-        <div
-          style={{
-            borderRadius: 12,
-            overflow: "hidden",
-            background: "#edeae4",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transform: hov ? "translateY(-6px) scale(1.03)" : "translateY(0) scale(1)",
-            transition: "transform 420ms cubic-bezier(0.34,1.56,0.64,1) 0ms",
-          }}
-        >
-          <svg viewBox="0 0 100 100" style={{ width: "70%", height: "70%" }} fill="none">
-            <path d="M28,16 C50,2 78,20 73,48 C68,76 40,84 24,68 C8,52 6,30 28,16Z" fill="#111" />
-            <path d="M60,56 C70,44 84,58 79,73 C74,88 58,84 53,73 C48,62 50,68 60,56Z" fill="#111" opacity="0.65" />
-          </svg>
-        </div>
-
-        {/* 2 — Portrait */}
-        <div
-          style={{
-            borderRadius: 12,
-            overflow: "hidden",
-            transform: hov ? "translateY(-6px) scale(1.03)" : "translateY(0) scale(1)",
-            transition: "transform 420ms cubic-bezier(0.34,1.56,0.64,1) 55ms",
-          }}
-        >
-          <div style={{ position: "relative", width: "100%", aspectRatio: "1 / 1" }}>
-            <MediaPlaceholder tone="light" />
-          </div>
-        </div>
-
-        {/* 3 — Color swatches */}
-        <div
-          style={{
-            borderRadius: 12,
-            overflow: "hidden",
-            background: "#fff",
-            display: "flex",
-            flexDirection: "column",
-            transform: hov ? "translateY(-6px) scale(1.03)" : "translateY(0) scale(1)",
-            transition: "transform 420ms cubic-bezier(0.34,1.56,0.64,1) 110ms",
-          }}
-        >
-          {[{ c: "#D95F3B", l: "VERMILLION" }, { c: "#1E1E1E", l: "COD GRAY" }, { c: "#888", l: "GRAY" }, { c: "#EFEFEF", l: "WHITE" }].map((s, i) => (
-            <div key={i} style={{ flex: 1, background: s.c, display: "flex", alignItems: "center", padding: "0 6px" }}>
-              <span style={{ ...TEXT_STYLE, fontSize: 4.5, fontWeight: 700, letterSpacing: "0.1em", color: i >= 2 ? "#333" : "#fff" }}>{s.l}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* 4 — Dark product */}
-        <div
-          style={{
-            borderRadius: 12,
-            overflow: "hidden",
-            transform: hov ? "translateY(-6px) scale(1.03)" : "translateY(0) scale(1)",
-            transition: "transform 420ms cubic-bezier(0.34,1.56,0.64,1) 30ms",
-          }}
-        >
-          <div style={{ position: "relative", width: "100%", aspectRatio: "1 / 1" }}>
-            <MediaPlaceholder tone="light" />
-          </div>
-        </div>
-
-        {/* 5 — Brand identity grid */}
-        <div
-          style={{
-            borderRadius: 12,
-            overflow: "hidden",
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "1fr 1fr",
-            transform: hov ? "translateY(-6px) scale(1.03)" : "translateY(0) scale(1)",
-            transition: "transform 420ms cubic-bezier(0.34,1.56,0.64,1) 75ms",
-          }}
-        >
-          <div style={{ background: "#D95F3B" }} />
-          <div style={{ background: "#1A1A1A", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ ...TEXT_STYLE, color: "#fff", fontSize: 12, fontWeight: 800, letterSpacing: "-0.02em" }}>AR</span>
-          </div>
-          <div style={{ background: "#222", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ ...TEXT_STYLE, color: "rgba(255,255,255,0.35)", fontSize: 4.5, fontWeight: 600, letterSpacing: "0.15em" }}>BRAND</span>
-          </div>
-          <div style={{ background: "#D95F3B" }} />
-        </div>
-
-        {/* 6 — Typography */}
-        <div
-          style={{
-            borderRadius: 12,
-            overflow: "hidden",
-            background: "#f2f0eb",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transform: hov ? "translateY(-6px) scale(1.03)" : "translateY(0) scale(1)",
-            transition: "transform 420ms cubic-bezier(0.34,1.56,0.64,1) 130ms",
-          }}
-        >
-          <span style={{ fontFamily: "Georgia, serif", fontSize: 46, fontWeight: 700, color: "#111", lineHeight: 1, letterSpacing: "-0.04em" }}>Gg</span>
-        </div>
-      </div>
+    <div className="bk">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={withBasePath("/media/brandkit/brand-kits.webp")} alt="" />
+      <style>{`
+        .bk {
+          width: 100%;
+          height: 100%;
+          display: grid;
+          place-items: end center;
+          overflow: hidden;
+        }
+        .bk img {
+          width: 100%;
+          height: auto;
+          display: block;
+          /* Bottom-anchored and faded off the tile edge, like the other
+             visuals in this bento. */
+          -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
+        }
+      `}</style>
     </div>
   );
 }
 
 // ── Scaled production: batched output mosaic ────────────────────────────────
+/* Scaled production: the batch itself. A feed comes in, rows fan out across
+   locale and format, and the run reports progress. That is the claim of the
+   card, so the panel states it as a job rather than as decoration. */
+const BATCH = [
+  { sku: "SKU-4417", locale: "en-GB", fmt: "1:1", done: true },
+  { sku: "SKU-4417", locale: "de-DE", fmt: "4:5", done: true },
+  { sku: "SKU-4418", locale: "fr-FR", fmt: "9:16", done: true },
+  { sku: "SKU-4418", locale: "ja-JP", fmt: "16:9", done: false },
+];
+
+function ScaledDemoPanel() {
+  return (
+    <div className="sd">
+      <div className="sd-head">
+        <span className="sd-file">autumn-drop.csv</span>
+        <span className="sd-count">128 rows</span>
+      </div>
+
+      <ul className="sd-rows">
+        {BATCH.map((r, i) => (
+          <li key={i}>
+            <span className="sd-sku">{r.sku}</span>
+            <span className="sd-meta">{r.locale}</span>
+            <span className="sd-meta">{r.fmt}</span>
+            <span className={`sd-dot ${r.done ? "sd-dot-on" : ""}`} aria-hidden />
+          </li>
+        ))}
+      </ul>
+
+      <div className="sd-foot">
+        <div className="sd-bar" aria-hidden><span /></div>
+        <span className="sd-prog">94 / 128 generated</span>
+      </div>
+
+      <style>{`
+        .sd { padding: 14px 14px 0; font-size: 12px; }
+        .sd-head {
+          display: flex; align-items: center; justify-content: space-between;
+          margin-bottom: 10px;
+        }
+        .sd-file { color: var(--ink); }
+        .sd-count { font-size: 11px; color: var(--ink-3); }
+        .sd-rows { list-style: none; margin: 0; padding: 0; }
+        .sd-rows li {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto auto 10px;
+          align-items: center; gap: 10px;
+          padding: 8px 0;
+          border-top: 1px solid var(--line);
+        }
+        .sd-sku { color: var(--ink); }
+        .sd-meta { font-size: 11px; color: var(--ink-3); }
+        .sd-dot {
+          width: 7px; height: 7px; border-radius: 999px;
+          border: 1px solid var(--line-strong);
+        }
+        .sd-dot-on { background: var(--ink); border-color: var(--ink); }
+        .sd-foot { padding: 12px 0 16px; border-top: 1px solid var(--line); }
+        .sd-bar {
+          height: 4px; border-radius: 999px;
+          background: rgba(0,0,0,0.07); overflow: hidden;
+        }
+        .sd-bar span { display: block; width: 73%; height: 100%; background: var(--ink); }
+        .sd-prog { display: block; margin-top: 7px; font-size: 11px; color: var(--ink-3); }
+      `}</style>
+    </div>
+  );
+}
+
 function ScaledDemo() {
   return (
     <div
@@ -195,7 +171,7 @@ function ScaledDemo() {
       }}
     >
       {/* Awaiting the batched-variants mosaic; see HANDOFF open items. */}
-      <MediaPlaceholder tone="light" label="Batched product variants: packaging, key shots, product pages" />
+      <ScaledDemoPanel />
     </div>
   );
 }
@@ -319,7 +295,7 @@ export default function BentoSection() {
           title="Integrations."
           desc="Connect Figma, Slack, Notion, and 100+ tools your team already uses. No accounts required."
         >
-          <IntegrationsGrid vignette={false} />
+          <IntegrationsGrid vignette={false} tone="light" />
         </Card>
 
         <style>{`

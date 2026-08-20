@@ -115,7 +115,8 @@ export default function BuiltForEnterprise({
                   className={`bfe-tab ${i === active ? "bfe-tab-on" : ""}`}
                   onClick={() => setActive(i)}
                 >
-                  {t.label}
+                  <span className="bfe-tab-mark" aria-hidden />
+                  <span>{t.label}</span>
                 </button>
               ))}
             </div>
@@ -161,11 +162,20 @@ export default function BuiltForEnterprise({
           align-items: start;
         }
 
-        .bfe-rail { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+        .bfe-rail { display: flex; flex-direction: column; align-items: stretch; gap: 4px; }
+        /* These read as plain paragraphs otherwise. A pill on hover and on the
+           active tab makes the rail legible as a control, and the leading rule
+           marks which one you are on: the same device the workflows use-case
+           list uses, so the site has one way of saying "selected". */
         .bfe-tab {
           border: 0;
           background: transparent;
-          padding: 0;
+          padding: 9px 14px 9px 12px;
+          border-radius: 10px;
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          width: 100%;
           text-align: left;
           cursor: pointer;
           font-family: inherit;
@@ -176,11 +186,31 @@ export default function BuiltForEnterprise({
           /* Inactive tabs stay legible rather than dropping to a hint — this
              is the section's navigation, and all four labels are content. */
           color: var(--ink-3);
-          transition: color 0.2s ease;
-          max-width: 22ch;
+          transition: color 0.2s ease, background 0.2s ease;
+          max-width: 26ch;
         }
-        .bfe-tab:hover { color: var(--ink-2); }
-        .bfe-tab-on { color: var(--ink-heading); }
+        .bfe-tab:hover { color: var(--ink-heading); background: rgba(0, 0, 0, 0.035); }
+        .bfe-tab-on { color: var(--ink-heading); background: rgba(0, 0, 0, 0.05); }
+
+        /* Leading rule: reserved space always, so the labels keep one left
+           edge, and scaled from a left origin so marking a tab never reflows
+           the rail. */
+        .bfe-tab-mark {
+          flex: 0 0 auto;
+          width: 16px;
+          height: 1px;
+          margin-bottom: 5px;
+          background: currentColor;
+          transform-origin: left center;
+          transform: scaleX(0);
+          opacity: 0;
+          transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+        }
+        .bfe-tab:hover .bfe-tab-mark { transform: scaleX(0.55); opacity: 0.5; }
+        .bfe-tab-on .bfe-tab-mark { transform: scaleX(1); opacity: 1; }
+        @media (prefers-reduced-motion: reduce) {
+          .bfe-tab-mark { transition: none; }
+        }
 
         /* Rows are separated by hairlines only; the last one drops its rule so
            the list doesn't end on a floating line. */
