@@ -59,10 +59,10 @@ export default function Home() {
       <main>
         <Hero />
         <Partners caption="Partnering with global industry leaders to power your creative output" />
+        <Suite tools={BUSINESS_TOOLS} />
         <Pitch />
         <ContactForm />
         <IndustriesSection />
-        <Suite tools={BUSINESS_TOOLS} />
         <WorkflowsSection />
         <Security />
         <Models />
