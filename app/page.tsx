@@ -61,14 +61,16 @@ export default function Home() {
         <Partners caption="Partnering with global industry leaders to power your creative output" />
         <Suite tools={BUSINESS_TOOLS} />
         <Pitch />
-        <ContactForm />
         <IndustriesSection />
         <WorkflowsSection />
+        <Apps />
         <Security />
         <Models />
-        <Apps />
         <CaseStudies />
         <TestimonialsSection />
+        {/* Second last: the form takes the query, the closing band signs the
+            page off after it. */}
+        <ContactForm />
         <ClosingCta
           title="A creative suite that scales"
           muted="with your business."

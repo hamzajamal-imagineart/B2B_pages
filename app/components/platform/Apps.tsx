@@ -73,11 +73,16 @@ export default function Apps() {
       </div>
 
       <style>{`
+        /* Two rows over six columns: three cards spanning two each, then two
+           spanning three. Both rows fill exactly, and the cards are half again
+           as wide as the old single row of five. */
         .apps-row {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(6, 1fr);
           gap: 14px;
         }
+        .apps-row > :nth-child(-n+3) { grid-column: span 2; }
+        .apps-row > :nth-child(n+4) { grid-column: span 3; }
         /* Name and lens share the baseline row rather than stacking, so the
            card's copy reads as a label with an affordance beside it. */
         /* Footage sits behind the card's own copy but above the palette fill,
@@ -112,31 +117,39 @@ export default function Apps() {
           isolation: isolate;
           overflow: hidden;
           border-radius: 20px;
-          padding: 22px;
-          aspect-ratio: 4 / 5;
+          padding: 26px;
+          /* One height for every card rather than one ratio: the two rows
+             differ in width, so a shared aspect would make the wide pair
+             enormous. */
+          height: clamp(300px, 30vw, 420px);
           display: flex;
           align-items: flex-end;
           justify-content: space-between;
           gap: 12px;
         }
         .app-name {
-          font-size: clamp(15px, 1.3vw, 17px);
+          font-size: clamp(16px, 1.5vw, 20px);
           line-height: 1.25;
           letter-spacing: -0.01em;
           font-weight: 500;
           color: currentColor;
-          max-width: 11ch;
+          max-width: 14ch;
         }
         .app-arrow {
-          width: 32px; height: 32px;
+          width: 36px; height: 36px;
           border-radius: 999px;
           display: grid; place-items: center;
           color: currentColor;
           flex: 0 0 auto;
         }
         @media (max-width: 1000px) {
-          .apps-row { grid-template-columns: repeat(3, 1fr); }
-          .app-card { aspect-ratio: 5 / 4; }
+          .apps-row { grid-template-columns: repeat(2, 1fr); }
+          .apps-row > :nth-child(-n+3),
+          .apps-row > :nth-child(n+4) { grid-column: span 1; }
+          .app-card { height: clamp(240px, 40vw, 320px); }
+        }
+        @media (max-width: 620px) {
+          .apps-row { grid-template-columns: 1fr; }
         }
         @media (max-width: 600px) {
           .apps-row { grid-template-columns: repeat(2, 1fr); }

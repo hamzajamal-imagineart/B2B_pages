@@ -1,4 +1,5 @@
 import { SectionGuides } from "@/components/primitives/SectionGuides";
+import { ButtonLink } from "@/components/Button";
 import {
   CaseStudyStyles,
   FEATURED,
@@ -14,9 +15,13 @@ import {
  * numbers run as the staggered stat mosaic. The other studies follow under
  * their own heading as cards.
  *
- * No filter chips here — this page is a shop window. Finding a specific study
- * is what /case-studies is for, and this section links to it.
+ * No filter chips here — this page is a shop window. Three cards is the whole
+ * point: finding a specific study is what /case-studies is for, and the CTA
+ * below the grid goes there for the rest.
  */
+/** Cards shown outside the index. The grid is three across, so three fills it
+ *  exactly and a fourth would open a second row holding one card. */
+const PREVIEW_COUNT = 3;
 export default function CaseStudies() {
   return (
     <section
@@ -41,14 +46,16 @@ export default function CaseStudies() {
           </h2>
 
           <div className="cs-grid mt-10">
-            {STORIES.map((s) => (
+            {STORIES.slice(0, PREVIEW_COUNT).map((s) => (
               <StoryCard key={s.slug} story={s} />
             ))}
           </div>
 
-          <a href="/case-studies" className="cs-all mt-12">
-            See all case studies →
-          </a>
+          <div className="cs-more mt-12">
+            <ButtonLink href="/case-studies" variant="muted" size="lg">
+              View More
+            </ButtonLink>
+          </div>
         </div>
       </div>
 
@@ -61,13 +68,9 @@ export default function CaseStudies() {
         .cs-featured-head .eyebrow { display: flex; justify-content: center; }
         .cs-featured-heading { max-width: 30ch; margin-inline: auto; }
         .cs-featured-head .lede { max-width: 66ch; margin-inline: auto; }
-        .cs-all {
-          display: inline-block;
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--ink);
-          border-bottom: 1px solid var(--line-strong);
-        }
+        /* Centred under the grid: the row is full, so a left-aligned link
+           read as a fourth item that had lost its card. */
+        .cs-more { display: flex; justify-content: center; }
       `}</style>
     </section>
   );
