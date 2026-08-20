@@ -16,7 +16,7 @@ type NavLink = { label: string; href: string; activeRoute?: string; exact?: bool
 
 const NAV_LINKS: NavLink[] = [
   { label: "Enterprise", href: "/", activeRoute: "/", exact: true },
-  { label: "Industry/Solutions", href: "/solutions", activeRoute: "/solutions" },
+  { label: "Solutions", href: "/solutions", activeRoute: "/solutions" },
   { label: "Platform", href: "/platform", activeRoute: "/platform" },
   { label: "Case Studies", href: "/case-studies", activeRoute: "/case-studies" },
   // Not in the supplied ordering, which lists only the five pages with content
