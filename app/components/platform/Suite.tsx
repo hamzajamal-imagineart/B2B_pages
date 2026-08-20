@@ -77,8 +77,8 @@ export const PLATFORM_TOOLS: Tool[] = [
   },
   {
     title: "Fashion Studio",
-    media: { src: "/media/templates/fashion-tryon.mp4", kind: "video" },
-    href: `${IA}/image`,
+    media: { src: "/media/apps/fashion-studio.mp4", kind: "video" },
+    href: `${IA}/fashion-studio`,
     body: "Bring apparel and product to life with on-model imagery and editorial-grade visuals.",
     icon: <IconHanger />,
   },
