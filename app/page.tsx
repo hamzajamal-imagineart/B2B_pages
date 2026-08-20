@@ -65,9 +65,9 @@ export default function Home() {
         <WorkflowsSection />
         <Apps />
         <Security />
-        <Models />
         <CaseStudies />
         <TestimonialsSection />
+        <Models />
         {/* Second last: the form takes the query, the closing band signs the
             page off after it. */}
         <ContactForm />
