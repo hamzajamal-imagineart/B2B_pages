@@ -19,8 +19,14 @@ import { withBasePath } from "@/lib/assets";
  *
  * NAMES AND DESCRIPTORS come from the product's own model pickers, so they
  * should match what a user sees in the app. If a model is renamed there,
- * rename it here. `media` is deliberately empty for now — the backdrops are
- * still to come, and until then each card runs on its tone.
+ * rename it here.
+ *
+ * `media` is a card's backdrop: a sample of that provider's own output, in
+ * `public/media/models/`, one file per provider and shared with nothing else.
+ * All fourteen have one. Clips and stills mix freely — the extension picks the
+ * element, so a replacement only has to keep its name. Omitting `media` is
+ * still supported and falls back to the flat tone, which is what a provider
+ * added before its footage arrives should do.
  */
 
 type Kind = "image" | "video";
@@ -28,7 +34,10 @@ type Model = { name: string; kind: Kind; desc: string };
 type Provider = {
   /** Wordmark text. Set as the company writes it, not title-cased. */
   name: string;
-  /** Optional photographic backdrop. Pending. */
+  /**
+   * Backdrop: a sample of this provider's output. `.mp4` renders as a muted
+   * loop, anything else as a still. Omit for the flat tone.
+   */
   media?: string;
   models: Model[];
 };
@@ -36,6 +45,7 @@ type Provider = {
 const PROVIDERS: Provider[] = [
   {
     name: "Google",
+    media: "/media/models/google.jpg",
     models: [
       { name: "Nano Banana 2", kind: "image", desc: "Most advanced Google model for high-quality images" },
       { name: "Nano Banana Pro", kind: "image", desc: "High-quality images with effortless style adaptation" },
@@ -47,6 +57,7 @@ const PROVIDERS: Provider[] = [
   },
   {
     name: "ByteDance",
+    media: "/media/models/bytedance.mp4",
     models: [
       { name: "Seedance 2.5", kind: "video", desc: "Realistic video with multimodal input" },
       { name: "Seedance 2.0", kind: "video", desc: "Latest video model with multi-reference" },
@@ -59,6 +70,7 @@ const PROVIDERS: Provider[] = [
   },
   {
     name: "Kling",
+    media: "/media/models/kling.mp4",
     models: [
       { name: "Kling 3.0 4K", kind: "video", desc: "4K cinematic visuals, fluid motion, native audio" },
       { name: "Kling 3.0", kind: "video", desc: "Top-tier cinematic visuals and fluid motion" },
@@ -69,6 +81,7 @@ const PROVIDERS: Provider[] = [
   },
   {
     name: "Black Forest Labs",
+    media: "/media/models/black-forest-labs.mp4",
     models: [
       { name: "Flux 3", kind: "video", desc: "Video model with native audio" },
       { name: "Flux 2 Max", kind: "image", desc: "Versatile generation, excelling at detail" },
@@ -78,6 +91,7 @@ const PROVIDERS: Provider[] = [
   },
   {
     name: "OpenAI",
+    media: "/media/models/openai.jpg",
     models: [
       { name: "GPT Image 2", kind: "image", desc: "World's best rendering model" },
       { name: "GPT Image 1.5", kind: "image", desc: "Latest image model with more precision" },
@@ -85,6 +99,7 @@ const PROVIDERS: Provider[] = [
   },
   {
     name: "xAI",
+    media: "/media/models/xai.mp4",
     models: [
       { name: "Grok 1.5", kind: "video", desc: "Latest model for high-quality video" },
       { name: "Grok Image", kind: "image", desc: "Image generation for high-quality output" },
@@ -92,48 +107,56 @@ const PROVIDERS: Provider[] = [
   },
   {
     name: "MiniMax",
+    media: "/media/models/minimax.mp4",
     models: [
       { name: "Hailuo H3", kind: "video", desc: "Keyframe control and multi-shot direction" },
     ],
   },
   {
     name: "Midjourney",
+    media: "/media/models/midjourney.jpg",
     models: [
       { name: "Midjourney v7", kind: "image", desc: "Stylized text-to-image generation" },
     ],
   },
   {
     name: "Ideogram",
+    media: "/media/models/ideogram.jpg",
     models: [
       { name: "Ideogram v4", kind: "image", desc: "Superior prompt understanding" },
     ],
   },
   {
     name: "Recraft",
+    media: "/media/models/recraft.jpg",
     models: [
       { name: "Recraft v4 pro", kind: "image", desc: "Pro model with the highest realism" },
     ],
   },
   {
     name: "ImagineArt",
+    media: "/media/models/imagineart.jpg",
     models: [
       { name: "ImagineArt 2.0", kind: "image", desc: "Enhanced text rendering" },
     ],
   },
   {
     name: "Alibaba",
+    media: "/media/models/alibaba.mp4",
     models: [
       { name: "Happy Horse 1.0", kind: "video", desc: "#1-ranked, cinematic 1080p" },
     ],
   },
   {
     name: "Lightricks",
+    media: "/media/models/lightricks.mp4",
     models: [
       { name: "LTX 2.3", kind: "video", desc: "Fast, open-weights video model" },
     ],
   },
   {
     name: "PixVerse",
+    media: "/media/models/pixverse.mp4",
     models: [
       { name: "Pixverse v6", kind: "video", desc: "Next-gen cinematic video, multi-clip and audio" },
     ],
@@ -148,6 +171,31 @@ const VIDEO_COUNT = PROVIDERS.reduce(
   (n, p) => n + p.models.filter((m) => m.kind === "video").length,
   0,
 );
+
+/**
+ * A provider's sample output, full-bleed behind the card. Clips autoplay muted
+ * and looped, the same terms the industry and app rails use; the poster-less
+ * still is the flat tone underneath, so nothing flashes before the first frame.
+ */
+function CardMedia({ src }: { src: string }) {
+  if (src.endsWith(".mp4")) {
+    return (
+      // eslint-disable-next-line jsx-a11y/media-has-caption
+      <video
+        className="mdl-bg"
+        src={withBasePath(src)}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden
+      />
+    );
+  }
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img className="mdl-bg" src={withBasePath(src)} alt="" loading="lazy" />;
+}
 
 export default function ModelsSection() {
   return (
@@ -180,8 +228,7 @@ export default function ModelsSection() {
           <article key={p.name} className={`mdl-card ${i < 2 ? "mdl-wide" : ""}`}>
             {p.media && (
               <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="mdl-bg" src={withBasePath(p.media)} alt="" />
+                <CardMedia src={p.media} />
                 <span className="mdl-scrim" aria-hidden />
               </>
             )}
@@ -216,7 +263,9 @@ export default function ModelsSection() {
           padding: 24px;
           display: flex;
           flex-direction: column;
-          /* Flat tone until the backdrops land. */
+          /* Sits under the backdrop as the colour, and is the whole card for
+             a provider without one. background-color, not the shorthand: the
+             shorthand would reset the backdrop's own painting. */
           background-color: #16171a;
           color: #fff;
         }
@@ -231,12 +280,26 @@ export default function ModelsSection() {
           object-fit: cover;
           display: block;
         }
+        /* Two scrims, because one gradient over the whole card cannot do both
+           jobs. A single veil heavy enough for the model list — 12px at 55%
+           white — dims the backdrop everywhere, and the backdrop is the point
+           of the card.
+
+           So: this one is a light veil that only firms up at the very top,
+           behind the wordmark. The list carries its own plate below, sized to
+           itself. Between them the footage runs close to raw. */
         .mdl-scrim {
           position: absolute;
           inset: 0;
           z-index: -1;
           pointer-events: none;
-          background: linear-gradient(to top, rgba(8,9,11,0.9) 0%, rgba(8,9,11,0.55) 55%, rgba(8,9,11,0.3) 100%);
+          background: linear-gradient(
+            to bottom,
+            rgba(8,9,11,0.62) 0%,
+            rgba(8,9,11,0.30) 11%,
+            rgba(8,9,11,0.12) 24%,
+            rgba(8,9,11,0.10) 100%
+          );
         }
 
         /* The wordmark, set in the page's own type rather than as a logo: the
@@ -247,15 +310,37 @@ export default function ModelsSection() {
           font-weight: 500;
           letter-spacing: -0.015em;
           line-height: 1.15;
+          /* A tight halo does locally what a heavy top band did across the
+             whole card width, and costs the backdrop nothing. */
+          text-shadow: 0 1px 2px rgba(8,9,11,0.55), 0 2px 14px rgba(8,9,11,0.45);
         }
 
         /* Models sit at the foot of the card, so the wordmark reads first. */
         .mdl-list {
+          position: relative;
           list-style: none;
           margin: auto 0 0;
           padding: 28px 0 0;
           display: grid;
           gap: 12px;
+        }
+        /* The list's own backing, bled to the card's padding edges and fading
+           out above the first row. It tracks the list's height, which is why it
+           lives here and not in .mdl-scrim: a card with seven models and a card
+           with one need the same legibility over different areas. Sits at -1 so
+           it clears .mdl-bg (-2) but stays under the list's own text. */
+        .mdl-list::before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          inset: 0 -24px -24px -24px;
+          pointer-events: none;
+          background: linear-gradient(
+            to top,
+            rgba(8,9,11,0.94) 0%,
+            rgba(8,9,11,0.90) 62%,
+            rgba(8,9,11,0.00) 100%
+          );
         }
         .mdl-wide .mdl-list {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -266,7 +351,9 @@ export default function ModelsSection() {
         .mdl-desc {
           font-size: 12px;
           line-height: 1.4;
-          color: rgba(255, 255, 255, 0.55);
+          /* Was 0.55. Raised so the plate under it can be lighter for the same
+             contrast — cheaper in image fidelity than more scrim. */
+          color: rgba(255, 255, 255, 0.68);
         }
 
         @media (max-width: 1000px) {
