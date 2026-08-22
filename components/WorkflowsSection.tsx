@@ -39,9 +39,13 @@ export default function WorkflowsSection() {
 
         <div className="wf-banner grain grain-diagonal grain-teal mt-12">
           {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+          {/* Same file the /workflows modes rail runs on its first tab, shared
+              deliberately rather than duplicated — it is one asset showing one
+              thing. A replacement meant for only one of the two needs its own
+              path; see the shared-file note in the handoff. */}
           <video
             className="wf-video"
-            src={withBasePath("/media/variable-demo.mp4")}
+            src={withBasePath("/media/modes/quick-iterations.mp4")}
             autoPlay
             muted
             loop

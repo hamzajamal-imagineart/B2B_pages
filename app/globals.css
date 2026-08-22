@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* The backdrop's node positions are arbitrary-value class strings living in
+   a constants file with no JSX, e.g. `left-[225.367px]`. An unscanned path
+   there renders the whole scene as invisible unstyled divs, with no error. */
+@source "./components/workflows/hero-backdrop";
+
 /* ═════════════════════════════════════════════════════════════
    ImagineArt Enterprise — visual language redesign.
 
@@ -30,6 +35,40 @@
   --radius-4: 16px;
   --radius-5: 20px;
   --radius-6: 24px;
+
+  /* ── Workflows hero backdrop ──────────────────────────────────────────
+     Three colour utilities and one breakpoint for the node scene behind
+     the /workflows hero. Namespaced `hb-` on purpose: the package they
+     came from names them border-primary / border-tertiary /
+     content-primary, which this file already defines above as site-wide
+     colours. Adopting its names would have repointed every border on all
+     five pages at the backdrop's palette. */
+  --color-hb-surface: rgb(var(--hb-surface));
+  --color-hb-content: rgb(var(--hb-content));
+  --color-hb-border: rgb(var(--hb-border));
+
+  /* The scene swaps between its mobile and desktop layouts here. Distinct
+     from the 1280px cutoff in use-wandering-glow that gates the motion. */
+  --breakpoint-laptop: 64rem;
+}
+
+/* Backdrop tokens, as space-separated RGB channels — the component composes
+   its own alpha via `rgb(var(--token) / 0.1)`, so a full colour function or an
+   oklch() here renders the layer transparent instead.
+
+   Dark values throughout: the /workflows hero is the one dark section on the
+   site (#0A0A0B), and the package ships light by default. Its own dark set is
+   keyed to a `.dark` ancestor this project does not have, so the dark values
+   are applied directly rather than through a variant that would never match.
+   --hb-bg must equal the hero's actual background or the ultrawide edge fades
+   show as two vertical bands above 1921px, and only there. */
+:root {
+  --hb-bg: 10 10 11;
+  --hb-border: 33 33 33;
+  --hb-dot: 61 61 61;
+  --hb-surface: 23 23 23;
+  --hb-content: 255 255 255;
+  --hb-glow: 138 63 252;
 }
 
 :root {

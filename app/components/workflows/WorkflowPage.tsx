@@ -6,6 +6,7 @@ import { MediaPlaceholder } from "./MediaPlaceholder";
 import { ButtonLink } from "@/components/Button";
 import { SectionGuides } from "@/components/primitives/SectionGuides";
 import { withBasePath } from "@/lib/assets";
+import { WorkflowAgentHeaderBackdrop } from "./hero-backdrop";
 import { useEffect, useRef, useState } from "react";
 import HeroPromptBox from "./HeroPromptBox";
 import BentoSection from "./BentoSection";
@@ -14,463 +15,21 @@ const FONT = "var(--font-sans), sans-serif";
 
 
 // ────────────────────────────────────────────────────────────────────────────
-// Hero asset cards — rich brand creative outputs (UGC, ad, lookbook, etc.)
-// ────────────────────────────────────────────────────────────────────────────
-
-type CardSlot = {
-  id: string;
-  x: string;
-  y: string;
-  width: number;
-  depth: number;   // cursor-parallax multiplier
-  delay: string;   // drift animation offset
-  /** transform-origin so hover scaling anchors the outside edge (keeps card on-screen). */
-  origin: string;
-  /** Render the card; receives `hovered` so the card can play its video etc. */
-  render: (hovered: boolean) => React.ReactNode;
-};
-
-// Wrapper that handles parallax, drift, and per-card hover (lift, big zoom, video play)
-function HeroCardSlot({ slot }: { slot: CardSlot }) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <div
-      data-depth={slot.depth}
-      style={{
-        position: "absolute",
-        left: slot.x,
-        top: slot.y,
-        width: slot.width,
-        zIndex: hovered ? 12 : 1,
-        transition: "transform 280ms cubic-bezier(0.22, 1, 0.36, 1)",
-        willChange: "transform",
-      }}
-    >
-      <div style={{ animation: `wp-drift 9s ease-in-out ${slot.delay} infinite` }}>
-        <div
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          style={{
-            transition:
-              "transform 540ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 540ms ease",
-            transform: hovered ? "scale(1.4)" : "scale(1)",
-            transformOrigin: slot.origin,
-            cursor: "pointer",
-            boxShadow: hovered
-              ? "0 60px 120px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.1)"
-              : undefined,
-            borderRadius: 16,
-          }}
-        >
-          {slot.render(hovered)}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-// Shared card frame — straight, rounded, video-backed
-function CardFrame({ children, ratio = "4/5", bg }: { children: React.ReactNode; ratio?: string; bg?: string }) {
-  return (
-    <div
-      style={{
-        width: "100%",
-        aspectRatio: ratio,
-        borderRadius: 16,
-        overflow: "hidden",
-        border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 28px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)",
-        background: bg ?? "#15151a",
-        position: "relative",
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-// Video that fills the frame — plays only while `playing` is true.
-function CardVideo({ src, brightness, playing }: { src: string; brightness?: number; playing: boolean }) {
-  const ref = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const v = ref.current;
-    if (!v) return;
-    if (playing) {
-      v.play().catch(() => {
-        /* play() can reject if not user-initiated on some browsers; safe to ignore */
-      });
-    } else {
-      v.pause();
-    }
-  }, [playing]);
-
-  return (
-    <video
-      ref={ref}
-      src={src}
-      muted
-      loop
-      playsInline
-      preload="auto"
-      style={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        display: "block",
-        filter: brightness != null ? `brightness(${brightness})` : undefined,
-      }}
-    />
-  );
-}
-
-// 1) Performance — UGC frame
-function PerformanceCard({ hovered }: { hovered: boolean }) {
-  return (
-    <CardFrame ratio="4/5">
-      <CardVideo src="/workflow-hero.mp4" playing={hovered} />
-    </CardFrame>
-  );
-}
-
-// 2) Scale — batch generation
-function ScaleCard({ hovered }: { hovered: boolean }) {
-  return (
-    <CardFrame ratio="4/5">
-      <CardVideo src="/media/variable-demo.mp4" playing={hovered} />
-    </CardFrame>
-  );
-}
-
-// 3) UGC ads — creator frame
-function UGCCard({ hovered }: { hovered: boolean }) {
-  return (
-    <CardFrame ratio="1/1">
-      <CardVideo src="/simple-demo.mp4" playing={hovered} />
-    </CardFrame>
-  );
-}
-
-// 4) Marketing — Lookbook
-function LookbookCard({ hovered }: { hovered: boolean }) {
-  return (
-    <CardFrame ratio="4/5">
-      <CardVideo src="/editor-demo.mp4" playing={hovered} />
-    </CardFrame>
-  );
-}
-
-// 5) Trailers
-function TrailerCard({ hovered }: { hovered: boolean }) {
-  return (
-    <CardFrame ratio="16/10">
-      <CardVideo src="/models-bg.mp4" brightness={0.85} playing={hovered} />
-    </CardFrame>
-  );
-}
-
-// 6) Brand Kits & Moodboards
-function BrandKitCard({ hovered }: { hovered: boolean }) {
-  return (
-    <CardFrame ratio="1/1" bg="#F2E6D8">
-      <CardVideo src="/iterate-demo.mp4" brightness={0.95} playing={hovered} />
-    </CardFrame>
-  );
-}
-
-const HERO_SLOTS: CardSlot[] = [
-  // origin anchors the OUTSIDE edge of each card so it scales toward the page center
-  { id: "performance", x: "3%",  y: "8%",  width: 240, depth: 1.5, delay: "0s",   origin: "top left",     render: (h) => <PerformanceCard hovered={h} /> },
-  { id: "scale",       x: "78%", y: "10%", width: 240, depth: 1.0, delay: "1.4s", origin: "top right",    render: (h) => <ScaleCard       hovered={h} /> },
-  { id: "ugc",         x: "8%",  y: "55%", width: 220, depth: 1.6, delay: "0.7s", origin: "bottom left",  render: (h) => <UGCCard         hovered={h} /> },
-  { id: "lookbook",    x: "78%", y: "53%", width: 240, depth: 1.2, delay: "2.1s", origin: "bottom right", render: (h) => <LookbookCard    hovered={h} /> },
-  { id: "trailer",     x: "20%", y: "32%", width: 200, depth: 0.8, delay: "1s",   origin: "top left",     render: (h) => <TrailerCard     hovered={h} /> },
-  { id: "brandkit",    x: "70%", y: "33%", width: 180, depth: 0.9, delay: "1.8s", origin: "top right",    render: (h) => <BrandKitCard    hovered={h} /> },
-];
-
-// ────────────────────────────────────────────────────────────────────────────
-// Collaborator cursors — minimal Figma-style multiplayer presence
-// ────────────────────────────────────────────────────────────────────────────
-type CollabCursor = {
-  name: string;
-  color: string;
-  startX: string;
-  startY: string;
-  pattern: 1 | 2 | 3;
-  duration: string;
-  delay: string;
-};
-
-const COLLAB_CURSORS: CollabCursor[] = [
-  { name: "Sophia",  color: "#F47A7A", startX: "32%", startY: "26%", pattern: 1, duration: "16s", delay: "0s"   },
-  { name: "Daniel",  color: "#5CB8FF", startX: "62%", startY: "60%", pattern: 2, duration: "18s", delay: "1.2s" },
-  { name: "Maya",    color: "#A78BFA", startX: "44%", startY: "70%", pattern: 3, duration: "20s", delay: "2.4s" },
-];
-
-function CollaboratorCursor({ c }: { c: CollabCursor }) {
-  return (
-    <div
-      aria-hidden
-      style={{
-        position: "absolute",
-        top: c.startY,
-        left: c.startX,
-        zIndex: 4,
-        pointerEvents: "none",
-        animation: `wp-cursor-${c.pattern} ${c.duration} ease-in-out ${c.delay} infinite`,
-        willChange: "transform",
-      }}
-    >
-      <svg width="14" height="18" viewBox="0 0 14 18" fill={c.color} style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))" }}>
-        <path d="M0 0L0 14L4 10.5L6.5 16L8 15.5L5.5 10L10.5 10Z" />
-      </svg>
-      <span
-        style={{
-          display: "inline-block",
-          marginTop: 2,
-          marginLeft: 4,
-          padding: "2px 8px",
-          borderRadius: 6,
-          background: c.color,
-          color: "#fff",
-          fontFamily: FONT,
-          fontSize: 10,
-          fontWeight: 600,
-          letterSpacing: "-0.005em",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-        }}
-      >
-        {c.name}
-      </span>
-    </div>
-  );
-}
-
-// Brand Kits cursor — stable (no drift) and oversized so it reads as a distinct
-// product affordance vs. the smaller floating collaborator cursors. Hovering
-// reveals a brand-kit image that zooms in (same easing as the hero cards).
-function BrandKitCursor() {
-  const [hovered, setHovered] = useState(false);
-  const GRADIENT = "linear-gradient(135deg, #FFB454 0%, #F47A7A 22%, #A78BFA 48%, #5A85FF 72%, #A6E3C5 100%)";
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: "16%",
-        left: "44%",
-        zIndex: hovered ? 13 : 5,
-      }}
-    >
-      {/* Cursor + label — the hover trigger */}
-      <div
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{ position: "relative", display: "inline-block", cursor: "pointer" }}
-      >
-        <svg width="22" height="28" viewBox="0 0 14 18" style={{ filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.45))" }}>
-          <defs>
-            <linearGradient id="brandkit-cursor-grad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#FFB454" />
-              <stop offset="22%" stopColor="#F47A7A" />
-              <stop offset="48%" stopColor="#A78BFA" />
-              <stop offset="72%" stopColor="#5A85FF" />
-              <stop offset="100%" stopColor="#A6E3C5" />
-            </linearGradient>
-          </defs>
-          <path d="M0 0L0 14L4 10.5L6.5 16L8 15.5L5.5 10L10.5 10Z" fill="url(#brandkit-cursor-grad)" />
-        </svg>
-        <span
-          style={{
-            display: "inline-block",
-            marginTop: 4,
-            marginLeft: 6,
-            padding: "5px 12px",
-            borderRadius: 8,
-            background: GRADIENT,
-            color: "#fff",
-            fontFamily: FONT,
-            fontSize: 13,
-            fontWeight: 600,
-            letterSpacing: "-0.005em",
-            textShadow: "0 1px 2px rgba(10,10,11,0.4)",
-            boxShadow: "0 6px 18px rgba(10,10,11,0.35), 0 0 24px rgba(247,122,122,0.2), 0 0 32px rgba(90,133,255,0.18)",
-          }}
-        >
-          Brand Kits
-        </span>
-      </div>
-
-      {/* Hover-revealed brand kit asset — zooms in like the other hero cards */}
-      <div
-        style={{
-          position: "absolute",
-          top: 44,
-          left: 22,
-          width: 260,
-          opacity: hovered ? 1 : 0,
-          transform: hovered ? "scale(1.4)" : "scale(0.7)",
-          transformOrigin: "top left",
-          transition: "opacity 320ms ease, transform 540ms cubic-bezier(0.22, 1, 0.36, 1)",
-          pointerEvents: "none",
-        }}
-      >
-        <CardFrame ratio="4/5" bg="#F2E6D8">
-          <CardVideo src="/iterate-demo.mp4" brightness={0.95} playing={hovered} />
-          <span
-            style={{
-              position: "absolute",
-              top: 12,
-              left: 12,
-              padding: "4px 10px",
-              borderRadius: 8,
-              background: "rgba(10,10,11,0.7)",
-              color: "#fff",
-              fontFamily: FONT,
-              fontSize: 10,
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              backdropFilter: "blur(6px)",
-            }}
-          >
-            Brand Kit · acme.com
-          </span>
-        </CardFrame>
-      </div>
-    </div>
-  );
-}
-
-// ────────────────────────────────────────────────────────────────────────────
-// HERO — magicpatterns-style scattered videos + cursor parallax + bottom prompt
-// ────────────────────────────────────────────────────────────────────────────
 function CanvasHero() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // Cursor parallax: every card moves proportionally to its data-depth.
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    function onMove(e: MouseEvent) {
-      if (!section) return;
-      const rect = section.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-      // Cursor position drives the dot-grid spotlight via CSS variables.
-      section.style.setProperty("--mx", `${mx}px`);
-      section.style.setProperty("--my", `${my}px`);
-      section.style.setProperty("--spot", "1");
-      // Card parallax (unchanged).
-      const x = (mx - rect.width / 2) / rect.width;
-      const y = (my - rect.height / 2) / rect.height;
-      const cards = section.querySelectorAll<HTMLElement>("[data-depth]");
-      cards.forEach((card) => {
-        const depth = parseFloat(card.dataset.depth ?? "1");
-        card.style.transform = `translate(${x * 28 * depth}px, ${y * 20 * depth}px)`;
-      });
-    }
-
-    function onLeave() {
-      if (!section) return;
-      section.style.setProperty("--spot", "0");
-      const cards = section.querySelectorAll<HTMLElement>("[data-depth]");
-      cards.forEach((card) => {
-        card.style.transform = "";
-      });
-    }
-
-    section.addEventListener("mousemove", onMove);
-    section.addEventListener("mouseleave", onLeave);
-    return () => {
-      section.removeEventListener("mousemove", onMove);
-      section.removeEventListener("mouseleave", onLeave);
-    };
-  }, []);
-
   return (
     <section
-      ref={sectionRef}
       style={{
         position: "relative",
+        /* Stacking context for the backdrop, which mounts behind the
+           content at a negative z-index. */
+        isolation: "isolate",
         background: "#0A0A0B",
         color: "#ffffff",
         minHeight: "100vh",
         overflow: "hidden",
       }}
     >
-      <style>{`
-        @keyframes wp-drift {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-        .canvas-spot {
-          position: absolute;
-          inset: 0;
-          z-index: 0;
-          pointer-events: none;
-          background-image: radial-gradient(circle, rgba(255,255,255,0.32) 1px, transparent 1px);
-          background-size: 20px 20px;
-          background-position: 0 0;
-          mask-image: radial-gradient(circle 180px at var(--mx, -400px) var(--my, -400px), #000 0%, rgba(0,0,0,0.45) 45%, transparent 80%);
-          -webkit-mask-image: radial-gradient(circle 180px at var(--mx, -400px) var(--my, -400px), #000 0%, rgba(0,0,0,0.45) 45%, transparent 80%);
-          opacity: var(--spot, 0);
-          transition: opacity 260ms ease;
-        }
-        @keyframes wp-cursor-1 {
-          0%, 100% { transform: translate(0, 0); }
-          25%      { transform: translate(60px, -38px); }
-          50%      { transform: translate(120px, 24px); }
-          75%      { transform: translate(40px, 70px); }
-        }
-        @keyframes wp-cursor-2 {
-          0%, 100% { transform: translate(0, 0); }
-          33%      { transform: translate(-72px, 42px); }
-          66%      { transform: translate(36px, -52px); }
-        }
-        @keyframes wp-cursor-3 {
-          0%, 100% { transform: translate(0, 0); }
-          20%      { transform: translate(48px, 28px); }
-          50%      { transform: translate(-28px, 56px); }
-          80%      { transform: translate(-58px, -22px); }
-        }
-      `}</style>
-
-      {/* Infinite dot-grid canvas — dim base layer */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)",
-          backgroundSize: "20px 20px",
-          maskImage:
-            "radial-gradient(ellipse 95% 85% at 50% 50%, black 40%, transparent 95%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 95% 85% at 50% 50%, black 40%, transparent 95%)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
-
-      {/* Cursor spotlight — bright dots revealed within a soft circle that follows the pointer */}
-      <div aria-hidden className="canvas-spot" />
-
-      {/* Asset cards — straight, drifting, parallax-aware, hover lift+zoom */}
-      {HERO_SLOTS.map((slot) => (
-        <HeroCardSlot key={slot.id} slot={slot} />
-      ))}
-
-      {/* Collaborator cursors — minimal multiplayer presence */}
-      {COLLAB_CURSORS.map((c) => (
-        <CollaboratorCursor key={c.name} c={c} />
-      ))}
-
-      {/* Brand Kits cursor — hover to reveal a brand kit asset that zooms in */}
-      <BrandKitCursor />
+      <WorkflowAgentHeaderBackdrop />
 
       {/* Foreground content — bottom-aligned eyebrow + heading + prompt */}
       <div
@@ -499,7 +58,6 @@ function CanvasHero() {
               textTransform: "uppercase",
               color: "rgba(255,255,255,0.55)",
               marginBottom: 24,
-              textShadow: "0 1px 16px rgba(0,0,0,0.5)",
             }}
           >
             ImagineArt Workflows
@@ -514,7 +72,6 @@ function CanvasHero() {
               lineHeight: 1.04,
               margin: 0,
               maxWidth: 980,
-              textShadow: "0 2px 32px rgba(0,0,0,0.5)",
             }}
           >
             Every creative tool.
@@ -530,7 +87,6 @@ function CanvasHero() {
               lineHeight: 1.6,
               maxWidth: 540,
               margin: "22px auto 0",
-              textShadow: "0 1px 18px rgba(0,0,0,0.4)",
             }}
           >
             AI generation, brand assets, and real-time collaboration, wired into one canvas, built for teams that ship.
@@ -868,6 +424,44 @@ type KyosoSectionProps = {
 };
 
 // Generic video card — drops a real <video> into the slideshow card slot.
+/**
+ * Stand-in for a mode that has no footage yet.
+ *
+ * Deliberately not MediaPlaceholder: that one is a mute surface for imagery
+ * that is merely missing, and it defaults to a dark fill built for the dark
+ * pages. This says the mode is unbuilt, on the light surface this section
+ * actually uses, and says it in words rather than leaving a reader to guess
+ * why one card in three is blank.
+ */
+function ComingSoonCard({ label = "Coming Soon" }: { label?: string }) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        display: "grid",
+        placeItems: "center",
+        background: "linear-gradient(160deg, #f7f7f8 0%, #ededf0 100%)",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: FONT,
+          /* The card is the full container width, so a label sized like body
+             copy read as a caption lost in it. Clamped rather than fixed
+             because the card scales with the container. */
+          fontSize: TYPE.h2,
+          fontWeight: 500,
+          letterSpacing: "-0.03em",
+          color: "rgba(10,10,11,0.38)",
+        }}
+      >
+        {label}
+      </span>
+    </div>
+  );
+}
+
 function VideoCard({ src }: { src: string }) {
   return (
     <video
@@ -976,6 +570,55 @@ function KyosoModeSection({ id, eyebrow, title, description, tabs, cards }: Kyos
       window.removeEventListener("resize", onScroll);
     };
   }, []);
+
+  /**
+   * Wheel and trackpad paging.
+   *
+   * The rail is a transform track, not a scroll container, so there is nothing
+   * for the browser to scroll natively — before this, the arrows and the tabs
+   * were the only way through it.
+   *
+   * Only horizontal intent is taken: a sideways trackpad swipe, or shift+wheel,
+   * which is the standard horizontal modifier for a wheel mouse with no X axis.
+   * A plain vertical wheel is left alone deliberately. Capturing it would trap
+   * the page inside the section, and this section in particular drives a
+   * scroll-linked zoom, so swallowing vertical scroll would freeze it mid-grow.
+   *
+   * Registered natively rather than via onWheel because React's wheel listener
+   * is passive, and a passive listener cannot preventDefault. Preventing it is
+   * the point at the ends of the rail too: an unconsumed horizontal swipe is
+   * what triggers the browser's back-navigation gesture.
+   */
+  const kWheelLock = useRef(0);
+  useEffect(() => {
+    const el = kSlideshowRef.current;
+    if (!el) return;
+
+    // One gesture should move one card. A trackpad emits a burst of events per
+    // swipe, so the rail stays locked for the length of its own transition.
+    const SETTLE_MS = 520;
+    const THRESHOLD = 24;
+
+    function onWheel(e: WheelEvent) {
+      const horizontal = e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      if (!horizontal) return;
+
+      e.preventDefault();
+
+      const now = Date.now();
+      if (now < kWheelLock.current) return;
+
+      const delta = e.shiftKey && e.deltaX === 0 ? e.deltaY : e.deltaX;
+      if (Math.abs(delta) < THRESHOLD) return;
+
+      kWheelLock.current = now + SETTLE_MS;
+      const dir = delta > 0 ? 1 : -1;
+      setActiveTab((t) => Math.max(0, Math.min(total - 1, t + dir)));
+    }
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [total]);
 
   return (
     <section
@@ -1644,9 +1287,10 @@ export default function WorkflowPage() {
         description="Iterate fast on ideas. Scale production with repeatable workflows. Multiply output with creative agents."
         tabs={["Quick Iterations", "Full Creative Pipelines", "Autonomous Agent"]}
         cards={[
-          <VideoCard key="a1" src={withBasePath("/media/card-generate.mp4")} />,
+          // Also the banner in the home page's Workflows section.
+          <VideoCard key="a1" src={withBasePath("/media/modes/quick-iterations.mp4")} />,
           <VideoCard key="a2" src={withBasePath("/media/variable-demo.mp4")} />,
-          <VideoCard key="a3" src={withBasePath("/media/apps/sketch-to-render.mp4")} />,
+          <ComingSoonCard key="a3" />,
         ]}
       />
 
