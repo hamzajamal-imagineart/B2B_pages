@@ -7,7 +7,6 @@ import { ButtonLink } from "@/components/Button";
 import { SectionGuides } from "@/components/primitives/SectionGuides";
 import { withBasePath } from "@/lib/assets";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import HeroPromptBox from "./HeroPromptBox";
 import BentoSection from "./BentoSection";
 
@@ -1149,21 +1148,27 @@ type UseCase = {
   label: string;
   visualTitle: string;
   desc: string;
-  // TODO: replace with Fal-generated category video
+  /**
+   * Category footage, one file per category in `public/media/use-cases/`.
+   * These used to share five clips from the public root, so Photography and
+   * Character showed the same video and none of the paths were basePath-safe.
+   * Landscape cuts, because the preview card is 16/9 — the vertical cuts of
+   * the same shoots crop to a centre band in it.
+   */
   video: string;
 };
 
 const USE_CASES: UseCase[] = [
-  { id: "vfx",          label: "Visual Effects", visualTitle: "Character & Background Swaps", desc: "Swap scenes. Add objects. Reimagine anything.",            video: "/workflow-hero.mp4" },
-  { id: "fashion",      label: "Fashion",        visualTitle: "Editorial Lookbooks",          desc: "Editorial fashion stories. On-model, every time.",         video: "/editor-demo.mp4"   },
-  { id: "advertising",  label: "Advertising",    visualTitle: "Performance Ad Pack",          desc: "Hooks, statics, motion. Built for paid social.",           video: "/simple-demo.mp4"   },
-  { id: "photography",  label: "Photography",    visualTitle: "Studio Product Shots",         desc: "Photoreal SKU shots. No studio.",                          video: "/iterate-demo.mp4"  },
-  { id: "concepting",   label: "Concepting",     visualTitle: "Concept Art & Worldbuilding",  desc: "Characters, environments, props, on-style.",             video: "/media/variable-demo.mp4" },
-  { id: "branding",     label: "Branding",       visualTitle: "Brand Kit Application",        desc: "Lock your brand once. Generate forever.",                  video: "/models-bg.mp4"     },
-  { id: "product",      label: "Product",        visualTitle: "Packshots & Renders",          desc: "Studio-grade visuals for every PDP.",                      video: "/workflow-hero.mp4" },
-  { id: "motion",       label: "Motion",         visualTitle: "Animated Brand Moments",       desc: "Statics into motion. Loops, transitions, hero moments.",   video: "/editor-demo.mp4"   },
-  { id: "character",    label: "Character",      visualTitle: "Consistent Characters",        desc: "Characters that stay on-model. Always.",                   video: "/iterate-demo.mp4"  },
-  { id: "architecture", label: "Architecture",   visualTitle: "Spaces & Environments",        desc: "Spaces with photoreal lighting. Any scale.",               video: "/simple-demo.mp4"   },
+  { id: "vfx",          label: "Visual Effects", visualTitle: "Character & Background Swaps", desc: "Swap scenes. Add objects. Reimagine anything.",            video: "/media/use-cases/vfx.mp4" },
+  { id: "fashion",      label: "Fashion",        visualTitle: "Editorial Lookbooks",          desc: "Editorial fashion stories. On-model, every time.",         video: "/media/use-cases/fashion.mp4"   },
+  { id: "advertising",  label: "Advertising",    visualTitle: "Performance Ad Pack",          desc: "Hooks, statics, motion. Built for paid social.",           video: "/media/use-cases/advertising.mp4"   },
+  { id: "photography",  label: "Photography",    visualTitle: "Studio Product Shots",         desc: "Photoreal SKU shots. No studio.",                          video: "/media/use-cases/photography.mp4"  },
+  { id: "concepting",   label: "Concepting",     visualTitle: "Concept Art & Worldbuilding",  desc: "Characters, environments, props, on-style.",             video: "/media/use-cases/concepting.mp4" },
+  { id: "branding",     label: "Branding",       visualTitle: "Brand Kit Application",        desc: "Lock your brand once. Generate forever.",                  video: "/media/use-cases/branding.mp4"     },
+  { id: "product",      label: "Product",        visualTitle: "Packshots & Renders",          desc: "Studio-grade visuals for every PDP.",                      video: "/media/use-cases/product.mp4" },
+  { id: "motion",       label: "Motion",         visualTitle: "Animated Brand Moments",       desc: "Statics into motion. Loops, transitions, hero moments.",   video: "/media/use-cases/motion.mp4"   },
+  { id: "character",    label: "Character",      visualTitle: "Consistent Characters",        desc: "Characters that stay on-model. Always.",                   video: "/media/use-cases/character.mp4"  },
+  { id: "architecture", label: "Architecture",   visualTitle: "Spaces & Environments",        desc: "Spaces with photoreal lighting. Any scale.",               video: "/media/use-cases/architecture.mp4"   },
 ];
 
 function UseCasesFlora() {
@@ -1376,7 +1381,7 @@ function UseCasesFlora() {
                 ref={(el) => {
                   cardVideoRefs.current[i] = el;
                 }}
-                src={u.video}
+                src={withBasePath(u.video)}
                 loop
                 muted
                 playsInline
@@ -1436,6 +1441,13 @@ function UseCasesFlora() {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+/**
+ * Where the Templates section sends people. There is no `/templates` route in
+ * this app — the templates live in the product, so both the section's button
+ * and every card go to the real apps directory rather than a local 404.
+ */
+const TEMPLATES_HREF = "https://www.imagine.art/apps";
+
 // Templates section — same shape as the home TemplatesSection (categories + grid)
 // ────────────────────────────────────────────────────────────────────────────
 const TPL_CATEGORIES = ["All", "Fashion", "Advertising", "Product", "VFX", "Branding", "Character"];
@@ -1476,7 +1488,13 @@ function TemplatesPreview() {
             Pre-built workflows, <span className="h-muted">ready to use</span>
           </h2>
         </div>
-        <ButtonLink href="/templates" variant="muted" size="md">
+        <ButtonLink
+          href={TEMPLATES_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+          variant="muted"
+          size="md"
+        >
           See all the templates
         </ButtonLink>
       </div>
@@ -1514,9 +1532,11 @@ function TemplatesPreview() {
         {visible.map((t, i) => {
           const isHov = hovered === i;
           return (
-            <Link
+            <a
               key={t.seed}
-              href="/templates"
+              href={TEMPLATES_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
               style={{ textDecoration: "none", display: "flex", flexDirection: "column", gap: 14 }}
@@ -1594,7 +1614,7 @@ function TemplatesPreview() {
                   {t.desc}
                 </p>
               </div>
-            </Link>
+            </a>
           );
         })}
       </div>
