@@ -1,6 +1,5 @@
-"use client";
-
-import { useRef } from "react";
+/* No "use client": the pager buttons were the only client code here, and the
+   grid replaced them. Hover is CSS, so this renders on the server now. */
 import { SectionGuides } from "@/components/primitives/SectionGuides";
 import { withBasePath } from "@/lib/assets";
 
@@ -71,23 +70,6 @@ const PALETTES = [
 ];
 
 export function IndustriesSection() {
-  const trackRef = useRef<HTMLDivElement | null>(null);
-
-  // Plain assignment, animated by `scroll-behavior: smooth` on the track.
-  // scrollBy({behavior:"smooth"}) is ignored by some engines, which left the
-  // equivalent buttons on the Enterprise page silently doing nothing.
-  const scrollByCards = (dir: number) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const card = el.querySelector<HTMLElement>(".ind-slide");
-    const gap = 14;
-    const amount = card ? card.offsetWidth + gap : el.clientWidth * 0.8;
-    const max = el.scrollWidth - el.clientWidth;
-    const to = Math.max(0, Math.min(max, el.scrollLeft + dir * amount));
-    if (to === el.scrollLeft) return;
-    el.scrollLeft = to;
-  };
-
   return (
     <section
       id="industries"
@@ -107,7 +89,7 @@ export function IndustriesSection() {
         </div>
       </div>
 
-      <div ref={trackRef} className="ind-track no-scrollbar mt-12">
+      <div className="ind-track mt-12">
         {INDUSTRIES.map((i, n) => (
           <a
             key={i.name}
@@ -132,48 +114,36 @@ export function IndustriesSection() {
         ))}
       </div>
 
-      <div className="container-page">
-        <div className="mt-6 flex items-center justify-end gap-3">
-          <button onClick={() => scrollByCards(-1)} aria-label="Previous industries" className="ind-pager">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </button>
-          <button onClick={() => scrollByCards(1)} aria-label="Next industries" className="ind-pager">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </button>
-        </div>
-      </div>
-
       <style>{`
-        /* Gutters match .container-page so the first card lines up with the
-           heading above it rather than hugging the viewport edge. */
+        /* Grid, not a rail. Ten cards on one screen instead of two behind a
+           pager, so nothing is hidden behind an interaction. Gutters match
+           .container-page so the grid lines up with the heading above it.
+
+           Four across at the widest, not five: at five each card fell to
+           ~230px and the footage was the point. Ten cards over four columns
+           leaves a short last row of two, which is the cost of the larger
+           card. */
         .ind-track {
-          display: flex;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 14px;
-          overflow-x: auto;
           padding-left: max(32px, calc((100vw - 1240px) / 2 + 32px));
           padding-right: max(32px, calc((100vw - 1240px) / 2 + 32px));
-          scroll-behavior: smooth;
-          min-width: 0;
-          /* Headroom for the hover scale: overflow-x: auto coerces overflow-y
-             to auto, so a card growing past the track's box would be clipped
-             rather than overflow it. */
-          padding-block: 12px;
         }
+        @media (min-width: 760px)  { .ind-track { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (min-width: 1040px) { .ind-track { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
         @media (max-width: 768px) {
           .ind-track { padding-left: 20px; padding-right: 20px; }
         }
-        /* No scroll-snap here: a "start" snap alignment aligns to the
-           scrollport edge, which cancels the container's gutter padding and
-           left the first card hanging off the page grid. */
         .ind-slide {
           position: relative;
           isolation: isolate;
           overflow: hidden;
-          flex: 0 0 auto;
-          width: clamp(258px, 26vw, 340px);
-          min-height: clamp(360px, 38vw, 440px);
+          /* The footage is 3:4, so the cell is too — no letterboxing, and every
+             card in a row ends at the same baseline. */
+          aspect-ratio: 3 / 4;
           border-radius: 20px;
-          padding: 26px;
+          padding: 22px;
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
@@ -210,9 +180,13 @@ export function IndustriesSection() {
           opacity: 0.72;
         }
         /* ── shared: video backdrop ── */
-        /* Sits behind the card's own copy but above the palette fill, which
-           stays underneath as the colour so nothing flashes before the video
-           paints. .grain's noise tile is z-index 0, hence -1 / -2 here. */
+        /* .grain's noise tile is a ::after at z-index 0, so on a card with
+           footage it painted straight over the video — the media sits at -2.
+           The palette itself stays: it is the fill underneath, so nothing
+           flashes before the first frame, and it still carries --grain-fg. */
+        .ind-slide.ind-has-video::after { content: none; }
+
+        /* Sits behind the card's own copy but above the palette fill. */
         .ind-video {
           position: absolute;
           inset: 0;
@@ -222,17 +196,64 @@ export function IndustriesSection() {
           object-fit: cover;
           display: block;
         }
+        /* Off at rest: the footage is the card, and a permanent wash over ten
+           of them flattened the whole section. It fades in on hover to carry
+           the body copy, which only exists then. */
         .ind-scrim {
           position: absolute;
           inset: 0;
           z-index: -1;
           pointer-events: none;
+          opacity: 0;
+          transition: opacity 300ms ease;
           background: linear-gradient(
             to top,
-            rgba(8, 11, 9, 0.86) 0%,
-            rgba(8, 11, 9, 0.5) 46%,
-            rgba(8, 11, 9, 0.24) 100%
+            rgba(8, 11, 9, 0.88) 0%,
+            rgba(8, 11, 9, 0.6) 46%,
+            rgba(8, 11, 9, 0.3) 100%
           );
+        }
+        .ind-slide:hover .ind-scrim,
+        .ind-slide:focus-visible .ind-scrim { opacity: 1; }
+
+        /* With no scrim at rest the title carries its own legibility. A tight
+           halo does that locally without putting a visible layer over the
+           footage, which is the thing being asked for. */
+        .ind-slide.ind-has-video .ind-slide-name {
+          text-shadow: 0 1px 3px rgba(8, 11, 9, 0.65), 0 2px 18px rgba(8, 11, 9, 0.5);
+        }
+
+        /* Body is hover-only on a card with footage. max-height rather than
+           display, so it animates and so it stays in the accessibility tree
+           for anyone who never triggers a hover. Cards with no footage keep
+           their copy visible — there is nothing to reveal. */
+        .ind-slide.ind-has-video .ind-slide-body {
+          max-height: 0;
+          margin-top: 0;
+          opacity: 0;
+          overflow: hidden;
+          transition: max-height 320ms ease, opacity 260ms ease, margin-top 320ms ease;
+        }
+        .ind-slide.ind-has-video:hover .ind-slide-body,
+        .ind-slide.ind-has-video:focus-visible .ind-slide-body {
+          max-height: 170px;
+          margin-top: 10px;
+          opacity: 0.82;
+        }
+
+        /* Nothing to hover on a touch screen, and a tap navigates away — so
+           show both rather than making the copy unreachable there. */
+        @media (hover: none) {
+          .ind-scrim { opacity: 1; }
+          .ind-slide.ind-has-video .ind-slide-body {
+            max-height: 170px;
+            margin-top: 10px;
+            opacity: 0.82;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ind-scrim,
+          .ind-slide.ind-has-video .ind-slide-body { transition: none; }
         }
 
         .ind-slide-arrow {
@@ -246,16 +267,6 @@ export function IndustriesSection() {
           color: currentColor;
           flex: 0 0 auto;
         }
-        .ind-pager {
-          width: 38px; height: 38px;
-          border-radius: 999px;
-          border: 1px solid var(--line);
-          background: #fff;
-          color: var(--ink);
-          display: grid; place-items: center;
-          cursor: pointer;
-        }
-        .ind-pager:hover { border-color: var(--line-strong); }
       `}</style>
     </section>
   );

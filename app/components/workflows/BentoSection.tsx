@@ -32,14 +32,15 @@ function OrbitalAgents() {
         overflow: "hidden",
       }}
     >
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
       <video
-        src={withBasePath("/media/apps/video-reframe.mp4")}
+        src={withBasePath("/media/bento/agents.mp4")}
         autoPlay
         muted
         loop
         playsInline
-        preload="auto"
-        crossOrigin="anonymous"
+        preload="metadata"
+        aria-hidden
         style={{
           position: "absolute",
           inset: 0,
@@ -54,33 +55,49 @@ function OrbitalAgents() {
 }
 
 // ── On-brand visuals: the real brand-kit board ─────────────────────────────
-/* The supplied board, in place of the hand-built swatch grid that stood here.
-   It is a transparent PNG, so it needs no frame: the cards in the artwork are
-   the visual, sitting straight on the tile.
+/* The supplied board, now as footage rather than the still that stood here.
+   Bottom-anchored under the same mask fade as the other visuals in this bento.
+
+   One thing changed with the swap: the still was a transparent PNG and sat
+   frameless, the artwork's own cards reading as the visual. Video carries no
+   alpha, so this is an opaque rectangle and the clip's own background is now
+   part of the card.
 
    The orange is a customer's brand colour, which is the sanctioned exception
-   to monochrome, the same way the partner logos keep theirs. */
+   to monochrome, the same way the partner logos keep theirs.
+
+   The still it replaced is still the Brand Guidelines card in the suite rail,
+   so it is in use, not orphaned — do not prune it. */
 function BrandKitDemo() {
   return (
     <div className="bk">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={withBasePath("/media/brandkit/brand-kits.webp")} alt="" />
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video
+        src={withBasePath("/media/brandkit/brand-kits.mp4")}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden
+      />
       <style>{`
         .bk {
           width: 100%;
           height: 100%;
           display: grid;
-          place-items: end center;
+          place-items: stretch;
           overflow: hidden;
         }
-        .bk img {
+        .bk video {
           width: 100%;
-          height: auto;
+          /* Fills the media box rather than sitting at its natural height,
+             which bottom-aligned the clip and left dead space above it. Cover
+             rather than contain: contain letterboxes inside a box whose
+             aspect is set by the tile, not by the footage. */
+          height: 100%;
+          object-fit: cover;
           display: block;
-          /* Bottom-anchored and faded off the tile edge, like the other
-             visuals in this bento. */
-          -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
         }
       `}</style>
     </div>
@@ -259,14 +276,19 @@ export default function BentoSection() {
       </div>
 
       <div className="wf-bento">
-        {/* Top row — wide collaboration spans 2 cols, agents takes 1 col */}
+        {/* Top row — wide brand-kit tile spans 2 cols, agents takes 1 col.
+            On-brand visuals holds the wide slot because it is the only tile
+            here carrying real footage, and it was the least legible of the
+            three narrow ones at a third of the row. Collaboration traded
+            places with it and reads fine narrow: its visual is a cursor
+            board that crops without losing the point. */}
         <Card
-          title="Real-time collaboration."
-          desc="See every change live. Comment, edit, and iterate alongside your whole team on the same canvas. No exports, no version sprawl."
+          title="On-brand visuals."
+          desc="Brand kits, moodboards, and style memory. Lock your identity once, generate infinite on-brand outputs."
           span={2}
           big
         >
-          <CollaborationDemo tone="light" />
+          <BrandKitDemo />
         </Card>
 
         <Card
@@ -278,10 +300,10 @@ export default function BentoSection() {
 
         {/* Bottom row — three equal cards */}
         <Card
-          title="On-brand visuals."
-          desc="Brand kits, moodboards, and style memory. Lock your identity once, generate infinite on-brand outputs."
+          title="Real-time collaboration."
+          desc="See every change live. Comment, edit, and iterate alongside your whole team on the same canvas. No exports, no version sprawl."
         >
-          <BrandKitDemo />
+          <CollaborationDemo tone="light" />
         </Card>
 
         <Card

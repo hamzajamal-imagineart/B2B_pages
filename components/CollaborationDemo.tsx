@@ -4,7 +4,14 @@ import { useRef, useState } from "react";
 
 /**
  * Real-time collaboration demo: a comment thread on a dotted canvas, with
- * named cursors flying in on hover and a "You" bubble tracking the pointer.
+ * named cursors at rest and a "You" bubble tracking the pointer.
+ *
+ * The cursors sit in place by default and scatter outward on hover, rather
+ * than flying in. At rest the card should already look like a canvas other
+ * people are working on — a still tile that only populates once a pointer
+ * arrives reads as empty to anyone who never hovers it, which is most
+ * visitors and every touch device. On hover the team clears out and "You"
+ * takes the canvas.
  *
  * Shared by the Workflows page's bento and the admin bento on the Enterprise
  * and Business pages.
@@ -19,10 +26,10 @@ import { useRef, useState } from "react";
  * markup serves both.
  */
 const CURSORS = [
-  { name: "Nima", color: "#4F7DF3", x: "10%", y: "22%", enter: "translateY(-60px)" },
-  { name: "Sophia", color: "#E2574C", x: "80%", y: "18%", enter: "translateX(60px)" },
-  { name: "Bogdan", color: "#2F9BE8", x: "78%", y: "74%", enter: "translateX(60px)" },
-  { name: "Francisco", color: "#D9A03F", x: "12%", y: "72%", enter: "translateX(-60px)" },
+  { name: "Nima", color: "#4F7DF3", x: "10%", y: "22%", exit: "translateY(-60px)" },
+  { name: "Sophia", color: "#E2574C", x: "80%", y: "18%", exit: "translateX(60px)" },
+  { name: "Bogdan", color: "#2F9BE8", x: "78%", y: "74%", exit: "translateX(60px)" },
+  { name: "Francisco", color: "#D9A03F", x: "12%", y: "72%", exit: "translateX(-60px)" },
 ];
 
 export function CollaborationDemo({
@@ -103,8 +110,8 @@ export function CollaborationDemo({
           style={{
             left: c.x,
             top: c.y,
-            opacity: hovered ? 1 : 0,
-            transform: hovered ? "translate(0,0)" : c.enter,
+            opacity: hovered ? 0 : 1,
+            transform: hovered ? c.exit : "translate(0,0)",
             transitionDelay: `${i * 65}ms`,
           }}
         >
@@ -228,17 +235,23 @@ export function CollaborationDemo({
           border-radius: 999px;
           background: linear-gradient(140deg, #8a6a52, #43342a);
         }
+        /* Same 11px, same reason as .collab-body above. */
         .collab-byline {
           margin-top: 5px;
           font-size: 11px;
-          letter-spacing: -0.01em;
+          letter-spacing: 0.004em;
         }
         .collab-byline strong { font-weight: 600; }
         .collab-byline span { color: var(--cl-ink-soft); }
+        /* The page sets letter-spacing: -0.011em on body, which is tuned for
+           15-17px copy. Inherited down to 11px it closes the letterforms up
+           and the comment reads cramped, so the tracking is opened back out
+           here rather than left to cascade. */
         .collab-body {
           margin-top: 3px;
           font-size: 11px;
-          line-height: 1.45;
+          line-height: 1.5;
+          letter-spacing: 0.006em;
           color: var(--cl-ink);
         }
 
