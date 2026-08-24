@@ -424,62 +424,207 @@ type KyosoSectionProps = {
 };
 
 // Generic video card — drops a real <video> into the slideshow card slot.
-/**
- * Stand-in for a mode that has no footage yet.
- *
- * Deliberately not MediaPlaceholder: that one is a mute surface for imagery
- * that is merely missing, and it defaults to a dark fill built for the dark
- * pages. This says the mode is unbuilt, on the light surface this section
- * actually uses, and says it in words rather than leaving a reader to guess
- * why one card in three is blank.
- */
-function ComingSoonCard({ label = "Coming Soon" }: { label?: string }) {
-  return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "grid",
-        placeItems: "center",
-        background: "linear-gradient(160deg, #f7f7f8 0%, #ededf0 100%)",
-      }}
-    >
-      <span
-        style={{
-          fontFamily: FONT,
-          /* The card is the full container width, so a label sized like body
-             copy read as a caption lost in it. Clamped rather than fixed
-             because the card scales with the container. */
-          fontSize: TYPE.h2,
-          fontWeight: 500,
-          letterSpacing: "-0.03em",
-          color: "rgba(10,10,11,0.38)",
-        }}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
+const fmtTime = (t: number) => {
+  if (!Number.isFinite(t)) return "0:00";
+  const m = Math.floor(t / 60);
+  const s = Math.floor(t % 60);
+  return `${m}:${s < 10 ? "0" : ""}${s}`;
+};
 
-function VideoCard({ src }: { src: string }) {
+/**
+ * A mode card's footage, with a control bar on hover.
+ *
+ * These clips run 45 to 50 seconds and are screen recordings of the product,
+ * so unlike the decorative backdrops elsewhere on the page they are worth
+ * actually watching — hence play/pause, a scrubber and fullscreen. Fullscreen
+ * earns its place because the card is a fraction of the viewport and the UI
+ * text inside the recording is small at that size.
+ *
+ * Sound is opt-in via the mute toggle, and the toggle only renders when the
+ * file actually carries an audio track — `hasAudio` is set per call site
+ * rather than sniffed, because there is no portable way to ask a video whether
+ * it has audio, and the guesses that exist are per-engine. The middle tab's
+ * clip has no audio stream at all, so it gets no button instead of a dead one.
+ * Playback still starts muted: autoplay with sound is blocked everywhere.
+ *
+ * The reveal is CSS (`:hover`, plus `:focus-within` so the bar does not vanish
+ * from under a keyboard user mid-scrub) per Guidelines §2 — no JS hover
+ * handlers. JS here only does what CSS cannot: actual playback.
+ *
+ * Progress is written straight to the DOM on `timeupdate` rather than held in
+ * state, the same reason the section's scroll zoom does: four re-renders a
+ * second per card, times three cards, for a bar that only moves visually.
+ */
+function VideoCard({ src, hasAudio = false }: { src: string; hasAudio?: boolean }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const seekRef = useRef<HTMLInputElement | null>(null);
+  const timeRef = useRef<HTMLSpanElement | null>(null);
+  const [playing, setPlaying] = useState(true);
+  const [muted, setMuted] = useState(true);
+  const [scrubbing, setScrubbing] = useState(false);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    function onTime() {
+      if (!v || scrubbing) return;
+      const pct = v.duration ? (v.currentTime / v.duration) * 100 : 0;
+      if (seekRef.current) seekRef.current.value = String(pct);
+      if (timeRef.current) {
+        timeRef.current.textContent = `${fmtTime(v.currentTime)} / ${fmtTime(v.duration)}`;
+      }
+    }
+    function onPlay() { setPlaying(true); }
+    function onPause() { setPlaying(false); }
+
+    v.addEventListener("timeupdate", onTime);
+    v.addEventListener("loadedmetadata", onTime);
+    v.addEventListener("play", onPlay);
+    v.addEventListener("pause", onPause);
+    onTime();
+    return () => {
+      v.removeEventListener("timeupdate", onTime);
+      v.removeEventListener("loadedmetadata", onTime);
+      v.removeEventListener("play", onPlay);
+      v.removeEventListener("pause", onPause);
+    };
+  }, [scrubbing]);
+
+  function togglePlay() {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    } else {
+      v.pause();
+    }
+  }
+
+  function toggleMuted() {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+  }
+
+  function seek(value: string) {
+    const v = videoRef.current;
+    if (!v || !v.duration) return;
+    v.currentTime = (Number(value) / 100) * v.duration;
+    if (timeRef.current) {
+      timeRef.current.textContent = `${fmtTime(v.currentTime)} / ${fmtTime(v.duration)}`;
+    }
+  }
+
+  function goFullscreen() {
+    const v = videoRef.current;
+    if (!v) return;
+    const req = v.requestFullscreen ?? (v as unknown as { webkitEnterFullscreen?: () => void }).webkitEnterFullscreen;
+    if (req) {
+      const r = req.call(v);
+      if (r && typeof (r as Promise<void>).catch === "function") (r as Promise<void>).catch(() => {});
+    }
+  }
+
   return (
-    <video
-      src={src}
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="auto"
-      style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        display: "block",
-      }}
-    />
+    <div className="mode-media">
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video
+        ref={videoRef}
+        src={src}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+        }}
+      />
+
+      {/* The card itself is a click target that selects its tab, so every
+          control stops the click from reaching it. */}
+      <div
+        className="mode-controls"
+        onClick={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          className="mode-btn"
+          aria-label={playing ? "Pause video" : "Play video"}
+          onClick={togglePlay}
+        >
+          {playing ? (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <rect x="6" y="5" width="4" height="14" rx="1" />
+              <rect x="14" y="5" width="4" height="14" rx="1" />
+            </svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M8 5.5v13l11-6.5z" />
+            </svg>
+          )}
+        </button>
+
+        <input
+          ref={seekRef}
+          className="mode-seek"
+          type="range"
+          min="0"
+          max="100"
+          step="0.1"
+          defaultValue="0"
+          aria-label="Seek"
+          onPointerDown={() => setScrubbing(true)}
+          onPointerUp={() => setScrubbing(false)}
+          onBlur={() => setScrubbing(false)}
+          onChange={(e) => seek(e.target.value)}
+        />
+
+        <span ref={timeRef} className="mode-time">0:00 / 0:00</span>
+
+        {hasAudio && (
+          <button
+            type="button"
+            className="mode-btn"
+            aria-label={muted ? "Unmute video" : "Mute video"}
+            aria-pressed={!muted}
+            onClick={toggleMuted}
+          >
+            {muted ? (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M11 5 6 9H3v6h3l5 4z" />
+                <path d="M17 9l4 6M21 9l-4 6" />
+              </svg>
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M11 5 6 9H3v6h3l5 4z" />
+                <path d="M16 8.5a4 4 0 0 1 0 7M18.5 6a7 7 0 0 1 0 12" />
+              </svg>
+            )}
+          </button>
+        )}
+
+        <button
+          type="button"
+          className="mode-btn"
+          aria-label="Play fullscreen"
+          onClick={goFullscreen}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M16 21h3a2 2 0 0 0 2-2v-3M8 21H5a2 2 0 0 1-2-2v-3" />
+          </svg>
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -1272,6 +1417,110 @@ export default function WorkflowPage() {
       <CanvasHero />
 
       <style>{`
+        /* ── mode card video controls ─────────────────────────────────
+           Revealed on hover, and on focus-within so the bar does not
+           disappear from under a keyboard user part-way through a scrub. */
+        .mode-media { position: absolute; inset: 0; }
+        .mode-controls {
+          position: absolute;
+          left: 12px;
+          right: 12px;
+          bottom: 12px;
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 8px 12px;
+          border-radius: 12px;
+          background: rgba(10, 10, 11, 0.62);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          opacity: 0;
+          transform: translateY(6px);
+          transition: opacity 220ms ease, transform 220ms ease;
+        }
+        .mode-media:hover .mode-controls,
+        .mode-controls:focus-within {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .mode-controls { transition: none; transform: none; }
+          .mode-media:hover .mode-controls,
+          .mode-controls:focus-within { transform: none; }
+        }
+        /* No hover reveal on touch, where there is no hover to speak of: the
+           bar would only ever appear after a tap that also switches tabs. */
+        @media (hover: none) {
+          .mode-controls { opacity: 1; transform: none; }
+        }
+
+        .mode-btn {
+          flex: 0 0 auto;
+          width: 26px;
+          height: 26px;
+          display: grid;
+          place-items: center;
+          border: 0;
+          border-radius: 7px;
+          background: rgba(255, 255, 255, 0.12);
+          color: #fff;
+          cursor: pointer;
+          transition: background 160ms ease;
+        }
+        .mode-btn:hover { background: rgba(255, 255, 255, 0.22); }
+        .mode-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+        .mode-time {
+          flex: 0 0 auto;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+          color: rgba(255, 255, 255, 0.75);
+          font-variant-numeric: tabular-nums;
+          white-space: nowrap;
+        }
+
+        /* Track is styled per-engine; there is no cross-browser shorthand. */
+        .mode-seek {
+          flex: 1 1 auto;
+          min-width: 0;
+          height: 16px;
+          margin: 0;
+          appearance: none;
+          -webkit-appearance: none;
+          background: transparent;
+          cursor: pointer;
+        }
+        .mode-seek::-webkit-slider-runnable-track {
+          height: 3px;
+          border-radius: 2px;
+          background: rgba(255, 255, 255, 0.28);
+        }
+        .mode-seek::-moz-range-track {
+          height: 3px;
+          border-radius: 2px;
+          background: rgba(255, 255, 255, 0.28);
+        }
+        .mode-seek::-webkit-slider-thumb {
+          appearance: none;
+          -webkit-appearance: none;
+          width: 11px;
+          height: 11px;
+          margin-top: -4px;
+          border: 0;
+          border-radius: 50%;
+          background: #fff;
+        }
+        .mode-seek::-moz-range-thumb {
+          width: 11px;
+          height: 11px;
+          border: 0;
+          border-radius: 50%;
+          background: #fff;
+        }
+        .mode-seek:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
         @keyframes wp-fade {
           from { opacity: 0; transform: scale(0.985); }
           to   { opacity: 1; transform: scale(1); }
@@ -1288,9 +1537,9 @@ export default function WorkflowPage() {
         tabs={["Quick Iterations", "Full Creative Pipelines", "Autonomous Agent"]}
         cards={[
           // Also the banner in the home page's Workflows section.
-          <VideoCard key="a1" src={withBasePath("/media/modes/quick-iterations.mp4")} />,
+          <VideoCard key="a1" src={withBasePath("/media/modes/quick-iterations.mp4")} hasAudio />,
           <VideoCard key="a2" src={withBasePath("/media/variable-demo.mp4")} />,
-          <ComingSoonCard key="a3" />,
+          <VideoCard key="a3" src={withBasePath("/media/modes/autonomous-agent.mp4")} hasAudio />,
         ]}
       />
 
