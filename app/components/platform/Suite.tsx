@@ -36,7 +36,11 @@ export const PLATFORM_TOOLS: Tool[] = [
   },
   {
     title: "Brand Guidelines",
-    media: { src: "/media/brandkit/brand-kits.webp", kind: "image" },
+    /* Same footage as the On-brand visuals tile in the workflows bento. Shared
+       rather than duplicated: it is one board showing one thing. BUSINESS_TOOLS
+       spreads PLATFORM_TOOLS.slice(1), so this entry serves / and /platform
+       from here — unlike the Workflows entry at index 0, which is redefined. */
+    media: { src: "/media/brandkit/brand-kits.mp4", kind: "video" },
     href: `${IA}/enterprise/brand-kits`,
     body: "Lock in your colors, fonts, and visual identity so every generation stays on-brand.",
     icon: <IconSwatch />,
