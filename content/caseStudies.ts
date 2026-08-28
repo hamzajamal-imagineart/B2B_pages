@@ -86,9 +86,57 @@ export const CASE_STUDIES: CaseStudy[] = [
       { value: "3\u00d7", label: "The market average" },
     ],
     featured: true,
-    // No sections yet, so it has no page and no card. It appears only as the
-    // featured block, which is the role both content specs give it.
-    sections: [],
+    pageTitle: "Scaling campaigns for MNCs with 586K unique users",
+    deck: "Smarters ran a personalized generative AI campaign for Unilever's Knorr brand in Mexico, built on real-time celebrity inpainting. 586,000 unique users generated their own image and opted in at nearly three times the market average.",
+    cover: "/media/case-studies/smarters-knorr.jpg",
+    facts: [
+      { label: "Company", value: "Smarters" },
+      { label: "Industry", value: "Digital campaign solutions" },
+      { label: "Client", value: "Unilever / Knorr (Mexico)" },
+      { label: "Plan", value: "ImagineArt Enterprise" },
+      { label: "Use Cases", value: "Real-time inpainting \u00b7 Lead capture \u00b7 Celebrity activation" },
+    ],
+    sections: [
+      {
+        label: "The Challenge",
+        heading: "Mass reach without losing the personal connection",
+        blocks: [
+          { kind: "para", text: "Mass-market campaigns need scale, and scale is usually what kills personalization. Generic creative builds awareness; personal creative drives conversion. Smarters needed both at once: individual-level output for hundreds of thousands of people at the same time." },
+          { kind: "list", items: [
+            "Standard campaign assets gave users little reason to opt in to ongoing communication",
+            "Celebrity campaigns normally ship one identical asset to everyone, which removes personalization entirely",
+            "High-volume activations need infrastructure that holds up under concurrent load without degrading output",
+            "Regional opt-in rates for comparable activations sat well below the 68% this campaign reached",
+          ] },
+        ],
+      },
+      {
+        label: "The Approach",
+        heading: "Real-time personalization at consumer scale",
+        blocks: [
+          { kind: "para", text: "The mechanic was real-time generative inpainting. A user uploaded a portrait, which was merged with pre-selected imagery of the rapper and singer Malilla to produce a unique, shareable visual on the spot." },
+          { kind: "list", items: [
+            "Portrait inpainting merged user selfies with celebrity imagery in real time, so every asset was unique to the person who made it",
+            "High-concurrency infrastructure served 586,000 users without latency spikes or a drop in output quality",
+            "The personalized result was the opt-in incentive, wiring the creative directly into the lead funnel",
+            "Users sharing their own asset extended reach organically, beyond what paid media bought",
+          ] },
+        ],
+      },
+      {
+        label: "The Results",
+        heading: "A campaign that converted at scale",
+        blocks: [
+          { kind: "metrics", rows: [
+            { label: "Unique users engaged", value: "586,000" },
+            { label: "Personalized images created", value: "222,000+" },
+            { label: "Opt-in rate", value: "68%" },
+            { label: "Active interaction with secondary content", value: "89%" },
+          ] },
+          { kind: "para", text: "The opt-in rate landed at nearly three times the regional market average, which is the clearest signal that personalized output is worth consenting to ongoing contact for. An 89% interaction rate with secondary content showed engagement went well past the moment of generation." },
+        ],
+      },
+    ],
   },
 
   {
@@ -640,6 +688,437 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
     ],
   },
+
+  {
+    slug: "xolour",
+    company: "Xolour",
+    industry: "Agency",
+    metric: "0 film crews",
+    title: "How an agency rebuilt its entire offering",
+    titleMuted: "around AI",
+    summary:
+      "Xolour cut film crews out of its cost base entirely, built a new proposition delivering high-budget creative to small brands, and went from chasing clients to being chased by them.",
+
+    pageTitle: "How an agency rebuilt its entire offering around AI",
+    deck: "Xolour eliminated film crews, built a new proposition delivering high-budget creative to small brands, and flipped from outbound selling to inbound demand, by rebuilding its whole creative operation around ImagineArt.",
+    cover: "/media/case-studies/xolour.jpg",
+    stats: [
+      { value: "0 film crews", label: "Largest cost line removed" },
+      { value: "Pitch to delivery", label: "Whole pipeline on one platform" },
+      { value: "3-person core", label: "Plus project-based freelancers" },
+    ],
+    facts: [
+      { label: "Company", value: "Xolour" },
+      { label: "Industry", value: "Creative and advertising agency" },
+      { label: "Team Size", value: "3-person core team plus freelancers" },
+      { label: "Plan", value: "ImagineArt Enterprise" },
+      { label: "Use Cases", value: "Pitch decks · Concept development · Final delivery" },
+      { label: "Contact", value: "Creative Director, Xolour" },
+    ],
+    sections: [
+      {
+        label: "The Challenge",
+        heading: "A crowded market, high overheads, nothing to differentiate on",
+        blocks: [
+          { kind: "para", text: "Xolour ran as a traditional advertising agency, and the constraints were structural rather than creative. Film crews and freelancers were the single largest expense. Traditional production was hard to sell into a saturated market. And because every agency produced work the same way, the output itself was hard to tell apart." },
+          { kind: "quote", text: "The offering to clients was never new, lots of competition, large overheads and budget limited our creativity.", attribution: "Creative Director, Xolour" },
+        ],
+      },
+      {
+        label: "The Decision",
+        heading: "One platform instead of a subscription per format",
+        blocks: [
+          { kind: "para", text: "ImagineArt was chosen for the interface and for having multiple models behind one login, which removed the need for a separate subscription per content format. The agency treated it as a change of operating model rather than a new tool in the existing one." },
+          { kind: "para", text: "It now runs across the whole project lifecycle: concept imagery for the pitch deck taken into first client meetings, rapid visual iteration during concepting before anything is committed, and final brand advertising produced end to end without a crew." },
+        ],
+      },
+      {
+        label: "The Results",
+        heading: "Cost removed, a new proposition, demand inverted",
+        blocks: [
+          { kind: "results", items: [
+            { label: "Cost", text: "Film crews and on-location production, the largest expense category in the business, are gone from the model entirely." },
+            { label: "Proposition", text: "Small-budget brands now get visual quality that used to require a major production budget, which became the agency's new pitch." },
+            { label: "Sales", text: "AI-led creative proved materially easier to sell than traditional production." },
+            { label: "Demand", text: "The agency stopped pursuing clients and started being approached by them." },
+          ] },
+          { kind: "quote", text: "I can now bring high-budget adverts to small brands, and that has become our new USP.", attribution: "Creative Director, Xolour" },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "withfeeling",
+    company: "WithFeeling",
+    industry: "Agency",
+    metric: "10 to 15 variations in 20 minutes",
+    title: "How a sonic branding agency replaced stock libraries",
+    titleMuted: "with work that is actually on brand",
+    summary:
+      "WithFeeling dropped four years of expensive stock subscriptions, now produces 10 to 15 on-brand variations in 20 minutes, and publishes AI-generated imagery in editorial magazines worldwide.",
+
+    pageTitle: "How a sonic branding agency replaced stock libraries with work that is actually on brand",
+    deck: "WithFeeling replaced off-brand stock subscriptions with ImagineArt, producing 10 to 15 on-brand visual variations in 20 minutes, publishing AI-generated imagery in worldwide editorial magazines, and consolidating its creative tools into one platform.",
+    cover: "/media/case-studies/withfeeling.jpg",
+    stats: [
+      { value: "20 minutes", label: "For 10 to 15 on-brand concept variations" },
+      { value: "1 platform", label: "Replacing several tools and stock subscriptions" },
+      { value: "4 years", label: "On expensive stock libraries before the switch" },
+    ],
+    facts: [
+      { label: "Company", value: "WithFeeling" },
+      { label: "Industry", value: "Sonic branding and music" },
+      { label: "Team Size", value: "7 full-time plus a freelance network" },
+      { label: "Plan", value: "ImagineArt" },
+      { label: "Use Cases", value: "Website animation · Social video · Pitch decks · Brand guides · Editorial" },
+      { label: "Contact", value: "Chris Atkins, Co-Founder" },
+    ],
+    sections: [
+      {
+        label: "The Challenge",
+        heading: "Stock libraries could not do surreal",
+        blocks: [
+          { kind: "para", text: "WithFeeling's brand is surreal, bold and a little humorous, and stock libraries are none of those things. Anything specific enough to be on brand had to go to a freelancer, which took days, or to a photoshoot, which took weeks and real money." },
+          { kind: "quote", text: "The content was cliché, overused, and miles off our brand.", attribution: "Chris Atkins, Co-Founder, WithFeeling" },
+        ],
+      },
+      {
+        label: "The Decision",
+        heading: "One roof, a better credit ratio, and someone to talk to",
+        blocks: [
+          { kind: "para", text: "Three things decided it: every tool under one platform, a credits-to-output ratio that beat juggling separate subscriptions, and live support. The team had already tried most of the alternatives individually." },
+          { kind: "para", text: "It now runs across website animation, social video, pitch deck imagery, brand guides and editorial thought-leadership visuals, using Elements to keep faces, logos, palettes and styles consistent between them." },
+        ],
+      },
+      {
+        label: "The Results",
+        heading: "Days compressed into minutes, and work good enough to publish",
+        blocks: [
+          { kind: "results", items: [
+            { label: "Speed", text: "Iterating on lighting, palette and composition takes minutes, where the same exploration used to take days." },
+            { label: "Quality", text: "Output sits alongside commissioned photography well enough that it now runs in editorial magazines worldwide." },
+            { label: "Cost", text: "Almost all production moved in-house, removing designer briefs, freelancer coordination and library licensing at once." },
+            { label: "Consistency", text: "Elements carries the same faces, logos and palette across every image, so scale does not cost coherence." },
+          ] },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "fjwu",
+    company: "Fatima Jinnah Women University",
+    industry: "Education",
+    metric: "67% higher creativity scores",
+    title: "How FJWU drove a 67% surge",
+    titleMuted: "in student creative performance",
+    summary:
+      "A 37-student cohort measured a 67% rise in creativity scores and a 41% fall in inconsistency, with every single student in the group improving.",
+
+    pageTitle: "How FJWU drove a 67% surge in student creative performance",
+    deck: "Fatima Jinnah Women University built ImagineArt's creative suite into project-based learning and measured the outcome: a 67% increase in creativity scores, a 41% reduction in inconsistency, and positive improvement across every student in the cohort.",
+    cover: "/media/case-studies/fjwu.jpg",
+    stats: [
+      { value: "67%", label: "Increase in class creativity scores" },
+      { value: "41%", label: "Reduction in creative inconsistency" },
+      { value: "100%", label: "Of students improved" },
+    ],
+    facts: [
+      { label: "Institution", value: "Fatima Jinnah Women University" },
+      { label: "Industry", value: "Higher education, visual communication design" },
+      { label: "Location", value: "Pakistan" },
+      { label: "Cohort", value: "37 students" },
+      { label: "Plan", value: "ImagineArt Enterprise" },
+      { label: "Use Cases", value: "Project briefs · Prototyping · Portfolio work" },
+    ],
+    sections: [
+      {
+        label: "The Challenge",
+        heading: "Theory without the tools to execute it",
+        blocks: [
+          { kind: "para", text: "Creative teaching tends to constrain output at the point of execution. Students learn the theory but lack the means to produce quickly, which makes feedback loops slow, iteration expensive, and the gap between the strongest and weakest students wider over time. Graduates also left unfamiliar with the AI tooling the industry had already adopted." },
+        ],
+      },
+      {
+        label: "The Approach",
+        heading: "Embedded across the whole project lifecycle",
+        blocks: [
+          { kind: "para", text: "ImagineArt was chosen for covering generation and iterative design in one place rather than requiring several tools. It was then built into the full arc of a project, from the initial brief through to the final portfolio piece." },
+          { kind: "list", items: [
+            "Instant prototyping, so an idea can be seen rather than only described",
+            "Compressed feedback cycles between tutor and student",
+            "Portfolio output at professional quality",
+            "Instructor time freed to spend on design theory rather than production mechanics",
+          ] },
+        ],
+      },
+      {
+        label: "The Results",
+        heading: "Every student in the cohort improved",
+        blocks: [
+          { kind: "metrics", rows: [
+            { label: "Mean creativity score", value: "13.38 → 22.65" },
+            { label: "Increase in creativity scores", value: "67%" },
+            { label: "Reduction in inconsistency", value: "41%" },
+            { label: "Students showing improvement", value: "100%" },
+            { label: "Largest individual gain", value: "72 points" },
+          ] },
+          { kind: "para", text: "The consistency figure matters as much as the headline one: the cohort did not simply get better on average, it got tighter, with the spread between strongest and weakest narrowing. Students previously capped around 72% reached full marks on creative excellence." },
+          { kind: "quote", text: "The data doesn't just show improvement, it shows that AI levels the playing field. Every student gained.", attribution: "Visual Communication Design Department, FJWU" },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "mnsaj",
+    company: "Mnsaj",
+    industry: "E-commerce",
+    metric: "50% faster turnaround",
+    title: "Halving content turnaround",
+    titleMuted: "and bringing creative fully in-house",
+    summary:
+      "A lean GCC e-commerce team removed its external studio dependency entirely, halved time to market, and now tests as many creative directions as it likes at no extra cost per iteration.",
+
+    pageTitle: "Halving content turnaround and bringing creative fully in-house",
+    deck: "Mnsaj, a high-growth e-commerce startup in the GCC, removed its external studio dependencies, halved time to market, and now produces studio-grade visuals on demand without the costs that were blocking scale.",
+    cover: "/media/case-studies/mnsaj.jpg",
+    stats: [
+      { value: "50% faster", label: "Concept to campaign launch" },
+      { value: "0 studios", label: "External production dependency removed" },
+      { value: "Hours, not days", label: "For a new product line to go live" },
+    ],
+    facts: [
+      { label: "Company", value: "Mnsaj" },
+      { label: "Industry", value: "E-commerce and fashion (GCC)" },
+      { label: "Team Size", value: "Lean startup team" },
+      { label: "Plan", value: "ImagineArt Teams" },
+      { label: "Use Cases", value: "Product imagery · Campaign generation · Image upscaling" },
+    ],
+    sections: [
+      {
+        label: "The Challenge",
+        heading: "External studios were a bottleneck the business could not afford",
+        blocks: [
+          { kind: "para", text: "For a small team managing fast-rotating inventory, creative was the permanent chokepoint. New lines needed to launch quickly, and traditional photography took days, leaving finished products sitting unpublished while they waited on content." },
+          { kind: "list", items: [
+            "Multiple days of lag per product line before anything could go live",
+            "Studio costs that rose in step with catalogue size",
+            "Source imagery too low in quality to use as-is against a premium position",
+            "No room to experiment, because every iteration started a budget conversation",
+          ] },
+        ],
+      },
+      {
+        label: "The Approach",
+        heading: "The whole creative stack, internalised",
+        blocks: [
+          { kind: "para", text: "ImagineArt Teams covered the three things the workflow actually needed: upscaling existing imagery, generating new campaign visuals, and allowing continuous experimentation without production overhead. Ideas get prototyped, approved and launched inside a single session." },
+          { kind: "list", items: [
+            "Upscaling turns low-quality product photos into high-resolution visuals immediately",
+            "Campaign generation moves from concept to launch-ready in hours",
+            "Several visual directions get tested per product at no additional cost",
+            "Revisions happen in the same sitting rather than across days of back-and-forth",
+          ] },
+        ],
+      },
+      {
+        label: "The Results",
+        heading: "Speed, cost and quality all moved together",
+        blocks: [
+          { kind: "results", items: [
+            { label: "Speed", text: "Concept-to-launch time cut by more than half, with new lines live in hours rather than days." },
+            { label: "Cost", text: "Studio and freelance designer dependencies removed outright, dropping production overhead to near zero and improving margin per line." },
+            { label: "Quality", text: "Upscaling brings existing product imagery up to the standard that previously needed a paid shoot." },
+            { label: "Scale", text: "Experimentation carries no financial risk, so more directions get tested per launch than before." },
+          ] },
+          { kind: "quote", text: "We can now experiment, iterate, and launch premium visuals without waiting, or wasting budget.", attribution: "Mnsaj team" },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "usa-home-improvement",
+    company: "USA Home Improvement",
+    industry: "Home Services",
+    metric: "A day down to a few hours",
+    title: "Cutting creative turnaround",
+    titleMuted: "from days to hours",
+    summary:
+      "Replacing an external designer workflow and Photoshop with in-house generation took campaign production from a full day to a few hours, and removed the brief entirely from early-stage ideation.",
+
+    pageTitle: "Cutting creative turnaround from days to hours",
+    deck: "USA Home Improvement replaced an external designer workflow and Photoshop production with ImagineArt, generating social ads, SMS and MMS creative, hurricane-season promotions and campaign visuals in hours rather than waiting a day or more.",
+    cover: "/media/case-studies/usa-home-improvement.jpg",
+    stats: [
+      { value: "1 day → hours", label: "Idea to usable visual" },
+      { value: "6+ formats", label: "Produced in-house" },
+      { value: "0 briefs", label: "Needed for early-stage ideation" },
+    ],
+    facts: [
+      { label: "Company", value: "USA Home Improvement" },
+      { label: "Industry", value: "Home services" },
+      { label: "Location", value: "United States" },
+      { label: "Plan", value: "ImagineArt" },
+      { label: "Use Cases", value: "Social ads · SMS and MMS · Seasonal promotions · Product concepts · Internal mockups" },
+      { label: "Contact", value: "Marketing team, USA Home Improvement" },
+    ],
+    sections: [
+      {
+        label: "The Challenge",
+        heading: "Everything started with a brief and a wait",
+        blocks: [
+          { kind: "para", text: "The team ran two tools: one connecting them to human designers, and Photoshop. Every visual meant a written brief, a wait, and revision rounds. Last-minute pivots were not possible, which is a poor fit for a seasonal business where hurricane promotions and deadline-driven campaigns are the norm. Testing several directions meant several briefs and several waits." },
+        ],
+      },
+      {
+        label: "The Approach",
+        heading: "Generate first, brief later",
+        blocks: [
+          { kind: "para", text: "The workflow inverted. The team now generates multiple styles, layouts and directions in one session and decides afterwards what is worth developing. External designers were not dropped, they were moved to the end of the process for final polish instead of the beginning for concepts." },
+          { kind: "quote", text: "Instead of waiting for a designer to turn around every concept, we can quickly generate different styles, layouts, and campaign directions ourselves before deciding what to use or refine.", attribution: "Marketing team, USA Home Improvement" },
+        ],
+      },
+      {
+        label: "The Results",
+        heading: "Faster, more independent, and more things tested",
+        blocks: [
+          { kind: "results", items: [
+            { label: "Speed", text: "Campaign production dropped from a day or more to a few hours." },
+            { label: "Independence", text: "The brief cycle now starts only after an idea has been validated internally, not before." },
+            { label: "Volume", text: "Several directions get evaluated at once, so more concepts reach review." },
+            { label: "Confidence", text: "Ideas get shown rather than described, which makes experimenting cheap enough to be worth doing." },
+          ] },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "noise2signal",
+    company: "Noise2Signal",
+    industry: "Agency",
+    metric: "2 days down to 1",
+    title: "How Noise2Signal replaced multi-tool chaos",
+    titleMuted: "with one creative platform",
+    summary:
+      "Consolidating a scattered AI stack onto one platform halved comparable project timelines, cut subscription spend, and brought work back in-house that had been going to freelancers.",
+
+    pageTitle: "How Noise2Signal replaced multi-tool chaos with one creative platform",
+    deck: "Noise2Signal removed the context-switching cost of working across fragmented AI ecosystems, reduced its freelancer dependency, and cut comparable project timelines from two days to one by consolidating its creative stack into ImagineArt.",
+    cover: "/media/case-studies/noise2signal.jpg",
+    stats: [
+      { value: "2 days → 1", label: "On comparable projects" },
+      { value: "1 platform", label: "Replacing several AI subscriptions" },
+      { value: "Fewer freelancers", label: "Work brought back in-house" },
+    ],
+    facts: [
+      { label: "Company", value: "Noise2Signal" },
+      { label: "Industry", value: "Creative agency" },
+      { label: "Plan", value: "ImagineArt" },
+      { label: "Use Cases", value: "UGC · Social ads · Product imagery · Cinematic ads · Campaign visuals" },
+      { label: "Contact", value: "Co-founder, Noise2Signal" },
+    ],
+    sections: [
+      {
+        label: "The Challenge",
+        heading: "The tooling was eating the time the tooling was meant to save",
+        blocks: [
+          { kind: "para", text: "The team ran several models across different ecosystems, each good at one thing. The fragmentation had a real cost: different interfaces, different prompting conventions, inconsistent output, and constant context-switching between them. Add the freelancers filling the remaining gaps, and the overhead was cancelling out the efficiency the tools were supposed to bring." },
+        ],
+      },
+      {
+        label: "The Decision",
+        heading: "Stop chasing models, pick a platform",
+        blocks: [
+          { kind: "para", text: "Rather than keep up with every new model release across every platform, the agency committed to one environment where frontier models sit together and behave consistently, so attention could go back to the work instead of the tool management around it." },
+          { kind: "quote", text: "You cannot be model chasing at this stage of the AI development curve.", attribution: "Co-founder, Noise2Signal" },
+        ],
+      },
+      {
+        label: "The Results",
+        heading: "Half the time, less spend, more kept in-house",
+        blocks: [
+          { kind: "results", items: [
+            { label: "Speed", text: "Production time halved on equivalent projects." },
+            { label: "Cost", text: "Subscription spend fell as redundant tools were consolidated away." },
+            { label: "Capability", text: "Internal tooling now covers work that used to be outsourced, reducing freelancer dependency." },
+            { label: "Adoption", text: "The team picked it up immediately, and the efficiency gain made the case to leadership on its own." },
+          ] },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "design-culture-company",
+    company: "Design Culture Company",
+    industry: "Agency",
+    metric: "25% → 55% thinking time",
+    title: "How DCC rebuilt its creative workflow",
+    titleMuted: "around ideas, not execution",
+    summary:
+      "A strategic design agency flipped the ratio of its project time, moving from 75% execution and 25% thinking to 45% execution and 55% thinking.",
+
+    pageTitle: "How DCC rebuilt its creative workflow around ideas, not execution",
+    deck: "Design Culture Company restructured how its team spends creative time, shifting from a workflow where 75% of a project went on execution to one where 55% goes on thinking, refinement and direction, by embedding ImagineArt across branding, campaigns, cinematic narratives and experiential design.",
+    cover: "/media/case-studies/design-culture-company.jpg",
+    stats: [
+      { value: "75% → 45%", label: "Project time spent on execution" },
+      { value: "25% → 55%", label: "Project time spent on thinking" },
+      { value: "Days → hours", label: "To visualize and compare directions" },
+    ],
+    facts: [
+      { label: "Company", value: "Design Culture Company (DCC)" },
+      { label: "Industry", value: "Strategic design agency" },
+      { label: "Plan", value: "ImagineArt Enterprise" },
+      { label: "Use Cases", value: "Campaigns · Cinematic narratives · Character development · Brand strategy · Experiential design" },
+      { label: "Contact", value: "Creative Director and Partner, DCC" },
+    ],
+    sections: [
+      {
+        label: "The Challenge",
+        heading: "Ideas losing their momentum on the way to being seen",
+        blocks: [
+          { kind: "para", text: "DCC's work is narrative-driven, which means a client has to connect with an idea emotionally for it to land. The structural problem sat between conception and visualization: early-stage work depended on stock imagery, photomontage, photographic reference and custom illustration, all of it slow and spread across several tools." },
+          { kind: "list", items: [
+            "Concepts risked losing their emotional momentum before they ever reached a presentation",
+            "Holding art direction consistent across a multidisciplinary team was hard at pace",
+            "Running directions in parallel took disproportionate manual effort",
+            "Execution consumed 75% of a project timeline, leaving 25% for the thinking",
+          ] },
+          { kind: "quote", text: "One of our biggest challenges was the amount of time required to translate ideas into tangible visual narratives.", attribution: "Creative Director, Design Culture Company" },
+        ],
+      },
+      {
+        label: "The Decision",
+        heading: "Chosen on direction, not on speed",
+        blocks: [
+          { kind: "para", text: "DCC tried several platforms and selected on the consistency and quality of creative direction rather than raw speed or feature count. What decided it was that the output showed an understanding of art direction, cinematic composition and visual language, reading as intentional rather than arbitrary." },
+          { kind: "quote", text: "ImagineArt feels genuinely aligned with the way a real creative team operates.", attribution: "Creative Director, Design Culture Company" },
+        ],
+      },
+      {
+        label: "The Results",
+        heading: "The ratio between thinking and doing, inverted",
+        blocks: [
+          { kind: "metrics", rows: [
+            { label: "Execution share of project time", value: "75% → 45%" },
+            { label: "Thinking and direction share", value: "25% → 55%" },
+            { label: "Time to compare creative directions", value: "Days → hours" },
+          ] },
+          { kind: "results", items: [
+            { label: "Speed", text: "Directions that took days now develop in hours, so more can be compared before a decision is made." },
+            { label: "Creative growth", text: "Designers built sharper judgement about how composition, lighting and atmosphere carry meaning." },
+            { label: "Client alignment", text: "Presentations are more immersive from the first stage, which shortens decision cycles." },
+            { label: "Cost", text: "Less dependency on outside support and subscriptions during early visualization, without giving up quality." },
+          ] },
+        ],
+      },
+    ],
+  },
 ];
 
 /** A study is linkable only once it has written content. */
@@ -653,10 +1132,23 @@ export const getCaseStudy = (slug: string) =>
 export const featuredCaseStudy = () =>
   CASE_STUDIES.find((s) => s.featured) ?? CASE_STUDIES[0];
 
-/** The card grid lists every study that has a page, in registry order.
- *  A study without written content appears only as the featured block, never
- *  as a card that goes nowhere. */
-export const allCaseStudies = () => CASE_STUDIES.filter(hasPage);
+/** The study that leads the grid, rendered full-width ahead of the rest. */
+const LEAD_SLUG = "unilever";
+
+/** The card grid lists every study that has a page, lead first and the rest
+ *  in registry order.
+ *
+ *  The featured study is excluded: it already occupies the block above the
+ *  grid, and once it gained written content it started appearing in both
+ *  places at once. */
+export const allCaseStudies = () => {
+  const featured = featuredCaseStudy();
+  const withPage = CASE_STUDIES.filter((s) => hasPage(s) && s.slug !== featured.slug);
+  return [
+    ...withPage.filter((s) => s.slug === LEAD_SLUG),
+    ...withPage.filter((s) => s.slug !== LEAD_SLUG),
+  ];
+};
 
 /** Filter list, derived from the studies the grid actually shows, so a chip
  *  can never filter down to nothing. */
