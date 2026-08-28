@@ -406,12 +406,13 @@ export default function HeroPromptBox() {
           to generate
         </span>
         <span style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(255,255,255,0.3)" }} />
+        {/* Was href="#templates" with a scrollIntoView to match. No element on
+            this page ever carried id="templates", so both halves were no-ops:
+            the anchor went nowhere and the query returned null. */}
         <a
-          href="#templates"
-          onClick={(e) => {
-            e.preventDefault();
-            document.querySelector("#templates")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }}
+          href="https://www.imagine.art/enterprise"
+          target="_blank"
+          rel="noopener noreferrer"
           style={{
             color: "rgba(255,255,255,0.7)",
             textDecoration: "none",

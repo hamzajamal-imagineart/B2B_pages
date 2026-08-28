@@ -1068,7 +1068,13 @@ function UseCasesFlora() {
           From product shots to VFX, from lookbooks to motion ads, a workflow for every kind of creative work.
         </p>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 28 }}>
-          <ButtonLink href="#" variant="brand" size="md">
+          <ButtonLink
+            href="https://www.imagine.art/enterprise"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="brand"
+            size="md"
+          >
             Open the app
           </ButtonLink>
           <ButtonLink

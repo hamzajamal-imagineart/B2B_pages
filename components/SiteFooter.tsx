@@ -50,7 +50,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
       { label: "HeyGen Avatar", href: `${BASE}/apps/heygen-avatar` },
       { label: "Seedance 2.0", href: `${BASE}/features/seedance-2-0` },
       { label: "Sora 2", href: `${BASE}/apps/sora-2` },
-      { label: "Veo 3.1", href: `${BASE}/features/veo-3-1-ai-video-generator` },
+      { label: "Veo 3.1", href: `${BASE}/apps/veo-3.1-lite` },
       { label: "Kling 3.0", href: `${BASE}/apps/kling-3.0` },
       { label: "Pixverse v6", href: `${BASE}/apps/pixverse-v6` },
       { label: "Seedance 2.5", href: `${BASE}/features/seedance-2-5` },
@@ -59,7 +59,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
       { label: "GPT Image 2", href: `${BASE}/apps/gpt-image-2` },
       { label: "Nano Banana 2", href: `${BASE}/apps/nano-banana-2` },
       { label: "Image Upscaler", href: `${BASE}/apps/image-upscaler` },
-      { label: "Flux 2", href: `${BASE}/features/flux-2` },
+      { label: "Flux 2", href: `${BASE}/models/flux-schnell` },
     ],
   },
   {
