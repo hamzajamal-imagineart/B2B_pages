@@ -4,20 +4,18 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactForm } from "@/components/ContactForm";
 import { IndustriesSection } from "@/components/IndustriesSection";
-import WorkflowsSection from "@/components/WorkflowsSection";
 import { NAV_VARIANT } from "@/lib/theme";
 
 import Hero from "./components/enterprise/Hero";
 import Partners from "./components/enterprise/Partners";
 import Security from "./components/enterprise/Security";
-import ClosingCta, { CONTACT_HREF, START_HREF } from "./components/enterprise/ClosingCta";
+import ClosingCta, { CONTACT_ANCHOR, START_HREF } from "./components/enterprise/ClosingCta";
 
 // Sections that arrived with the Business page when the two merged.
 import Pitch from "./components/business/Pitch";
 import CaseStudies from "./components/business/CaseStudies";
 import Suite, { BUSINESS_TOOLS } from "./components/platform/Suite";
 import Models from "./components/platform/Models";
-import Apps from "./components/platform/Apps";
 
 // SEO. Kept in sync with layout.tsx's metadata.
 const softwareSchema = {
@@ -62,8 +60,6 @@ export default function Home() {
         <Suite tools={BUSINESS_TOOLS} />
         <Pitch />
         <IndustriesSection />
-        <WorkflowsSection />
-        <Apps />
         <Security />
         <CaseStudies />
         <TestimonialsSection />
@@ -76,7 +72,7 @@ export default function Home() {
           muted="with your business."
           lede="From your first asset to your thousandth campaign, ImagineArt grows with your team."
           primary={{ label: "Get Started", href: START_HREF }}
-          secondary={{ label: "Contact Sales", href: CONTACT_HREF }}
+          secondary={{ label: "Contact Sales", href: CONTACT_ANCHOR }}
           backdrop="/media/cta-hills.jpg"
         />
       </main>
