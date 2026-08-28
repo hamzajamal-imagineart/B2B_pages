@@ -1,5 +1,5 @@
 import { BannerHero } from "@/components/BannerHero";
-import { CONTACT_HREF } from "../enterprise/ClosingCta";
+import { CONTACT_ANCHOR } from "../enterprise/ClosingCta";
 
 /**
  * Solutions hero — the shared banner composition, no eyebrow.
@@ -18,7 +18,7 @@ export default function Hero() {
       muted="Built for how business actually runs."
       titleMaxCh={18}
       grain="grain-mineral"
-      primary={{ label: "Contact Sales", href: CONTACT_HREF }}
+      primary={{ label: "Contact Sales", href: CONTACT_ANCHOR }}
       footText="ImagineArt is one of the best AI tools for business teams that need creative at scale, the speed, structure, and control to ship campaign-ready assets up to 90% faster and 75% more cost-effective. Humans and AI, built around how your operation actually works."
       footLink={{ label: "Find your industry →", href: "#industries" }}
     />

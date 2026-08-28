@@ -101,7 +101,7 @@ export default async function CaseStudyPage({
           title="Ready to transform"
           muted="your creative production?"
           lede="Join the teams using ImagineArt to produce high-volume, on-brand content without the overhead."
-          primary={{ label: "Book a Demo", href: DEMO_HREF }}
+          primary={{ label: "Book a Demo", href: DEMO_HREF, target: "_blank", rel: "noopener noreferrer" }}
           secondary={{ label: "More Case Studies", href: "/case-studies" }}
         />
       </main>
@@ -247,7 +247,7 @@ function Body({ study }: { study: CaseStudy }) {
                 ))}
               </dl>
               <div className="csd-fact-ctas">
-                <ButtonLink href={DEMO_HREF} variant="brand" size="md">
+                <ButtonLink href={DEMO_HREF} target="_blank" rel="noopener noreferrer" variant="brand" size="md">
                   Book a Demo
                 </ButtonLink>
                 <a

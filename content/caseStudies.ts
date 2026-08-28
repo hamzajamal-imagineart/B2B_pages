@@ -669,8 +669,14 @@ export const caseStudyIndustries = () => [
 
 export const caseStudyHref = (s: CaseStudy) => `/case-studies/${s.slug}`;
 
-/** Shared CTA destinations, supplied with the Buzz Lab copy. */
-export const DEMO_HREF =
-  "https://www.imagine.art/business/enterprise#enterprise-contact-form";
+/**
+ * Shared CTA destinations, supplied with the Buzz Lab copy.
+ *
+ * DEMO_HREF used to be an off-site contact form. Every reach-out CTA now lands
+ * on this site's own form section instead. Case studies have no form of their
+ * own, so this is the Enterprise one, and the call sites open it in a new tab
+ * so a reader mid-case-study does not lose their place.
+ */
+export const DEMO_HREF = "/#contact";
 // imagine.art/teams 404s; the subscription page is the live equivalent.
 export const TEAMS_HREF = "https://www.imagine.art/enterprise/subscription";

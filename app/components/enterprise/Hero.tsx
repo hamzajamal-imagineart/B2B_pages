@@ -1,5 +1,5 @@
 import { BannerHero } from "@/components/BannerHero";
-import { CONTACT_HREF } from "./ClosingCta";
+import { CONTACT_ANCHOR } from "./ClosingCta";
 
 /**
  * Enterprise hero — the shared banner composition.
@@ -19,7 +19,7 @@ export default function Hero() {
       titleMaxCh={16}
       video="/media/hero-v2.mp4"
       grain="grain-sage"
-      primary={{ label: "Contact Sales", href: CONTACT_HREF }}
+      primary={{ label: "Contact Sales", href: CONTACT_ANCHOR }}
       footText="The enterprise AI creative platform that turns ideas into production-ready images and video, securely, at scale, and without limits on who gets to create."
       footLink={{ label: "See how workflows work →", href: "/workflows" }}
     />

@@ -65,7 +65,10 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
   {
     heading: "Contact Us",
     links: [
-      { label: "Contact Sales", href: `${BASE}/business/enterprise/contact-us` },
+      /* The Enterprise page's form. The footer is on every route and is a
+         server component with no pathname, so it always points there rather
+         than at whichever form the current page might have. */
+      { label: "Contact Sales", href: "/#contact" },
       { label: "Book a Demo", href: "https://cal.com/team/imagineart/imagineart-customer-assist" },
     ],
   },

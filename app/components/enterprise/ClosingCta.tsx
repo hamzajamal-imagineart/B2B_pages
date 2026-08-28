@@ -2,10 +2,23 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
 import { ButtonLink } from "@/components/Button";
 import { withBasePath } from "@/lib/assets";
 
-const CONTACT_HREF = "https://www.imagine.art/business/enterprise/contact-us";
+/**
+ * Contact destinations.
+ *
+ * The form is a section on this site now, not an off-site page. Two shapes:
+ *
+ * - CONTACT_ANCHOR — same-page scroll, for the two pages that render a form of
+ *   their own (Enterprise and Solutions).
+ * - CONTACT_HREF — the Enterprise page's form, for every other page. Opened in
+ *   a new tab so a reader on a case study or the workflows page does not lose
+ *   their place; pass CONTACT_TARGET alongside it.
+ */
+const CONTACT_ANCHOR = "#contact";
+const CONTACT_HREF = "/#contact";
+const CONTACT_TARGET = { target: "_blank", rel: "noopener noreferrer" } as const;
 const START_HREF = "https://www.imagine.art";
 
-type Cta = { label: string; href: string };
+type Cta = { label: string; href: string; target?: string; rel?: string };
 
 /**
  * Closing CTA band, shared across the Enterprise, Platform and Business pages.
@@ -18,7 +31,7 @@ export default function ClosingCta({
   title = "Bring your whole team",
   muted = "into one creative platform",
   lede = "Talk to us about rollout, security review, and what unlimited seats look like for an organization your size.",
-  primary = { label: "Contact Sales", href: CONTACT_HREF },
+  primary = { label: "Contact Sales", href: CONTACT_HREF, ...CONTACT_TARGET },
   secondary = { label: "See Workflows", href: "/workflows" },
   backdrop = "/media/cta-fog-grass.jpg",
 }: {
@@ -47,10 +60,10 @@ export default function ClosingCta({
         </h2>
         {lede && <p className="lede mx-auto mt-6">{lede}</p>}
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <ButtonLink href={primary.href} variant="brand" size="lg">
+          <ButtonLink href={primary.href} target={primary.target} rel={primary.rel} variant="brand" size="lg">
             {primary.label}
           </ButtonLink>
-          <ButtonLink href={secondary.href} variant="ghost" size="lg">
+          <ButtonLink href={secondary.href} target={secondary.target} rel={secondary.rel} variant="ghost" size="lg">
             {secondary.label}
           </ButtonLink>
         </div>
@@ -104,4 +117,4 @@ export default function ClosingCta({
   );
 }
 
-export { CONTACT_HREF, START_HREF };
+export { CONTACT_HREF, CONTACT_ANCHOR, CONTACT_TARGET, START_HREF };

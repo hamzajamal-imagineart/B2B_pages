@@ -1,7 +1,7 @@
 import { SiteNav } from "@/components/SiteNav";
 import { PageTint } from "@/components/PageTint";
 import { SiteFooter } from "@/components/SiteFooter";
-import ClosingCta from "../components/enterprise/ClosingCta";
+import ClosingCta, { CONTACT_HREF, CONTACT_TARGET } from "../components/enterprise/ClosingCta";
 import { navVariantFor } from "@/lib/theme";
 import WorkflowPage from "../components/workflows/WorkflowPage";
 import ModelsSection from "../components/workflows/ModelsSection";
@@ -31,7 +31,7 @@ export default function WorkflowsRoute() {
         muted="today?"
         lede={null}
         primary={{ label: "Get Started", href: "https://imagine.art/enterprise" }}
-        secondary={{ label: "Book a demo", href: "/#demo" }}
+        secondary={{ label: "Book a demo", href: CONTACT_HREF, ...CONTACT_TARGET }}
       />
       <SiteFooter />
     </div>
