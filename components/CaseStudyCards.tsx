@@ -76,14 +76,21 @@ export function FeaturedCard() {
  * metric chip. The metric still lives on the study and drives search; it just
  * isn't a badge on the card any more.
  */
-export function StoryCard({ story }: { story: CaseStudy }) {
+export function StoryCard({
+  story,
+  wide = false,
+}: {
+  story: CaseStudy;
+  /** Lead card: spans the full row and lays out side by side. */
+  wide?: boolean;
+}) {
   const linked = hasPage(story);
   const Tag = linked ? "a" : "div";
 
   return (
     <Tag
       {...(linked ? { href: caseStudyHref(story) } : {})}
-      className={`cs-card ${linked ? "cs-card-linked" : ""}`}
+      className={`cs-card ${linked ? "cs-card-linked" : ""} ${wide ? "cs-card-wide" : ""}`}
     >
       {/* Rendered even without a cover, so a row of cards keeps its copy on a
           common baseline. An empty slot reads as a placeholder, not a bug. */}
@@ -308,9 +315,39 @@ export function CaseStudyStyles() {
 
       .cs-empty { font-size: 15px; color: var(--ink-3); }
 
+      /* Lead card. Spans the row and turns on its side, so the extra width
+         goes to the cover and the copy rather than stretching a portrait card
+         into a letterbox. The media loses its 4:3 and matches the card's own
+         height instead, which is set by the copy beside it. */
+      .cs-card-wide {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: stretch;
+      }
+      .cs-card-wide .cs-card-media {
+        flex: 0 0 48%;
+        aspect-ratio: auto;
+        min-height: 340px;
+      }
+      .cs-card-wide .cs-card-inner {
+        justify-content: center;
+        padding: 36px 40px;
+      }
+      .cs-card-wide .cs-card-title {
+        font-size: clamp(22px, 2.2vw, 30px);
+      }
+      .cs-card-wide .cs-card-body {
+        max-width: 54ch;
+      }
+
       @media (max-width: 980px) {
         .cs-featured { grid-template-columns: 1fr; }
         .cs-grid { grid-template-columns: 1fr; }
+        /* At one column the lead card is the same width as the rest, so the
+           side-by-side split has nothing to buy and it reverts. */
+        .cs-card-wide { flex-direction: column; }
+        .cs-card-wide .cs-card-media { flex: none; aspect-ratio: 4 / 3; min-height: 0; }
+        .cs-card-wide .cs-card-inner { padding: 18px 16px 20px; }
       }
     `}</style>
   );

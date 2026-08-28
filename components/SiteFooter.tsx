@@ -50,7 +50,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
       { label: "HeyGen Avatar", href: `${BASE}/apps/heygen-avatar` },
       { label: "Seedance 2.0", href: `${BASE}/features/seedance-2-0` },
       { label: "Sora 2", href: `${BASE}/apps/sora-2` },
-      { label: "Veo 3.1", href: `${BASE}/features/veo-3-1-ai-video-generator` },
+      { label: "Veo 3.1", href: `${BASE}/apps/veo-3.1-lite` },
       { label: "Kling 3.0", href: `${BASE}/apps/kling-3.0` },
       { label: "Pixverse v6", href: `${BASE}/apps/pixverse-v6` },
       { label: "Seedance 2.5", href: `${BASE}/features/seedance-2-5` },
@@ -59,13 +59,16 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
       { label: "GPT Image 2", href: `${BASE}/apps/gpt-image-2` },
       { label: "Nano Banana 2", href: `${BASE}/apps/nano-banana-2` },
       { label: "Image Upscaler", href: `${BASE}/apps/image-upscaler` },
-      { label: "Flux 2", href: `${BASE}/features/flux-2` },
+      { label: "Flux 2", href: `${BASE}/models/flux-schnell` },
     ],
   },
   {
     heading: "Contact Us",
     links: [
-      { label: "Contact Sales", href: `${BASE}/business/enterprise/contact-us` },
+      /* The Enterprise page's form. The footer is on every route and is a
+         server component with no pathname, so it always points there rather
+         than at whichever form the current page might have. */
+      { label: "Contact Sales", href: "/#contact" },
       { label: "Book a Demo", href: "https://cal.com/team/imagineart/imagineart-customer-assist" },
     ],
   },
@@ -190,7 +193,7 @@ export function SiteFooter() {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 pt-5 pb-2 border-t border-white/[0.06] flex-wrap">
           <div className="flex items-center gap-0.5 flex-wrap">
             <span className="text-[12px] text-white/25">
-              © {year} <strong className="font-semibold">Vyro Turkey</strong>. All rights reserved.
+              © {year} <strong className="font-semibold">Vyro</strong>. All rights reserved.
             </span>
             <button type="button" className="text-[12px] text-white/25 px-3 bg-transparent border-none cursor-pointer hover:text-white/55 transition-colors">
               Manage Cookie Preferences

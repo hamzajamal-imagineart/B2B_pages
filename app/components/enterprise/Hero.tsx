@@ -1,14 +1,16 @@
 import { BannerHero } from "@/components/BannerHero";
-import { CONTACT_HREF } from "./ClosingCta";
+import { CONTACT_ANCHOR } from "./ClosingCta";
 
 /**
  * Enterprise hero — the shared banner composition.
  *
- * ⚠ hero-v2.mp4 is a screen recording of Langdock, not ImagineArt: the URL bar
- * reads app.langdock.com and the sidebar carries their wordmark. Langdock was
- * one of the design references for this redesign and its capture appears to
- * have been used as the asset by mistake. Replace before launch —
- * HANDOFF §6 item 7.
+ * The footage is shared with the Solutions hero rather than duplicated: it is
+ * one film, and both pages open on it. A replacement meant for only one of
+ * them needs its own path.
+ *
+ * It replaces hero-v2.mp4, which was a screen recording of Langdock rather
+ * than ImagineArt — app.langdock.com in the URL bar, their wordmark in the
+ * sidebar. That file is now unreferenced; do not wire it back in.
  */
 export default function Hero() {
   return (
@@ -17,9 +19,9 @@ export default function Hero() {
       title="Create at the speed"
       muted="of your ambition"
       titleMaxCh={16}
-      video="/media/hero-v2.mp4"
+      video="/media/hero-enterprise.mp4"
       grain="grain-sage"
-      primary={{ label: "Contact Sales", href: CONTACT_HREF }}
+      primary={{ label: "Contact Sales", href: CONTACT_ANCHOR }}
       footText="The enterprise AI creative platform that turns ideas into production-ready images and video, securely, at scale, and without limits on who gets to create."
       footLink={{ label: "See how workflows work →", href: "/workflows" }}
     />

@@ -936,6 +936,8 @@ type UseCase = {
   label: string;
   visualTitle: string;
   desc: string;
+  /** Closest matching filter in the template gallery, if there is one. */
+  category?: string;
   /**
    * Category footage, one file per category in `public/media/use-cases/`.
    * These used to share five clips from the public root, so Photography and
@@ -946,15 +948,30 @@ type UseCase = {
   video: string;
 };
 
+/**
+ * The template gallery and its seven confirmed category slugs:
+ *
+ *   cinematic · advertising · fashion · branding · fmcg · fastfood · editing
+ *
+ * Two do not follow from their chip label — "Fashion & Apparel" is `fashion`
+ * and "Fast Food" is `fastfood`, unhyphenated — so derive nothing here, and
+ * check a new one against the gallery before adding it.
+ *
+ * Categories with no honest match get no filter rather than a wrong one.
+ */
+const GALLERY_HREF = "https://www.imagine.art/enterprise/template";
+const galleryHref = (category?: string) =>
+  category ? `${GALLERY_HREF}?category=${category}` : GALLERY_HREF;
+
 const USE_CASES: UseCase[] = [
-  { id: "vfx",          label: "Visual Effects", visualTitle: "Character & Background Swaps", desc: "Swap scenes. Add objects. Reimagine anything.",            video: "/media/use-cases/vfx.mp4" },
-  { id: "fashion",      label: "Fashion",        visualTitle: "Editorial Lookbooks",          desc: "Editorial fashion stories. On-model, every time.",         video: "/media/use-cases/fashion.mp4"   },
-  { id: "advertising",  label: "Advertising",    visualTitle: "Performance Ad Pack",          desc: "Hooks, statics, motion. Built for paid social.",           video: "/media/use-cases/advertising.mp4"   },
-  { id: "photography",  label: "Photography",    visualTitle: "Studio Product Shots",         desc: "Photoreal SKU shots. No studio.",                          video: "/media/use-cases/photography.mp4"  },
+  { id: "vfx",          label: "Visual Effects", category: "editing", visualTitle: "Character & Background Swaps", desc: "Swap scenes. Add objects. Reimagine anything.",            video: "/media/use-cases/vfx.mp4" },
+  { id: "fashion",      label: "Fashion",        category: "fashion", visualTitle: "Editorial Lookbooks",          desc: "Editorial fashion stories. On-model, every time.",         video: "/media/use-cases/fashion.mp4"   },
+  { id: "advertising",  label: "Advertising",    category: "advertising", visualTitle: "Performance Ad Pack",          desc: "Hooks, statics, motion. Built for paid social.",           video: "/media/use-cases/advertising.mp4"   },
+  { id: "photography",  label: "Photography",    category: "fmcg", visualTitle: "Studio Product Shots",         desc: "Photoreal SKU shots. No studio.",                          video: "/media/use-cases/photography.mp4"  },
   { id: "concepting",   label: "Concepting",     visualTitle: "Concept Art & Worldbuilding",  desc: "Characters, environments, props, on-style.",             video: "/media/use-cases/concepting.mp4" },
-  { id: "branding",     label: "Branding",       visualTitle: "Brand Kit Application",        desc: "Lock your brand once. Generate forever.",                  video: "/media/use-cases/branding.mp4"     },
-  { id: "product",      label: "Product",        visualTitle: "Packshots & Renders",          desc: "Studio-grade visuals for every PDP.",                      video: "/media/use-cases/product.mp4" },
-  { id: "motion",       label: "Motion",         visualTitle: "Animated Brand Moments",       desc: "Statics into motion. Loops, transitions, hero moments.",   video: "/media/use-cases/motion.mp4"   },
+  { id: "branding",     label: "Branding",       category: "branding", visualTitle: "Brand Kit Application",        desc: "Lock your brand once. Generate forever.",                  video: "/media/use-cases/branding.mp4"     },
+  { id: "product",      label: "Product",        category: "fmcg", visualTitle: "Packshots & Renders",          desc: "Studio-grade visuals for every PDP.",                      video: "/media/use-cases/product.mp4" },
+  { id: "motion",       label: "Motion",         category: "cinematic", visualTitle: "Animated Brand Moments",       desc: "Statics into motion. Loops, transitions, hero moments.",   video: "/media/use-cases/motion.mp4"   },
   { id: "character",    label: "Character",      visualTitle: "Consistent Characters",        desc: "Characters that stay on-model. Always.",                   video: "/media/use-cases/character.mp4"  },
   { id: "architecture", label: "Architecture",   visualTitle: "Spaces & Environments",        desc: "Spaces with photoreal lighting. Any scale.",               video: "/media/use-cases/architecture.mp4"   },
 ];
@@ -1051,10 +1068,22 @@ function UseCasesFlora() {
           From product shots to VFX, from lookbooks to motion ads, a workflow for every kind of creative work.
         </p>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 28 }}>
-          <ButtonLink href="#" variant="brand" size="md">
+          <ButtonLink
+            href="https://www.imagine.art/enterprise"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="brand"
+            size="md"
+          >
             Open the app
           </ButtonLink>
-          <ButtonLink href="/templates" variant="muted" size="md">
+          <ButtonLink
+            href={GALLERY_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="muted"
+            size="md"
+          >
             Browse workflows
           </ButtonLink>
         </div>
@@ -1217,7 +1246,13 @@ function UseCasesFlora() {
             >
               {current.desc}
             </p>
-            <ButtonLink href="/templates" variant="muted" size="md">
+            <ButtonLink
+              href={galleryHref(current.category)}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="muted"
+              size="md"
+            >
               Explore this Flow →
             </ButtonLink>
           </div>
@@ -1229,12 +1264,9 @@ function UseCasesFlora() {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-/**
- * Where the Templates section sends people. There is no `/templates` route in
- * this app — the templates live in the product, so both the section's button
- * and every card go to the real apps directory rather than a local 404.
- */
-const TEMPLATES_HREF = "https://www.imagine.art/apps";
+/* Where the Templates section sends people: the same gallery the use-cases
+   CTAs point at. There is no /templates route in this app. */
+const TEMPLATES_HREF = GALLERY_HREF;
 
 // Templates section — same shape as the home TemplatesSection (categories + grid)
 // ────────────────────────────────────────────────────────────────────────────
@@ -1314,8 +1346,13 @@ function TemplatesPreview() {
         })}
       </div>
 
-      {/* Uniform card grid: the templates are peers with one shared 4:3
-          aspect, which is exactly the case Guidelines §6 reserves it for. */}
+      {/* Uniform card grid: the templates are peers on one shared aspect, which
+          is exactly the case Guidelines §6 reserves it for.
+
+          Square, not the 4:3 it used to be. Half the clips are 3:4 portrait and
+          half are 16:9 landscape, so no single ratio suits both — 4:3 was cheap
+          on the landscape ones and cut the portrait ones nearly in half. A
+          square splits the difference and gives every card a third more height. */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 24 }}>
         {visible.map((t, i) => {
           const isHov = hovered === i;
@@ -1333,7 +1370,7 @@ function TemplatesPreview() {
                 style={{
                   borderRadius: 24,
                   overflow: "hidden",
-                  aspectRatio: "4/3",
+                  aspectRatio: "1/1",
                   background: "var(--panel-2)",
                   position: "relative",
                   transition: "transform 400ms cubic-bezier(0.22,1,0.36,1), border-color 300ms",
@@ -1385,22 +1422,13 @@ function TemplatesPreview() {
                     color: "#0a0a0b",
                     letterSpacing: "-0.02em",
                     lineHeight: 1.25,
-                    margin: "0 0 6px",
+                    /* Was 0 0 6px, spacing the descriptor that sat below. The
+                       title is the last thing in the card now. */
+                    margin: 0,
                   }}
                 >
                   {t.title}
                 </h3>
-                <p
-                  style={{
-                    fontFamily: FONT,
-                    fontSize: 13,
-                    color: "rgba(10,10,11,0.55)",
-                    lineHeight: 1.55,
-                    margin: 0,
-                  }}
-                >
-                  {t.desc}
-                </p>
               </div>
             </a>
           );
@@ -1538,7 +1566,7 @@ export default function WorkflowPage() {
         cards={[
           // Also the banner in the home page's Workflows section.
           <VideoCard key="a1" src={withBasePath("/media/modes/quick-iterations.mp4")} hasAudio />,
-          <VideoCard key="a2" src={withBasePath("/media/variable-demo.mp4")} />,
+          <VideoCard key="a2" src={withBasePath("/media/modes/full-creative-pipelines.mp4")} hasAudio />,
           <VideoCard key="a3" src={withBasePath("/media/modes/autonomous-agent.mp4")} hasAudio />,
         ]}
       />

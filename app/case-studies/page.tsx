@@ -7,7 +7,7 @@ import { NAV_VARIANT } from "@/lib/theme";
 
 import Hero from "../components/case-studies/Hero";
 import CaseStudyIndex from "../components/case-studies/Index";
-import ClosingCta, { CONTACT_HREF, START_HREF } from "../components/enterprise/ClosingCta";
+import ClosingCta, { CONTACT_HREF, CONTACT_TARGET, START_HREF } from "../components/enterprise/ClosingCta";
 
 export const metadata: Metadata = {
   title: "ImagineArt Case Studies, How Brands Scale Creative Production",
@@ -29,7 +29,7 @@ export default function CaseStudiesPage() {
           title="Put your team"
           muted="on the next one."
           lede="Talk to us about what production at this scale looks like for an organization your size."
-          primary={{ label: "Contact Sales", href: CONTACT_HREF }}
+          primary={{ label: "Contact Sales", href: CONTACT_HREF, ...CONTACT_TARGET }}
           secondary={{ label: "Get Started", href: START_HREF }}
         />
       </main>

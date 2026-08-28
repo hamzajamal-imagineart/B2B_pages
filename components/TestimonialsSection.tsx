@@ -5,9 +5,21 @@ import { SectionGuides } from "@/components/primitives/SectionGuides";
  * metrics) that sticks while a stacked column of individual reviews scrolls
  * past it on the right.
  *
- * TODO: every value below is placeholder. Replace the quotes, the sources and
- * the metrics with real figures before this ships — a fabricated rating or
- * review is worse than showing no social proof at all.
+ * Reviews are real, pulled from the public Trustpilot profile for
+ * www.imagine.art on 28 Aug 2026, filtered to five stars. Kept short and
+ * attributed to the reviewer's own display name and Trustpilot, because that
+ * is all the source gives — a role and company would have to be invented, and
+ * an invented source is worse than a thin one.
+ *
+ * Obvious typos are corrected and nothing else is changed. Two caveats worth
+ * carrying forward:
+ *
+ * 1. These are consumer reviews of the consumer product. None of them mentions
+ *    a team, brand consistency or scale, which is what this page sells. The
+ *    surrounding copy still says "teams".
+ * 2. The profile's overall score is 3.9, not 5. Showing only five-star reviews
+ *    is normal marketing practice but it is a selected view, so do not pair it
+ *    with an aggregate rating claim.
  */
 type Review = { stars: number; quote: string; source: string };
 
@@ -15,25 +27,58 @@ const REVIEWS: Review[] = [
   {
     stars: 5,
     quote:
-      "TODO: a quote about the specific problem this solved, in the customer's own voice. Name the situation, not the feature.",
-    source: "TODO: Role, Company",
+      "I tried multiple tools to create videos but only ImagineArt was able to give me crisp videos as per the prompt.",
+    source: "Uzair Khan, via Trustpilot",
   },
   {
     stars: 5,
     quote:
-      "TODO: a second quote from a different kind of user, so the set doesn't read as one persona.",
-    source: "TODO: Role, Company",
+      "I love this platform. Very easy to navigate through whatever you need to create, and the pricing is very reasonable.",
+    source: "Robyn Delay, via Trustpilot",
   },
   {
     stars: 5,
     quote:
-      "TODO: a third quote. Ideally one that names a constraint — time, budget, headcount — that the product removed.",
-    source: "TODO: Role, Company",
+      "ImagineArt was very helpful to me. Their support was extremely responsive to what I needed.",
+    source: "Heidi Anderson, via Trustpilot",
   },
   {
     stars: 5,
-    quote: "TODO: a fourth quote. Keep the four roles distinct from each other.",
-    source: "TODO: Role, Company",
+    quote:
+      "It's the perfect portal for everything I need in AI. Easy to add credits. Quick and responsive.",
+    source: "Aubrey Kurlansky, via Trustpilot",
+  },
+  {
+    stars: 5,
+    quote:
+      "Easy to generate. Everything you need is here, and one clip and the task is completed.",
+    source: "Event House, via Trustpilot",
+  },
+  {
+    stars: 5,
+    quote:
+      "I'm really impressed with the quality. It works very well and completely met my expectations.",
+    source: "Ali Haider, via Trustpilot",
+  },
+  {
+    stars: 5,
+    quote: "Love it. It's my go-to re-imaging tool.",
+    source: "Karen Golding, via Trustpilot",
+  },
+  {
+    stars: 5,
+    quote: "Excellent results every time. Just loved it.",
+    source: "Verified reviewer, via Trustpilot",
+  },
+  {
+    stars: 5,
+    quote: "Very nice work on this project, and the art is amazing.",
+    source: "Giwrgos Avdiu, via Trustpilot",
+  },
+  {
+    stars: 5,
+    quote: "A great and comprehensive application.",
+    source: "Bud Brure, via Trustpilot",
   },
 ];
 

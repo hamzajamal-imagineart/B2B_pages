@@ -10,14 +10,24 @@ const NAV_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 const NAV_DURATION = "480ms";
 
 const HOME = "https://www.imagine.art";
-const CTA_HREF = "https://www.imagine.art/business/enterprise/contact-us";
+/**
+ * The nav CTA points at a contact form section, not an off-site page.
+ *
+ * Enterprise and Solutions each render their own form, so there it is a
+ * same-page scroll. Every other route has no form, so it goes to the
+ * Enterprise one in a new tab rather than navigating the reader away.
+ */
+const PAGES_WITH_FORM = new Set(["/", "/solutions"]);
+const contactCta = (pathname: string) =>
+  PAGES_WITH_FORM.has(pathname)
+    ? { href: "#contact" }
+    : { href: "/#contact", target: "_blank", rel: "noopener noreferrer" };
 
 type NavLink = { label: string; href: string; activeRoute?: string; exact?: boolean };
 
 const NAV_LINKS: NavLink[] = [
   { label: "Enterprise", href: "/", activeRoute: "/", exact: true },
   { label: "Solutions", href: "/solutions", activeRoute: "/solutions" },
-  { label: "Platform", href: "/platform", activeRoute: "/platform" },
   { label: "Case Studies", href: "/case-studies", activeRoute: "/case-studies" },
   // Not in the supplied ordering, which lists only the five pages with content
   // specs. Kept, and placed last, because /workflows is a live route.
@@ -176,7 +186,7 @@ export function SiteNav({
 
         {/* Desktop CTA (single primary — per Guidelines' single-CTA allowance) */}
         <div className="nav-desktop" style={{ alignItems: "center", gap: 10, flexShrink: 0 }}>
-          <a href={CTA_HREF} className="nav-cta" style={{ height: 40, padding: "8px 16px", fontSize: 16 }}>
+          <a {...contactCta(pathname)} className="nav-cta" style={{ height: 40, padding: "8px 16px", fontSize: 16 }}>
             Contact Sales
           </a>
         </div>
@@ -244,7 +254,7 @@ export function SiteNav({
             <div style={{ width: "calc(100% - 48px)", height: 1, background: "rgba(11,11,12,0.08)", margin: "16px 0" }} />
 
             <a
-              href={CTA_HREF}
+              {...contactCta(pathname)}
               onClick={() => setMenuOpen(false)}
               style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", height: 46, padding: "0 26px", borderRadius: 22, fontFamily: FONT, fontSize: 15, fontWeight: 600, color: "#fff", background: "#171717", textDecoration: "none" }}
             >
