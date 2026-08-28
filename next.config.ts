@@ -8,7 +8,12 @@ const nextConfig: NextConfig = {
   // `output: "export"`, this stops applying and the redirect has to be set on
   // the host proxy instead.
   async redirects() {
-    return [{ source: "/business", destination: "/", permanent: true }];
+    return [
+      { source: "/business", destination: "/", permanent: true },
+      // /platform removed. Its Suite, Models and Apps sections already live on
+      // /, so that is where the path resolves rather than 404ing.
+      { source: "/platform", destination: "/", permanent: true },
+    ];
   },
 };
 
