@@ -193,7 +193,7 @@ export function SiteFooter() {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 pt-5 pb-2 border-t border-white/[0.06] flex-wrap">
           <div className="flex items-center gap-0.5 flex-wrap">
             <span className="text-[12px] text-white/25">
-              © {year} <strong className="font-semibold">Vyro Turkey</strong>. All rights reserved.
+              © {year} <strong className="font-semibold">Vyro</strong>. All rights reserved.
             </span>
             <button type="button" className="text-[12px] text-white/25 px-3 bg-transparent border-none cursor-pointer hover:text-white/55 transition-colors">
               Manage Cookie Preferences
