@@ -94,8 +94,11 @@ export default function CaseStudyIndex() {
         </p>
 
         <div className="cs-grid mt-8">
-          {stories.map((s) => (
-            <StoryCard key={s.slug} story={s} />
+          {/* The first card leads full-width. Under a filter or a search that
+              is whichever study heads the narrowed set, so the shape of the
+              grid stays the same rather than losing its lead. */}
+          {stories.map((s, i) => (
+            <StoryCard key={s.slug} story={s} wide={i === 0} />
           ))}
         </div>
 
