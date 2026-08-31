@@ -1,17 +1,20 @@
 # ImagineArt Enterprise — B2B Pages Handoff
 
-Five marketing pages for **ImagineArt**, built from stakeholder content specs
-(`B2B LPs` PDFs) on one design system and one component kit.
+Four marketing pages for **ImagineArt**, built from stakeholder content specs
+(`B2B LPs` PDFs) on one design system and one component kit. `/platform` was
+folded into `/` and now redirects.
 
 - **Repo:** https://github.com/hamzajamal-imagineart/B2B_pages
-- **Branch:** `redesign/enterprise-visual-language` — merged to `main` via PRs #1–#9
+- **Branch:** `redesign/enterprise-visual-language` — PRs #1–#12 merged to `main`
 - **Stack:** Next.js 16.2.4 (App Router, Turbopack) · React 19 · TypeScript · Tailwind v4
 - **Run:** `npm run dev` → http://localhost:3000 · **Build:** `npm run build` (passes clean)
-- **No `gh` CLI and no GitHub MCP on this machine.** PRs must be opened in the browser.
+- **`gh` CLI is installed and authenticated.** An earlier handoff said otherwise.
+  It authenticates per account: `gh auth switch --user hamzajamal-imagineart`, and
+  git reads that token only after `gh auth setup-git`. The macOS keychain may hold
+  a colleague's credential that otherwise wins and 403s the push.
 
-> **Git state at handoff:** `main` is at PR #9 and contains everything except the
-> final commit (`07b3dfc`, the Models rebuild), which is pushed to the branch but
-> not yet merged. One PR away from parity.
+> **Git state at handoff:** everything below is on the branch and in **open PR #13**,
+> which is where all work lands — do not open a second one. `main` is at PR #12.
 
 ---
 
@@ -19,19 +22,23 @@ Five marketing pages for **ImagineArt**, built from stakeholder content specs
 
 | Route | Page | Notes |
 |---|---|---|
-| `/` | Enterprise | **Business merged into this page.** 13 sections. |
-| `/platform` | Platform | |
-| `/solutions` | Industry/Solutions | |
+| `/` | Enterprise | **Business merged into this page.** 11 sections. |
+| `/solutions` | Industry/Solutions | now carries Workflows, Apps and its own form |
 | `/case-studies` | Case-study index | filter chips + search |
-| `/case-studies/[slug]` | Detail (4 live) | |
+| `/case-studies/[slug]` | Detail — **12 live** | |
 | `/workflows` | Workflows | was a clone from another repo; now largely conformed |
+| ~~`/platform`~~ | **gone** | 308 → `/`; its Suite/Models/Apps already lived there |
 | ~~`/business`~~ | **gone** | 308 → `/` via `next.config.ts` |
 
-Nav is **Enterprise · Solutions · Platform · Case Studies · Workflows**.
+Nav is **Enterprise · Solutions · Case Studies · Workflows**.
 
-⚠ **The `/business` redirect is a server feature.** If this ever deploys as
-`output: "export"`, `redirects()` stops applying and the rule must move to the
+⚠ **Both redirects are a server feature.** If this ever deploys as
+`output: "export"`, `redirects()` stops applying and the rules must move to the
 host proxy. Noted in `next.config.ts` itself.
+
+⚠ **`PLATFORM_TOOLS` did not go with the page.** It is the source array
+`BUSINESS_TOOLS` spreads. `platform/BuiltForEnterprise` and `platform/Hero` are
+unreferenced but left on disk.
 
 ---
 
@@ -44,19 +51,21 @@ with defaults.
 
 | Shared component | Used by |
 |---|---|
-| `BannerHero` | `/`, `/solutions` (`footLink` optional; omit `video` for a placeholder panel) |
-| `ContactForm` | `/`, `/platform` — **HubSpot embed**, see §5 |
-| `IndustriesSection` | `/`, `/solutions` — 10 cards, all now with video |
-| `WorkflowsSection` | `/`, `/workflows`-adjacent — node canvas + the 4-panel Z-fold (`AdminBento`) |
+| **`MediaCard` + `MediaCardStyles`** | Industries, Apps, Templates — **the card**, see §6 |
+| `BannerHero` | `/`, `/solutions` — both now carry the same hero film |
+| `ContactForm` | `/`, `/solutions` — **HubSpot embed**, see §5 |
+| `IndustriesSection` | `/`, `/solutions` — 10 cards, grid, all with video |
+| `WorkflowsSection` | `/solutions` — node canvas + the 4-panel Z-fold (`AdminBento`) |
 | `AdminBento` | inside `WorkflowsSection` — plain icon grid, see §6 |
-| `CollaborationDemo` | `/workflows`, `tone="light" \| "dark"` |
-| `CaseStudyCards` | `/`, `/solutions`, `/case-studies` |
+| `CollaborationDemo` | `/workflows` bento, `tone="light" \| "dark"` |
+| `CaseStudyCards` | `/`, `/case-studies` — `StoryCard` takes `wide` for the lead |
 | `IntegrationsGrid` | `/workflows`, props `vignette` and `tone` |
 | `PageTint` | every page — see §3 |
-| `platform/Suite` + `SuiteRail` | `/`, `/platform` — see §4 |
-| `platform/Models`, `platform/Apps`, `platform/BuiltForEnterprise` | `/`, `/platform` |
-| `enterprise/Security` | `/`, `/platform`-adjacent — 7 tiles |
-| `enterprise/ClosingCta` | every page |
+| `platform/Suite` + `SuiteRail` | `/` — see §4 |
+| `platform/Models` | `/`, `/workflows` |
+| `platform/Apps` | `/solutions` |
+| `enterprise/Security` | `/` — 7 tiles |
+| `enterprise/ClosingCta` | every page — also exports the contact hrefs, see §5 |
 | `SiteNav` / `SiteFooter` | every page |
 
 **`Suite` is a server component; `SuiteRail` is the client half.** Marking
@@ -76,7 +85,6 @@ recessed panel) so a heading can never drift from its background.
 | Page | Palette |
 |---|---|
 | `/` | sage |
-| `/platform` | slate |
 | `/solutions` | mineral |
 | `/case-studies` | stone |
 | `/workflows` | **neutral** (white; added so the page stopped being an exception) |
@@ -101,20 +109,22 @@ objects and cannot reach the CSS classes. It is a **copy** — change both.
 
 ## 4. Section inventory
 
-**`/` (13 sections):** Hero · Partners · Suite · Pitch · Industries · Workflows+Z-fold ·
-Apps · Security · Case studies · Testimonials · Models · Contact form · Closing CTA
+**`/` (11 sections):** Hero · Partners · Suite · Pitch · Industries · Security ·
+Case studies · Testimonials · Models · Contact form · Closing CTA
 
-**`/platform`:** Hero · Partners · Suite · Models · BuiltForEnterprise · Apps ·
-Contact form · Closing CTA
+**`/solutions` (8):** Hero · Industries · Partners · BuiltForSuccess · Workflows+Z-fold ·
+Apps · Contact form · Closing CTA
 
-**`/solutions`:** Hero · Industries · Partners · BuiltForSuccess · Case studies · Closing CTA
+Workflows and Apps moved off `/`, which was carrying thirteen sections; Case
+studies came off `/solutions`. Industries and Partners are still on both.
 
 **`/workflows`:** CanvasHero · Creative modes (tabbed rail) · Use cases ·
 Capabilities bento · Templates · Models · FAQ · Closing CTA
 
 ### The Suite rail
 
-Nine tools (`BUSINESS_TOOLS`) on `/`, eight (`PLATFORM_TOOLS`) on `/platform`.
+Nine tools (`BUSINESS_TOOLS`) on `/`. `PLATFORM_TOOLS` is still the source array
+it spreads, even though `/platform` is gone.
 Was a 4-column grid; now a card rail with chevrons, matching the industry rail.
 Every card has media and its own `imagine.art` destination, opening in a new tab.
 
@@ -131,8 +141,15 @@ three across on a six-column grid. Wordmarks are set in type, not logos.
 **Unverified naming** — provider prefixes were dropped where the card already
 says it (`Hailuo H3` under MiniMax, `Grok Image` under xAI); **Alibaba** and
 **Lightricks** are inferred from descriptors; **Kling** is the brand, not
-Kuaishou; **Flux 3 is filed as video** on its descriptor alone. `media` is on the
-type but empty — backdrops pending.
+Kuaishou; **Flux 3 is filed as video** on its descriptor alone.
+
+**Backdrops have landed.** All 14 cards carry a sample of that provider's own
+output from `public/media/models/`, one file per provider, shared with nothing
+else. `.mp4` renders as a muted loop, anything else as a still — the extension
+picks the element, so a replacement only has to keep its name. Omitting `media`
+still falls back to the flat `#16171a` tone, which is what a provider added
+before its footage arrives should do. Scrim alphas there are **measured, not
+chosen**: see the comment on `.mdl-scrim` before lightening them.
 
 ---
 
@@ -165,10 +182,46 @@ a `MutationObserver` fires once, too early, and never again.
 Only the `pagename` hidden field separates them. Clone the form and swap
 `FORM_ID` if they must be distinct.
 
+### Where the contact CTAs go
+
+Every reach-out CTA now lands on a form section on this site, not an off-site
+page. Two shapes, both exported from `enterprise/ClosingCta`:
+
+- `CONTACT_ANCHOR` (`#contact`) — same-page scroll, for the two pages that
+  render a form: `/` and `/solutions`.
+- `CONTACT_HREF` (`/#contact`) + `CONTACT_TARGET` — the Enterprise form, for
+  every other page, in a new tab so a reader mid-case-study keeps their place.
+
+`SiteNav` is pathname-aware. `SiteFooter` is not — it is a server component
+with no pathname, so it always points at the Enterprise form.
+
+**"Get Started" and the teams/subscription link are deliberately untouched.**
+They are product entry points, not ways to reach a person.
+
 ---
 
 ## 6. Decisions worth knowing (changing these reintroduces a bug)
 
+- **There is one card: `components/MediaCard.tsx`.** Industries, Apps and
+  Templates all render it. Callers choose only size and fill — Industries 3:4,
+  Templates 1:1, Apps an explicit height because its grid runs two rows at
+  different widths. Everything else is fixed there on purpose: no scrim at rest,
+  a scrim fading in on hover to carry the body copy, a text-shadow doing the
+  title's legibility locally, both shown outright on touch, all of it cancelled
+  under reduced motion. **Render `MediaCardStyles` once per section, not per
+  card.** Do not fork it back out.
+- **Apps passes its height as a custom property**, not a number. The card sets
+  height inline, and an inline style outranks a media query, so a responsive
+  height has to arrive through `--app-card-h`.
+- **Two rules at equal specificity are decided by source order.** Adding
+  `color: inherit` to `.app-card` silently beat `.app-has-video { color: #fff }`
+  further up the sheet and turned every card's copy and arrow dark, because
+  both `.app-name` and the arrow use `currentColor`.
+- **Do not gate content on an active index.** The use-cases preview rendered
+  `current.desc`, so nine of ten descriptions never reached the HTML and a
+  crawler without JS saw one. All ten render now, stacked in a single grid cell
+  with only the active one opaque, inactive ones `aria-hidden` and out of the
+  tab order.
 - **`overflow-x: auto` coerces `overflow-y` to `auto`.** Every card rail with a
   hover scale needs `padding-block` headroom or the growing card is clipped.
   This bit the platform, industry and suite rails in turn.
@@ -198,63 +251,122 @@ Only the `pagename` hidden field separates them. Clone the form and swap
 
 ## 7. Assets
 
-`public/media/` is **21MB** (was 13MB at the last handoff). Everything is
-re-encoded through ffmpeg; card media is sized to its render width, not the
-source.
+`public/media/` is **~70MB** (21MB two handoffs ago). Everything is re-encoded
+through ffmpeg; card media is sized to its render width, not the source. **That
+growth is the open weight problem — see §8.**
 
 ```
 media/
 ├── industries/*.mp4     10 of 10 — Telecom's gap is closed
 ├── apps/*.mp4           app + suite card clips
+├── models/*             14 provider backdrops, 8 clips + 6 stills (8.5MB)
+├── use-cases/*.mp4      10 category clips, one per use case (13MB)
+├── modes/*.mp4          3 creative-mode clips, WITH audio (~21MB)
 ├── templates/*.mp4      6 workflow-template clips
-├── cards/, brandkit/, admin/, case-studies/, noise/, partners/
-├── hero-v2.mp4          ⚠ Enterprise hero — see §8
-└── variable-demo.mp4    node canvas, used on several pages
+├── bento/*.mp4          capabilities-bento tiles (agents, MCP)
+├── hero-backdrop/*      6 node-scene assets, re-hosted off the CDN (500KB)
+├── case-studies/*.jpg   12 covers, 1600px
+├── cards/, brandkit/, admin/, noise/, partners/
+├── hero-enterprise.mp4  the hero, on `/` AND `/solutions` (5.6MB)
+└── variable-demo.mp4    node canvas, suite cards
 ```
 
-**Shared-file trap:** several clips serve two sections at once. Overwriting one
-silently changes a card nobody asked about — give a replacement its own path.
+**Shared-file trap:** several clips serve more than one section at once.
+Overwriting one silently changes a card nobody asked about — give a replacement
+its own path. Deliberate shares, noted at their call sites:
+
+- `hero-enterprise.mp4` — `/` and `/solutions` heroes
+- `modes/quick-iterations.mp4` — the modes rail and the home Workflows banner
+- `brandkit/brand-kits.mp4` — Suite card, capabilities bento, Templates card
+
+**Unreferenced but kept on purpose** (do not prune): `hero-v2.mp4`,
+`apps/video-reframe.mp4`, `templates/brand-kit.mp4`, `brandkit/brand-kits.webp`,
+`card-generate.*`, `admin/tile-*.jpg`.
 
 ---
 
 ## 8. Open items
 
-1. **⚠ The Enterprise hero video is a screen recording of Langdock.**
-   `public/media/hero-v2.mp4` shows `app.langdock.com`, their sidebar wordmark
-   and a GPT-5.1 picker. It is the largest element on `/`. **Replace before
-   launch.** Every other video is clean.
-2. **Testimonials has 9 `TODO` placeholder quotes** and now sits on the root.
-   Get real quotes or cut the section. (12 TODOs total; the others are minor.)
-3. **The contact form is not wired.** No endpoint in the spec; submit is
-   intercepted and the status line says so. `action` and `onSubmit` are passed
-   through for whoever connects it. **Company-size options are invented** — they
-   should match whatever CRM receives this.
-4. **Five videos sit at the public root** (`workflow-hero.mp4`, `editor-demo.mp4`,
-   `simple-demo.mp4`, `iterate-demo.mp4`, `models-bg.mp4`) and are referenced
-   without `withBasePath()`. Breaks both halves of Guidelines §7 and will 404 on
-   a mounted deploy.
-5. **`cdn.simpleicons.org`** — `IntegrationsGrid` pulls ~38 icons from an
-   external CDN at runtime.
-6. **No CI.** No `.github/workflows`; `npm run build` is the only guard. **And
-   `npm run lint` is broken repo-wide** — ESLint 9 needs `eslint.config.js` and
-   the project only has the old format. A minimal `npm ci && npm run build` on
-   PRs is overdue given the size of recent changes.
-7. **`/solutions` substantially duplicates `/`** — same industries, partners, case
-   studies. Worse since the merge, because `/` now also carries Suite/Models/Apps
-   from `/platform`. Needs a differentiation pass or a `rel=canonical` decision.
-8. **Unbuilt spec section:** "Added resources / blog slider" (§12 of the Business
-   spec). Blocked on real articles.
-9. **Three suite links are inferred** from the footer's map rather than confirmed:
-   Image/Video Canvas → `/image`, Video Extend → `/video`,
-   AI Influencer / UGC → `/apps/heygen-avatar`.
-10. **`/workflows` has pre-existing hydration warnings** and is still 6-of-7 files
-    `"use client"`, including the 1,700-line `WorkflowPage.tsx`. That is the real
-    performance item and it is untouched.
-11. **CEO feedback, not actioned:** *"We would have a switcher at the top for
+**Closed since the last handoff:** the Langdock hero (1), the testimonial
+placeholders (2), the un-prefixed root videos (4), and the hand-built contact
+form (3 — the form is a live HubSpot embed, see §5).
+
+### Correctness
+
+1. **Two footer labels contradict their destinations.** "Flux 2" points at
+   `/models/flux-schnell`, a different model; "Veo 3.1" at the Lite variant.
+   Both URLs resolve — it is the labels that are wrong. The Models section on
+   `/workflows` still lists Flux 2 / 2 Max / 2 Klein, so the footer is the only
+   place Flux appears as Schnell.
+2. **Six `<img>` carry no `alt` attribute at all** — `SiteNav`, `Partners`,
+   `IntegrationsGrid`, `MediaPlaceholder`, the case-study detail page and the
+   hero backdrop. Decorative images need `alt=""`, not nothing, or a screen
+   reader may read the filename.
+3. **The Outfit Tryon card points at `studio-tryon-male`**, which is narrower
+   than the card's name.
+
+### Weight
+
+4. **`public/media/` is ~70MB, up from 21MB.** `/workflows` alone carries around
+   21MB of mode footage, all three clips eager-loading before a tab is touched,
+   and the hero is 5.6MB on two pages. **The single biggest win is unapplied:**
+   `preload="metadata"` plus pausing inactive cards — the pattern `UseCasesFlora`
+   already uses in the same file. The mode clips run 46–52s; a 12–15s cut would
+   take each to roughly a fifth with no quality loss.
+5. **`cdn.simpleicons.org`** — `IntegrationsGrid` pulls its icons from an
+   external CDN at runtime. The hero backdrop's assets were re-hosted off their
+   CDN; this is the last runtime third-party dependency.
+
+### Content
+
+6. **The testimonials are consumer reviews of the consumer product.** None
+   mentions a team, brand consistency or scale, and they sit under a heading
+   reading "Trusted by teams". The Trustpilot profile scores 3.9 overall, so
+   showing only five-star reviews is a selected view — do not pair it with an
+   aggregate rating claim. Verify the right to use the reviewers' names.
+7. **`CPG` and `FMCG` are separate case-study chips for the same thing.**
+   More visible now there are twelve studies.
+8. **The case-study set skews to agencies** (4 of the 8 added), and FJWU is a
+   university on a B2B page. Strong numbers, odd fit.
+9. **"Scaled production" is no longer claimed anywhere** — that bento card became
+   Connect with MCP, which sits beside the Integrations card, so the bento has
+   two integration tiles.
+10. **Unbuilt spec section:** "Added resources / blog slider" (§12 of the
+    Business spec). Blocked on real articles.
+11. **Three suite links are inferred** rather than confirmed: Image/Video Canvas
+    → `/image`, Video Extend → `/video`, AI Influencer / UGC →
+    `/apps/heygen-avatar`.
+
+### Engineering
+
+12. **No CI.** No `.github/workflows`; `npm run build` is the only guard. **And
+    `npm run lint` is broken repo-wide** — ESLint 9 needs `eslint.config.js` and
+    the project only has the old format.
+13. **`/workflows` has pre-existing hydration warnings** and is still mostly
+    `"use client"`, including the ~1,530-line `WorkflowPage.tsx`. That is the
+    real performance item and it is untouched.
+14. **`/solutions` still overlaps `/`** on Industries and Partners. Case studies
+    came off it and Workflows/Apps moved onto it, so the two pages are further
+    apart than they were, but a `rel=canonical` decision is still open.
+15. **CEO feedback, not actioned:** *"We would have a switcher at the top for
     Creative, Computer."* These pages only sell the Creative line; **Imagine
-    Computer** is a whole product line they never mention. Unresolved whether the
-    switcher changes the page or just the product grid, and whether Computer-side
-    copy exists.
+    Computer** is a whole product line they never mention.
+
+### ⚠ Never visually verified
+
+16. Four compositions were built and measured but **never seen**, because the
+    in-app preview pane caps at 782px wide:
+    - the **workflows hero backdrop** — its scene needs >1024px and its glow is
+      deliberately disabled below 1280px, so a narrow window shows a static
+      centred glow that looks broken and is not;
+    - the **full-width Unilever card** on the case-study index, which only
+      exists above 980px;
+    - the **Templates cards**, which changed from stacked to overlay;
+    - the **Industries grid** at its four-column breakpoint.
+
+    Everything measurable checks out — tokens resolve, classes emit, assets
+    load, contrast passes. The compositions are unverified. Open them in a real
+    browser above 1280px before shipping.
 
 ---
 
@@ -276,11 +388,26 @@ animating those reflows the list and shifts the page mid-scroll.
 ## 10. Verifying visually
 
 The in-app preview pane reports `visibilityState: hidden`, which suspends
-scroll-driven animation and smooth scrolling. **Check in a real browser:** hero
-scroll-zoom, video autoplay, the chevron pagers (they set `el.scrollLeft` with
-`scroll-behavior: smooth`; the pane suspends it — set `scrollBehavior = 'auto'`
-first to test), and the scroll-driven active state in the use-cases list.
+scroll-driven animation, smooth scrolling **and `loading="lazy"`** — a lazy
+image will sit at `naturalWidth: 0` forever there and load fine in a browser.
 
-The pane also only screenshots reliably at scroll 0, and it resets an injected
-negative `margin-top` on reload. **Prefer asserting computed values via
-JavaScript over screenshots** — it is faster and does not race the pane.
+**The pane also caps around 782px wide**, whatever viewport you ask for. That is
+below four separate breakpoints in this project, so several compositions cannot
+be seen in it at all — see §8 item 16.
+
+**Check in a real browser:** the hero scroll-zoom, video autoplay, the
+scroll-driven active state in the use-cases list, and anything above 980px.
+
+Screenshots only work reliably at scroll 0, and an injected negative
+`margin-top` resets on reload. **Prefer asserting computed values via
+JavaScript over screenshots** — faster, and it does not race the pane.
+
+⚠ **Synthetic mouse events do not reach React hover handlers.** React derives
+`onMouseEnter` from bubbling `mouseover`/`mouseout` pairs, so a dispatched
+`mouseenter` no-ops and a dispatched `mouseover` usually does too. Hover
+behaviour written in CSS can be read off computed styles; hover behaviour
+gated on React state effectively cannot be tested from the pane.
+
+⚠ **`npm run build` kills the dev server.** Several checks in this session
+returned `000` for every route and read as catastrophic when the server had
+simply gone. Re-start the preview and re-check before believing a sweep.
