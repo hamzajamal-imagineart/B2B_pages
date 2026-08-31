@@ -104,10 +104,14 @@ function BrandKitDemo() {
   );
 }
 
-// ── Scaled production: batched output mosaic ────────────────────────────────
-/* Scaled production: the batch itself. A feed comes in, rows fan out across
-   locale and format, and the run reports progress. That is the claim of the
-   card, so the panel states it as a job rather than as decoration. */
+// ── Connect with MCP ────────────────────────────────────────────────────────
+/* This card used to be "Scaled production", illustrated by a mock CSV job
+   fanning out across locale and format. The claim is now the MCP server, so
+   the CSV panel had to go with the copy — it would have contradicted it.
+
+   ScaledDemoPanel and its BATCH rows are unreferenced as a result. Left in
+   place rather than deleted: they are a built visual, and recoverable here
+   rather than only in history if the batch claim comes back. */
 const BATCH = [
   { sku: "SKU-4417", locale: "en-GB", fmt: "1:1", done: true },
   { sku: "SKU-4417", locale: "de-DE", fmt: "4:5", done: true },
@@ -187,8 +191,24 @@ function ScaledDemo() {
         overflow: "hidden",
       }}
     >
-      {/* Awaiting the batched-variants mosaic; see HANDOFF open items. */}
-      <ScaledDemoPanel />
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video
+        src={withBasePath("/media/bento/mcp.mp4")}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+        }}
+      />
     </div>
   );
 }
@@ -307,8 +327,8 @@ export default function BentoSection() {
         </Card>
 
         <Card
-          title="Scaled production."
-          desc="Plug in a CSV or feed and batch-generate every locale, format, and SKU automatically."
+          title="Connect with MCP."
+          desc="Generate images, video, and music from inside Claude, Cursor, or any MCP client. No API key, running on the credits you already have."
         >
           <ScaledDemo />
         </Card>
