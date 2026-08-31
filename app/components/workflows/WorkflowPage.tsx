@@ -1216,45 +1216,65 @@ function UseCasesFlora() {
               />
             ))}
           </div>
-          <div style={{ marginTop: 24, minHeight: 130 }}>
-            <h3
-              key={`title-${current.id}`}
-              style={{
-                fontFamily: FONT,
-                fontSize: TYPE.h3,
-                fontWeight: 600,
-                color: SURFACE.ink,
-                letterSpacing: "-0.03em",
-                margin: "0 0 8px",
-                animation: "wp-fade 360ms cubic-bezier(0.22,1,0.36,1) both",
-              }}
-            >
-              {current.visualTitle}
-            </h3>
-            <p
-              key={`desc-${current.id}`}
-              style={{
-                fontFamily: FONT,
-                fontSize: 14,
-                fontWeight: 500,
-                color: SURFACE.ink3,
-                lineHeight: 1.55,
-                margin: "0 0 18px",
-                maxWidth: 540,
-                animation: "wp-fade 360ms cubic-bezier(0.22,1,0.36,1) both",
-              }}
-            >
-              {current.desc}
-            </p>
-            <ButtonLink
-              href={galleryHref(current.category)}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="muted"
-              size="md"
-            >
-              Explore this Flow →
-            </ButtonLink>
+          {/* Every category's copy is rendered, not only the active one.
+              This read `current.visualTitle` / `current.desc`, so nine of the
+              ten descriptions never reached the HTML and a crawler with no JS
+              saw one. They are stacked into a single grid cell instead: the
+              cell sizes to the tallest, they overlap, and only the active one
+              is opaque. Inactive copy stays in the markup, is hidden from
+              assistive tech, and is out of the tab order. */}
+          <div style={{ marginTop: 24, display: "grid" }}>
+            {USE_CASES.map((u, i) => {
+              const on = i === activeIndex;
+              return (
+                <div
+                  key={u.id}
+                  aria-hidden={!on}
+                  style={{
+                    gridArea: "1 / 1",
+                    opacity: on ? 1 : 0,
+                    pointerEvents: on ? "auto" : "none",
+                    transition: "opacity 360ms cubic-bezier(0.22,1,0.36,1)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontFamily: FONT,
+                      fontSize: TYPE.h3,
+                      fontWeight: 600,
+                      color: SURFACE.ink,
+                      letterSpacing: "-0.03em",
+                      margin: "0 0 8px",
+                    }}
+                  >
+                    {u.visualTitle}
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: FONT,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: SURFACE.ink3,
+                      lineHeight: 1.55,
+                      margin: "0 0 18px",
+                      maxWidth: 540,
+                    }}
+                  >
+                    {u.desc}
+                  </p>
+                  <ButtonLink
+                    href={galleryHref(u.category)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="muted"
+                    size="md"
+                    tabIndex={on ? undefined : -1}
+                  >
+                    Explore this Flow →
+                  </ButtonLink>
+                </div>
+              );
+            })}
           </div>
           </div>
         </div>
