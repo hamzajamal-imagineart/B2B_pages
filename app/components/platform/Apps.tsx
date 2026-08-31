@@ -1,5 +1,5 @@
 import { SectionGuides } from "@/components/primitives/SectionGuides";
-import { withBasePath } from "@/lib/assets";
+import { MediaCard, MediaCardStyles } from "@/components/MediaCard";
 
 /**
  * Apps.
@@ -8,16 +8,19 @@ import { withBasePath } from "@/lib/assets";
  * the name alone rather than a fabricated one-liner each. The footage does the
  * differentiating instead of invented copy.
  */
-/* All five carry footage now. `light` stays on the type because an app added
-   before its capture still needs the denser lens fill: the default .glass
-   disappears into a pale palette, same reason Security's tile graphics carry
-   .glass-on-light. */
-const APPS: { name: string; video?: string; light?: boolean }[] = [
-  { name: "Outfit Tryon", video: "/media/apps/outfit-tryon.mp4" },
-  { name: "Variate", video: "/media/apps/variate.mp4" },
-  { name: "Video Reframe", video: "/media/apps/reframe-presets.mp4" },
-  { name: "Topaz Video Upscale", video: "/media/apps/upscale.mp4" },
-  { name: "Sketch to Render", video: "/media/apps/sketch-render.mp4" },
+/* All five carry footage. An app added before its capture still renders: the
+   shared card falls back to the flat fill and drops the arrow. */
+/* Each card links to its app. `href` is optional so an app can be listed
+   before its page exists; without one the card renders as a plain div and
+   drops the arrow, rather than showing an affordance that goes nowhere. */
+const IA_APPS = "https://www.imagine.art/apps";
+
+const APPS: { name: string; video?: string; href?: string }[] = [
+  { name: "Outfit Tryon", video: "/media/apps/outfit-tryon.mp4", href: `${IA_APPS}/studio-tryon-male` },
+  { name: "Variate", video: "/media/apps/variate.mp4", href: `${IA_APPS}/variate` },
+  { name: "Video Reframe", video: "/media/apps/reframe-presets.mp4", href: `${IA_APPS}/video-reframe` },
+  { name: "Topaz Video Upscale", video: "/media/apps/upscale.mp4", href: `${IA_APPS}/video-upscaler` },
+  { name: "Sketch to Render", video: "/media/apps/sketch-render.mp4", href: `${IA_APPS}/sketch-to-render` },
 ];
 
 export default function Apps() {
@@ -40,39 +43,25 @@ export default function Apps() {
         </div>
 
         <div className="apps-row mt-14">
-          {APPS.map((a) => (
-            <div
+          {APPS.map((a, i) => (
+            <MediaCard
               key={a.name}
-              className={`app-card ${a.video ? "app-has-video" : ""}`}
-            >
-              {a.video && (
-                <>
-                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                  <video
-                    className="app-video"
-                    src={withBasePath(a.video)}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    aria-hidden
-                  />
-                  <span className="app-scrim" aria-hidden />
-                </>
-              )}
-              <span className="app-name">{a.name}</span>
-              <span
-                className={`app-arrow glass ${a.light ? "glass-on-light" : ""}`}
-                aria-hidden
-              >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-                  <path d="M6 12h12M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </div>
+              href={a.href}
+              video={a.video}
+              title={a.name}
+              /* Height, not a ratio: the two rows run at different widths, so
+                 a shared ratio would make the wide pair enormous. Passed as a
+                 custom property because the inline style the card sets would
+                 otherwise outrank the media query below. */
+              height="var(--app-card-h)"
+              fill="#1c1d1a"
+              eager={i < 3}
+            />
           ))}
         </div>
       </div>
+
+      <MediaCardStyles />
 
       <style>{`
         /* Two rows over six columns: three cards spanning two each, then two
@@ -108,47 +97,14 @@ export default function Apps() {
         }
         /* A card with footage carries its own copy colour, since the scrim
            underneath is dark whatever the palette is. */
-        .app-has-video { color: #fff; }
 
-        .app-card {
-          position: relative;
-          isolation: isolate;
-          overflow: hidden;
-          /* Flat dark fill, no grain. Every card runs footage now, so the tile
-             was noise over video for the split second before it painted, and
-             the palettes it carried were never really seen. */
-          background-color: #1c1d1a;
-          border-radius: 20px;
-          padding: 26px;
-          /* One height for every card rather than one ratio: the two rows
-             differ in width, so a shared aspect would make the wide pair
-             enormous. */
-          height: clamp(300px, 30vw, 420px);
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-          gap: 12px;
-        }
-        .app-name {
-          font-size: clamp(16px, 1.5vw, 20px);
-          line-height: 1.25;
-          letter-spacing: -0.01em;
-          font-weight: 500;
-          color: currentColor;
-          max-width: 14ch;
-        }
-        .app-arrow {
-          width: 36px; height: 36px;
-          border-radius: 999px;
-          display: grid; place-items: center;
-          color: currentColor;
-          flex: 0 0 auto;
-        }
+        /* Read by MediaCard via height="var(--app-card-h)". */
+        .apps-row { --app-card-h: clamp(300px, 30vw, 420px); }
         @media (max-width: 1000px) {
           .apps-row { grid-template-columns: repeat(2, 1fr); }
           .apps-row > :nth-child(-n+3),
           .apps-row > :nth-child(n+4) { grid-column: span 1; }
-          .app-card { height: clamp(240px, 40vw, 320px); }
+          .apps-row { --app-card-h: clamp(240px, 40vw, 320px); }
         }
         @media (max-width: 620px) {
           .apps-row { grid-template-columns: 1fr; }
