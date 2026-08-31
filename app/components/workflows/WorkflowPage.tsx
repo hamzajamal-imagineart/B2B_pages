@@ -6,6 +6,7 @@ import { MediaPlaceholder } from "./MediaPlaceholder";
 import { ButtonLink } from "@/components/Button";
 import { SectionGuides } from "@/components/primitives/SectionGuides";
 import { withBasePath } from "@/lib/assets";
+import { MediaCard, MediaCardStyles } from "@/components/MediaCard";
 import { WorkflowAgentHeaderBackdrop } from "./hero-backdrop";
 import { useEffect, useRef, useState } from "react";
 import HeroPromptBox from "./HeroPromptBox";
@@ -1300,13 +1301,12 @@ const TEMPLATES = [
   { cat: "Advertising", title: "Campaign Variants",       desc: "One brief into every format and market, on-brand by default.",       seed: "wf-tpl-ad-campaign",    video: "/media/templates/ad-campaign.mp4"    },
   { cat: "Product",     title: "Studio Product Shots",    desc: "Photorealistic SKU imagery in any setting. No studio required.",    seed: "wf-tpl-product-studio", video: "/media/templates/product-studio.mp4" },
   { cat: "VFX",         title: "Scene Compositing",       desc: "Chain image and video models into one narrative pipeline.",          seed: "wf-tpl-vfx-scene",      video: "/media/templates/vfx-scene.mp4"      },
-  { cat: "Branding",    title: "Brand Kit Application",   desc: "Lock your identity once. Generate infinite on-brand assets.",        seed: "wf-tpl-brand-kit",      video: "/media/templates/brand-kit.mp4"      },
+  { cat: "Branding",    title: "Brand Kit Application",   desc: "Lock your identity once. Generate infinite on-brand assets.",        seed: "wf-tpl-brand-kit",      video: "/media/brandkit/brand-kits.mp4"     },
   { cat: "Character",   title: "Consistent Characters",   desc: "Build characters that stay on-model across every medium.",           seed: "wf-tpl-character",      video: "/media/templates/character.mp4"      },
 ];
 
 function TemplatesPreview() {
   const [activeCat, setActiveCat] = useState<string>("All");
-  const [hovered, setHovered] = useState<number | null>(null);
   const visible = activeCat === "All" ? TEMPLATES : TEMPLATES.filter((t) => t.cat === activeCat);
 
   return (
@@ -1374,86 +1374,21 @@ function TemplatesPreview() {
           on the landscape ones and cut the portrait ones nearly in half. A
           square splits the difference and gives every card a third more height. */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 24 }}>
-        {visible.map((t, i) => {
-          const isHov = hovered === i;
-          return (
-            <a
-              key={t.seed}
-              href={TEMPLATES_HREF}
-              target="_blank"
-              rel="noopener noreferrer"
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              style={{ textDecoration: "none", display: "flex", flexDirection: "column", gap: 14 }}
-            >
-              <div
-                style={{
-                  borderRadius: 24,
-                  overflow: "hidden",
-                  aspectRatio: "1/1",
-                  background: "var(--panel-2)",
-                  position: "relative",
-                  transition: "transform 400ms cubic-bezier(0.22,1,0.36,1), border-color 300ms",
-                  transform: isHov ? "translateY(-3px)" : "translateY(0)",
-                  /* A hairline does the work; §3 prefers no shadow. */
-                  border: `1px solid ${isHov ? "var(--line-strong)" : "var(--line)"}`,
-                }}
-              >
-                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                <video
-                  src={withBasePath(t.video)}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload={i < 3 ? "auto" : "metadata"}
-                  aria-label={t.title}
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                    transform: isHov ? "scale(1.04)" : "scale(1)",
-                    transition: "transform 600ms cubic-bezier(0.25,0.46,0.45,0.94)",
-                  }}
-                />
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontFamily: FONT,
-                    fontSize: 10,
-                    fontWeight: 600,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "rgba(10,10,11,0.45)",
-                    marginBottom: 6,
-                  }}
-                >
-                  {t.cat}
-                </div>
-                <h3
-                  style={{
-                    fontFamily: FONT,
-                    fontSize: TYPE.h3,
-                    fontWeight: 500,
-                    color: "#0a0a0b",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1.25,
-                    /* Was 0 0 6px, spacing the descriptor that sat below. The
-                       title is the last thing in the card now. */
-                    margin: 0,
-                  }}
-                >
-                  {t.title}
-                </h3>
-              </div>
-            </a>
-          );
-        })}
+        {visible.map((t, i) => (
+          <MediaCard
+            key={t.seed}
+            href={TEMPLATES_HREF}
+            video={t.video}
+            label={t.cat}
+            title={t.title}
+            aspect="1 / 1"
+            fill="var(--panel-2)"
+            eager={i < 3}
+          />
+        ))}
       </div>
+
+      <MediaCardStyles />
     </section>
   );
 }
